@@ -8,7 +8,10 @@ const Intern = function(intern) {
 };
 
 Intern.getAll = (result) => {
-  let query = "SELECT * FROM intern;";
+  let query = `SELECT  intern.id, intern.name, intern.joining_date , technology.tech_name
+                FROM intern
+                JOIN technology
+                ON intern.ongoing_tech = technology.id;`;
 
   sql.query(query, (err, res) => {
     if (err) {

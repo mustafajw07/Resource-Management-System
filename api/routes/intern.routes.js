@@ -9,5 +9,7 @@ module.exports = app => {
     // Retrieve all interns
     router.get("/", interns.findAll);
 
+    router.get("/:id" , interns.findOne);
+
     app.use('/api/interns', router);
 };
