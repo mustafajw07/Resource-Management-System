@@ -1,0 +1,58 @@
+import { Routes } from '@angular/router';
+import { LayoutComponent } from './layout/layout.component';
+
+export const routes: Routes = [
+    {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then((c) => c.DashboardComponent),
+      },
+      {
+        path: 'project-requisition',
+        loadComponent: () =>
+          import('./pages/project-requisition/project-requisition.component').then(
+            (c) => c.ProjectRequisitionComponent),
+      },
+      {
+        path: 'interns-pool',
+        loadComponent: () =>
+          import('./pages/interns-pool/interns-pool.component').then((c) => c.InternsPoolComponent),
+      },
+      {
+        path: 'project-utilization',
+        loadComponent: () =>
+          import('./pages/project-utilization/project-utilization.component').then(
+            (c) => c.ProjectUtilizationComponent),
+      },
+      {
+        path: 'project-status-tracker',
+        loadComponent: () =>
+          import('./pages/project-status-tracker/project-status-tracker.component').then(
+            (c) => c.ProjectStatusTrackerComponent),
+      }
+    ],
+  },
+  {
+    path: 'auth',
+    loadComponent: () => import('./auth/auth.component').then((c) => c.AuthComponent),
+  },
+  {
+    path: 'unauthorized',
+    loadComponent: () =>
+      import('./unauthorized/unauthorized.component').then((c) => c.UnauthorizedComponent),
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
+  },
+];

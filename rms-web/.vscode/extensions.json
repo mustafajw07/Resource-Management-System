@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "angular.ng-template", // Official Angular Language Service
+        "dbaeumer.vscode-eslint", // Official ESLint plugin
+        "esbenp.prettier-vscode", // Official Prettier formatter
+    ]
+}
