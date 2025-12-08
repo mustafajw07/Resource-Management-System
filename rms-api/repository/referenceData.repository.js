@@ -12,13 +12,13 @@ const ReferenceDataRepository = {
     async getAll() {
         const query = `
             SELECT
-                rd.id AS id,
-                rd.name AS name,
-                rc.id AS categoryId,
-                rc.name AS categoryName
+            rd.reference_id AS id,
+            rd.reference_name AS name,
+            rc.category_id AS categoryId,
+            rc.category_name AS categoryName
             FROM ReferenceData rd
-            JOIN ReferenceCategory rc ON rc.id = rd.category_id
-            ORDER BY rd.id
+            JOIN ReferenceCategory rc ON rc.category_id = rd.category_id
+            ORDER BY rd.reference_id
         `;
 
         return new Promise((resolve, reject) => {

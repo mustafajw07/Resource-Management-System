@@ -10,8 +10,8 @@ CREATE TABLE `User` (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
-  CONSTRAINT fk_user_jobtitle FOREIGN KEY (job_title_id) REFERENCES ReferenceData(id)
+  CONSTRAINT fk_user_jobtitle FOREIGN KEY (job_title_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT fk_user_location FOREIGN KEY (location_id) REFERENCES Location(id)
+  CONSTRAINT fk_user_location FOREIGN KEY (location_id) REFERENCES Location(location_id)
     ON DELETE SET NULL ON UPDATE CASCADE
 );

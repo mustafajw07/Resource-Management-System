@@ -12,8 +12,8 @@ CREATE TABLE InternDetail (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
-  CONSTRAINT fk_intern_user FOREIGN KEY (user_id) REFERENCES `User`(id)
+  CONSTRAINT fk_intern_user FOREIGN KEY (user_id) REFERENCES `User`(user_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_intern_mentor FOREIGN KEY (mentor_id) REFERENCES `User`(id)
+  CONSTRAINT fk_intern_mentor FOREIGN KEY (mentor_id) REFERENCES `User`(user_id)
     ON DELETE SET NULL ON UPDATE CASCADE
 );

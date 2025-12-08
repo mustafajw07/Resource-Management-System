@@ -11,11 +11,11 @@ CREATE TABLE ProjectAllocation (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
-  CONSTRAINT fk_alloc_user FOREIGN KEY (user_id) REFERENCES `User`(id)
+  CONSTRAINT fk_alloc_user FOREIGN KEY (user_id) REFERENCES `User`(user_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_alloc_project FOREIGN KEY (project_id) REFERENCES Project(id)
+  CONSTRAINT fk_alloc_project FOREIGN KEY (project_id) REFERENCES Project(project_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_alloc_role FOREIGN KEY (role_id) REFERENCES Role(id)
+  CONSTRAINT fk_alloc_role FOREIGN KEY (role_id) REFERENCES Role(role_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_alloc_user_dates (user_id, start_date, end_date),
   INDEX idx_alloc_project (project_id)

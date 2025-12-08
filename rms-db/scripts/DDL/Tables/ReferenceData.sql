@@ -1,4 +1,3 @@
--- Reference Data
 CREATE TABLE ReferenceData (
   reference_id INT AUTO_INCREMENT PRIMARY KEY,
   category_id INT NOT NULL,
@@ -8,7 +7,7 @@ CREATE TABLE ReferenceData (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
-  CONSTRAINT fk_refdata_category FOREIGN KEY (category_id) REFERENCES ReferenceCategory(id)
+  CONSTRAINT fk_refdata_category FOREIGN KEY (category_id) REFERENCES ReferenceCategory(category_id)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  UNIQUE KEY ux_refdata_category_name (category_id, name)
+  UNIQUE KEY ux_refdata_category_name (category_id, reference_name)
 );
