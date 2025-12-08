@@ -8,9 +8,9 @@ CREATE TABLE UserRole (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
-  CONSTRAINT fk_userrole_user FOREIGN KEY (user_id) REFERENCES `User`(id)
+  CONSTRAINT fk_userrole_user FOREIGN KEY (user_id) REFERENCES `User`(user_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_userrole_role FOREIGN KEY (role_id) REFERENCES Role(id)
+  CONSTRAINT fk_userrole_role FOREIGN KEY (role_id) REFERENCES Role(role_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
   UNIQUE KEY ux_userrole_user_role (user_id, role_id)
 );
