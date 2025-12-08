@@ -1,0 +1,16 @@
+
+-- Project
+CREATE TABLE Project (
+  project_id INT AUTO_INCREMENT PRIMARY KEY,
+  project_name VARCHAR(255) NOT NULL,
+  client_id INT NOT NULL,
+  status VARCHAR(50),
+  start_date DATE,
+  end_date DATE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by VARCHAR(255),
+  updated_by VARCHAR(255),
+  CONSTRAINT fk_project_client FOREIGN KEY (client_id) REFERENCES Client(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+);

@@ -1,0 +1,17 @@
+-- User
+CREATE TABLE `User` (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  job_title_id INT,
+  location_id INT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by VARCHAR(255),
+  updated_by VARCHAR(255),
+  CONSTRAINT fk_user_jobtitle FOREIGN KEY (job_title_id) REFERENCES ReferenceData(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT fk_user_location FOREIGN KEY (location_id) REFERENCES Location(id)
+    ON DELETE SET NULL ON UPDATE CASCADE
+);
