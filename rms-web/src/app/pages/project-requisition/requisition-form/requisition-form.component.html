@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm">Project ID</label>
+            <input type="text" formControlName="projectId" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Requisition Date</label>
+            <input type="date" formControlName="requisitionDate" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Requisition Type</label>
+            <input type="text" formControlName="requisitionType" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Requisition Stage</label>
+            <input type="text" formControlName="requisitionStage" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Hiring POC</label>
+            <input type="text" formControlName="hiringPoc" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Client POC</label>
+            <input type="text" formControlName="clientPoc" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">Urgency</label>
+            <input type="text" formControlName="urgency" class="w-full p-2 border rounded" />
+        </div>
+
+        <div>
+            <label class="block text-sm">FTE Head Count</label>
+            <input type="number" formControlName="fteHeadCount" class="w-full p-2 border rounded" />
+        </div>
+
+        <div class="col-span-2">
+            <label class="block text-sm">Notes</label>
+            <textarea formControlName="notes" class="w-full p-2 border rounded" rows="3"></textarea>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-2 pt-2">
+        <p-button severity="secondary" label="Cancel" [outlined]="true" (click)="onCancel()"/>
+        <p-button severity="contrast" label="Submit Request" (click)="onSubmit()"/>
+    </div>
+</form>

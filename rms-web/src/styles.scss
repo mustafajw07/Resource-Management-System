@@ -1,0 +1,29 @@
+@use "./theme/theme-colors" as rms-m3-theme;
+// Tailwind CSS
+@use "./theme/tailwind.css";
+// Custom styles
+@use './theme/typography.scss' as m3-typography-hierarchy;
+
+:root {
+  --rms-header-height: 64px;
+  --rms-bottom-margin: 8px;
+  --rms-right-margin: 8px;
+  --rms-section-x-padding: 16px;
+  --rms-section-y-padding: 24px;
+  --rms-http-event-loader-height: 4px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", sans-serif;
+
+  // mgt-toolkit
+  --default-font-family: "IBM Plex Sans", sans-serif;
+  --body-font: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  --person-line1-font-weight: 500;
+}

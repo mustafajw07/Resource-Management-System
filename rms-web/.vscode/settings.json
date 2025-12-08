@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.ts": "explicit"
+  },
+  "eslint.validate": ["typescript", "html"],
+  "eslint.format.enable": true,
+  "prettier.requireConfig": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.mjs"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  }
+}
