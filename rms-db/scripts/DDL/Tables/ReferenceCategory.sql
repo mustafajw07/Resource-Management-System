@@ -1,0 +1,11 @@
+-- Reference Category
+CREATE TABLE ReferenceCategory (
+  category_id INT AUTO_INCREMENT PRIMARY KEY,
+  category_name VARCHAR(100) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by VARCHAR(255),
+  updated_by VARCHAR(255)
+);
