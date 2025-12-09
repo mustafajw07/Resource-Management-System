@@ -1,26 +1,46 @@
 # RmsWeb
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+This is the RMS front-end application built with Angular.
 
-## Development server
+## Prerequisites
 
-To start a local development server, run:
+- Node.js (18+ recommended)
+- npm or yarn
+- The backend API (rms-api) should be running for full functionality
+
+## Development
+
+Install dependencies:
 
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Start the local development server (default port 4200):
+
+```bash
+npm run start:dev
+```
+
+Open the app at `http://localhost:4200/`. The app will reload automatically on file changes.
+
+## Build
+
+Build the app for production:
+
+```bash
+npm run build:prod
+```
 
 ## Code scaffolding
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Generate components using Angular CLI:
 
 ```bash
 ng generate component component-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+For a full list of schematics:
 
 ```bash
 ng generate --help
