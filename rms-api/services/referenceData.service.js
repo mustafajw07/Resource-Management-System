@@ -9,8 +9,6 @@ exports.findAll = async (req, res) => {
     const data = await ReferenceDataRepository.getAll();
     return res.status(200).json(data);
   } catch (err) {
-    // Log error server-side with details for debugging
-    console.error('ReferenceData.findAll error:', err);
     const message = (err && err.message) ? err.message : 'Some error occurred while retrieving reference data.';
     return res.status(500).json({ message });
   }

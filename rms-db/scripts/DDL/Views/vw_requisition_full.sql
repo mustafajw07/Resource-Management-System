@@ -11,22 +11,22 @@ SELECT
   p.end_date    AS project_end_date,
 
   r.requisition_type_id,
-  rd_type.reference_name AS requisition_type_name,
+  rd_type.reference_name AS requisition_type,
 
   r.requisition_stage_id,
-  rd_stage.reference_name AS requisition_stage_name,
+  rd_stage.reference_name AS requisition_stage,
 
   r.fulfillment_medium_id,
-  rd_fulfillment.reference_name AS fulfillment_medium_name,
+  rd_fulfillment.reference_name AS fulfillment_medium,
 
   r.urgency_id,
-  rd_urgency.reference_name AS urgency_name,
+  rd_urgency.reference_name AS urgency,
 
   r.requisition_status_id,
-  rd_status.reference_name AS requisition_status_name,
+  rd_status.reference_name AS requisition_status,
 
   r.capability_area_id,
-  rd_capability.reference_name AS capability_area_name,
+  rd_capability.reference_name AS capability_area,
 
   -- People
   r.hiring_poc_id,

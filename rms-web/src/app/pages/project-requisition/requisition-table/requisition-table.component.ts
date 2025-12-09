@@ -13,10 +13,12 @@ import { DialogModule } from 'primeng/dialog';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
 import { ProjectRequisition } from '@core/interfaces/ProjectRequisition';
 import { toast } from 'ngx-sonner';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
+    styleUrls: ['./requisition-table.component.scss'],
     imports: [TableModule,TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
 })
 export class RequisitionTableComponent implements OnInit {
@@ -25,8 +27,8 @@ export class RequisitionTableComponent implements OnInit {
         { field: 'requisitionDate', header: 'Requisition Date' },
         { field: 'requisitionType', header: 'Requisition Type' },
         { field: 'requisitionStage', header: 'Requisition Stage' },
-        { field: 'hiringPoc', header: 'Hiring POC' },
-        { field: 'clientPoc', header: 'Client POC' },
+        { field: 'hiringPocName', header: 'Hiring POC' },
+        { field: 'clientPocName', header: 'Client POC' },
         { field: 'urgency', header: 'Urgency' },
         { field: 'requisitionStatus', header: 'Requisition Status' },
         { field: 'fteHeadCount', header: 'FTE Head Count' },
@@ -36,9 +38,11 @@ export class RequisitionTableComponent implements OnInit {
     protected popupHeader = '';
     protected loading = false;
     protected visible = false;
+    protected globalFilterFields: string[] = [];
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
 
     ngOnInit(): void {
+        this.globalFilterFields = this.headers.map(h => h.field);
         this.getRequisitions();
     }
     
@@ -65,6 +69,11 @@ export class RequisitionTableComponent implements OnInit {
         this.visible = true;
     }
 
+    protected editRequisition(){
+        this.popupHeader = "Edit Project Requisition";
+        this.visible = true;
+    }
+
     /**
      * Handles the form submission from the requisition form
      * @param payload 
@@ -80,13 +89,29 @@ export class RequisitionTableComponent implements OnInit {
      * @return void
      */
     protected getRequisitions() {
+        this.loading = true;
         this.projectRequisitionService.GetAllRequisitions().subscribe({
             next: (data: ProjectRequisition[]) => {
                 this.requisitions = data;
+                this.loading = false;
             },
-            error: (error: string) => {
-                toast.error('Failed to load requisitions: ' + error);
+            error: (error: HttpErrorResponse) => {
+                this.loading = false;
+                toast.error('Failed to load requisitions: ' + error.message);
             }
         });
+    }
+
+    /**
+     * Return tailwind-style classes for urgency levels
+     */
+    protected urgencyClass(value: string): string {
+        if (!value) return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
+        switch ((value || '').toString().toLowerCase()) {
+            case 'high': return 'bg-red-100 text-red-800 px-2 py-0.5 rounded';
+            case 'medium': return 'bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded';
+            case 'low': return 'bg-green-100 text-green-800 px-2 py-0.5 rounded';
+            default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
+        }
     }
 }
