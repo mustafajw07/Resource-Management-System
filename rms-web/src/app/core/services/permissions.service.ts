@@ -1,17 +1,13 @@
 import { Injectable, signal } from '@angular/core';
+import { User } from '@core/interfaces/User';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PermissionsService {
-  roles$ = signal<any[] | null>(null);
-  permissions$ = signal<any>({});
-  user$ = signal<any | null>(null);
-  
-  setUserRolesAndPermissions(user: any, roles: any[], permissions: any) {
+  roles$ = signal<string[] | null>(null);
+  user$ = signal<User | null>(null);
+
+  setUserRolesAndPermissions(user: User, roles: string[] | null) {
     this.user$.set(user);
     this.roles$.set(roles);
-    this.permissions$.set(permissions);
   }
-
 }

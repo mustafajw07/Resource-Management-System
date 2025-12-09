@@ -1,35 +1,34 @@
-// import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { MsalService } from '@azure/msal-angular';
+import { Observable, of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
-  // private httpClient = inject(HttpClient);
+  private readonly msalService = inject(MsalService);
 
-  // GetAll(): Observable<IUser[]> {
-  //   const url = `${environment.API_URL}/user`;
-  //   return this.httpClient.get<IUser[]>(url);
-  // }
-
-  GetPermissions(): Observable<any> {
-    // const url = `${environment.API_URL}/user/permissions`;
-    // return this.httpClient.get<IUserPermission>(url);
-    return new Observable<any>((subscriber) => {
-      const roles = [{ id: 1, name: 'Admin' }];
-      subscriber.next(roles);
-      subscriber.complete();
-    });
+  /**
+   * Check synchronously whether the current user has a specific role.
+   */
+  public doesUserHaveRole(roleToCheck: string): boolean {
+    const roles = this.getRolesSync();
+    return roles.includes(roleToCheck);
   }
 
-  GetRoles(): Observable<any> {
-    // const url = `${environment.API_URL}/user/roles`;
-    // return this.httpClient.get<IUserRole[]>(url);
-    return new Observable<any>((subscriber) => {
-      const roles = [{ id: 1, name: 'Admin' }];
-      subscriber.next(roles);
-      subscriber.complete();
-    });
+  /**
+   * Returns user roles as an Observable. Always emits an array (possibly empty).
+   */
+  public getRoles(): Observable<string[]> {
+    const roles = this.getRolesSync();
+    return of(roles);
+  }
+
+  /**
+   * Synchronous helper to read roles from the active account's id token claims.
+   * Returns an array (empty if not present).
+   */
+  private getRolesSync(): string[] {
+    const claims = this.msalService.instance.getActiveAccount()?.idTokenClaims;
+    const userRoles = claims && (claims as any).roles ? (claims as any).roles as string[] : [];
+    return Array.isArray(userRoles) ? userRoles : [];
   }
 }

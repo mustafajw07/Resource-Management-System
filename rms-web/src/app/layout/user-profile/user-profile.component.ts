@@ -7,6 +7,7 @@ import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
+import { User } from '@core/interfaces/User';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,7 +15,7 @@ import { MenuItem } from 'primeng/api';
   imports: [MenuModule, ButtonModule, AvatarModule],
 })
 export class UserProfileComponent {
-  protected user: any = null;
+  protected user: User | null= null;
   protected isUserProfileMenuOpen = false;
   protected isSigningOut = false;
   protected initials: string = '';
@@ -36,7 +37,7 @@ export class UserProfileComponent {
       email: String(activeAccount.idTokenClaims.preferred_username),
       first_name: nameParts[0] || '',
       last_name: nameParts.slice(1).join(' ') || '',
-      fullName: fullName,
+      full_name: fullName,
     };
 
     // compute initials for avatar label

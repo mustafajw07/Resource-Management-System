@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -10,39 +10,42 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
 import { DialogModule } from 'primeng/dialog';
+import { ProjectRequisitionService } from '@core/services/project-requisition.service';
+import { ProjectRequisition } from '@core/interfaces/ProjectRequisition';
+import { toast } from 'ngx-sonner';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
-    imports: [TableModule, TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
+    styleUrls: ['./requisition-table.component.scss'],
+    imports: [TableModule,TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
-        { field: 'id', header: 'ID' },
+        { field: 'projectName', header: 'Project Name' },
         { field: 'requisitionDate', header: 'Requisition Date' },
-        { field: 'projectId', header: 'Project ID' },
         { field: 'requisitionType', header: 'Requisition Type' },
         { field: 'requisitionStage', header: 'Requisition Stage' },
-        { field: 'hiringPoc', header: 'Hiring POC' },
-        { field: 'clientPoc', header: 'Client POC' },
-        { field: 'fulfillmentMedium', header: 'Fulfillment Medium' },
+        { field: 'hiringPocName', header: 'Hiring POC' },
+        { field: 'clientPocName', header: 'Client POC' },
         { field: 'urgency', header: 'Urgency' },
         { field: 'requisitionStatus', header: 'Requisition Status' },
         { field: 'fteHeadCount', header: 'FTE Head Count' },
-        { field: 'fteTotalAllocation', header: 'FTE Total Allocation' },
-        { field: 'fulfilledAllocation', header: 'Fulfilled Allocation' },
-        { field: 'notes', header: 'Notes' },
-        { field: 'tentativeOnboardingDate', header: 'Tentative Onboarding Date' },
         { field: 'ageingDays', header: 'Ageing Days' },
-        { field: 'capabilityArea', header: 'Capability Area' },
     ];
-    protected requisitions = [];
+    protected requisitions: ProjectRequisition[] = [];
     protected popupHeader = '';
     protected loading = false;
     protected visible = false;
+    protected globalFilterFields: string[] = [];
+    private readonly projectRequisitionService = inject(ProjectRequisitionService);
 
-    ngOnInit(): void { }
-
+    ngOnInit(): void {
+        this.globalFilterFields = this.headers.map(h => h.field);
+        this.getRequisitions();
+    }
+    
     /**
      * Utility to safely get nested field values
      * @param obj The object to retrieve the value from
@@ -66,6 +69,11 @@ export class RequisitionTableComponent implements OnInit {
         this.visible = true;
     }
 
+    protected editRequisition(){
+        this.popupHeader = "Edit Project Requisition";
+        this.visible = true;
+    }
+
     /**
      * Handles the form submission from the requisition form
      * @param payload 
@@ -76,4 +84,34 @@ export class RequisitionTableComponent implements OnInit {
         this.visible = false;
     }
 
+    /**
+     * Handles the form cancellation from the requisition form
+     * @return void
+     */
+    protected getRequisitions() {
+        this.loading = true;
+        this.projectRequisitionService.GetAllRequisitions().subscribe({
+            next: (data: ProjectRequisition[]) => {
+                this.requisitions = data;
+                this.loading = false;
+            },
+            error: (error: HttpErrorResponse) => {
+                this.loading = false;
+                toast.error('Failed to load requisitions: ' + error.message);
+            }
+        });
+    }
+
+    /**
+     * Return tailwind-style classes for urgency levels
+     */
+    protected urgencyClass(value: string): string {
+        if (!value) return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
+        switch ((value || '').toString().toLowerCase()) {
+            case 'high': return 'bg-red-100 text-red-800 px-2 py-0.5 rounded';
+            case 'medium': return 'bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded';
+            case 'low': return 'bg-green-100 text-green-800 px-2 py-0.5 rounded';
+            default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
+        }
+    }
 }

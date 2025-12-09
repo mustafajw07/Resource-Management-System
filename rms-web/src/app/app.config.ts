@@ -11,7 +11,7 @@ import { UserService } from './core/services/user.service';
 import { PermissionsService } from './core/services/permissions.service';
 import { environment } from '@environments';
 import { Location } from '@angular/common';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 
 
 const appInitializer = () => {
@@ -34,7 +34,7 @@ const appInitializer = () => {
       msalService.instance.setActiveAccount(activeAccount);
 
       return loadUserRolesAndPermissions(userService).pipe(
-        tap(({ roles, permissions }) => {
+        tap((roles) => {
           if (location.path() === '/auth') {
             router.navigate(['dashboard']);
           }
@@ -46,8 +46,7 @@ const appInitializer = () => {
               first_name: '',
               last_name: '',
             },
-            roles,
-            permissions,
+            roles
           );
         }),
         catchError((error) => {
@@ -55,7 +54,6 @@ const appInitializer = () => {
             router.navigate(['unauthorized']);
             return EMPTY;
           }
-
           throw error;
         }),
       );
@@ -65,10 +63,7 @@ const appInitializer = () => {
 
 // Load user roles and permissions
 function loadUserRolesAndPermissions(userService: UserService) {
-  return forkJoin({
-    roles: userService.GetRoles(),
-    permissions: userService.GetPermissions(),
-  });
+  return userService.getRoles();
 }
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -164,6 +159,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
+    provideHttpClient(),
     providePrimeNG({
       theme: {
         preset: Aura, 

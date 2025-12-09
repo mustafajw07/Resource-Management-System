@@ -1,4 +1,6 @@
+// Angular Material theme
 @use "./theme/theme-colors" as rms-m3-theme;
+@use 'sass:map' as map;
 // Tailwind CSS
 @use "./theme/tailwind.css";
 // Custom styles
@@ -11,6 +13,22 @@
   --rms-section-x-padding: 16px;
   --rms-section-y-padding: 24px;
   --rms-http-event-loader-height: 4px;
+}
+
+html {
+  color-scheme: light;
+
+  /* Map Material-generated palette values to CSS variables used in the app */
+  :root {
+    --rms-primary: #{map.get(rms-m3-theme.$primary-palette, 50)};
+    --rms-primary-variant: #{map.get(rms-m3-theme.$primary-palette, 40)};
+    --rms-on-primary: #{map.get(rms-m3-theme.$primary-palette, 100)};
+    --rms-tertiary: #{map.get(rms-m3-theme.$tertiary-palette, 50)};
+    --rms-surface: #{map.get(rms-m3-theme.$primary-palette, 98)};
+    --rms-on-surface: #{map.get(rms-m3-theme.$primary-palette, 10)};
+  }
+
+  // @include m3-typography-hierarchy.rms-typography-hierarchy;
 }
 
 html,
