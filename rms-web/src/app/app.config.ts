@@ -1,4 +1,4 @@
-import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
@@ -12,6 +12,8 @@ import { PermissionsService } from './core/services/permissions.service';
 import { environment } from '@environments';
 import { Location } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { referenceDataReducer } from './store/reference-data/reference-data.reducer';
 
 
 const appInitializer = () => {
@@ -160,6 +162,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
+    importProvidersFrom(StoreModule.forRoot({referenceDataReducer: referenceDataReducer})),
     providePrimeNG({
       theme: {
         preset: Aura, 
@@ -168,5 +171,5 @@ export const appConfig: ApplicationConfig = {
         }
       }
     })
-  ]
+  ],
 };
