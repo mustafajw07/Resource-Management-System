@@ -1,4 +1,12 @@
 const sql = require('../database/db.js');
+const util = require('util');
+
+// Use promisified query for cleaner async/await usage
+const queryAsync = util.promisify(sql.query).bind(sql);
+
+function toSnake(key) {
+    return key.replace(/([A-Z])/g, '_$1').toLowerCase();
+}
 
 /**
  * Repository for project requisition data access.
@@ -45,15 +53,78 @@ const ProjectRequisition = {
             FROM resource_planning_dev.vw_requisition_full;
         `;
 
-        return new Promise((resolve, reject) => {
-            sql.query(query, (err, results) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(results);
-            });
-        });
+        return queryAsync(query);
     },
+
+    /**
+     * Create a new requisition record. Accepts an object with properties in camelCase.
+     * Returns the newly created insertId.
+     */
+    async create(data = {}) {
+        // Allowed fields we will persist (snake_case derived from these keys)
+        const allowed = [
+            'requisitionDate','projectId','projectName','clientId','clientName','projectStatus',
+            'projectStartDate','projectEndDate','requisitionTypeId','requisitionStageId','fulfillmentMediumId',
+            'urgencyId','requisitionStatusId','capabilityAreaId','hiringPocId','hiringPocName','hiringPocEmail',
+            'clientPocName','fteHeadCount','fteTotalAllocation','fulfilledAllocation','notes','tentativeOnboardingDate'
+        ];
+
+        const cols = [];
+        const placeholders = [];
+        const values = [];
+
+        for (const key of allowed) {
+            if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined) {
+                cols.push(toSnake(key));
+                placeholders.push('?');
+                values.push(data[key]);
+            }
+        }
+
+        if (cols.length === 0) {
+            throw new Error('No valid fields provided for insert');
+        }
+
+        const sqlStr = `INSERT INTO resource_planning_dev.requisition (${cols.join(',')}) VALUES (${placeholders.join(',')})`;
+        const result = await queryAsync(sqlStr, values);
+        return { insertId: result.insertId };
+    },
+
+    /**
+     * Update an existing requisition by requisitionId. Data is camelCase
+     * Returns { affectedRows }
+     */
+    async update(requisitionId, data = {}) {
+        if (!requisitionId) {
+            throw new Error('requisitionId is required for update');
+        }
+
+        const allowed = [
+            'requisitionDate','projectId','projectName','clientId','clientName','projectStatus',
+            'projectStartDate','projectEndDate','requisitionTypeId','requisitionStageId','fulfillmentMediumId',
+            'urgencyId','requisitionStatusId','capabilityAreaId','hiringPocId','hiringPocName','hiringPocEmail',
+            'clientPocName','fteHeadCount','fteTotalAllocation','fulfilledAllocation','notes','tentativeOnboardingDate'
+        ];
+
+        const sets = [];
+        const values = [];
+
+        for (const key of allowed) {
+            if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined) {
+                sets.push(`${toSnake(key)} = ?`);
+                values.push(data[key]);
+            }
+        }
+
+        if (sets.length === 0) {
+            throw new Error('No valid fields provided for update');
+        }
+
+        values.push(requisitionId);
+        const sqlStr = `UPDATE resource_planning_dev.requisition SET ${sets.join(', ')} WHERE requisition_id = ?`;
+        const result = await queryAsync(sqlStr, values);
+        return { affectedRows: result.affectedRows };
+    }
 };
 
 module.exports = ProjectRequisition;
