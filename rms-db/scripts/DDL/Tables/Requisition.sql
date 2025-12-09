@@ -5,7 +5,7 @@ CREATE TABLE Requisition (
   requisition_type_id INT,
   requisition_stage_id INT,
   hiring_poc_id INT,
-  client_poc_name VARCHAR(255),
+  client_poc_id INT,
   fulfillment_medium_id INT,
   urgency_id INT,
   requisition_status_id INT,
@@ -26,7 +26,9 @@ CREATE TABLE Requisition (
     ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_requisition_stage FOREIGN KEY (requisition_stage_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT fk_req_hiring_poc FOREIGN KEY (hiring_poc_id) REFERENCES `User`(user_id)
+  CONSTRAINT fk_req_hiring_poc FOREIGN KEY (client_poc_id) REFERENCES `OnShoreManager`(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT fk_req_client_poc FOREIGN KEY (hiring_poc_id) REFERENCES `User`(user_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_fulfillment_medium FOREIGN KEY (fulfillment_medium_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,

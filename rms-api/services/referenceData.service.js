@@ -7,7 +7,7 @@ const ReferenceDataRepository = require('../repository/referenceData.repository'
 exports.findAll = async (req, res) => {
   try {
     const data = await ReferenceDataRepository.getAll();
-    return res.json(data);
+    return res.status(200).json(data);
   } catch (err) {
     // Log error server-side with details for debugging
     console.error('ReferenceData.findAll error:', err);

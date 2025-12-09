@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -10,39 +10,38 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
 import { DialogModule } from 'primeng/dialog';
+import { ProjectRequisitionService } from '@core/services/project-requisition.service';
+import { ProjectRequisition } from '@core/interfaces/ProjectRequisition';
+import { toast } from 'ngx-sonner';
 
 @Component({
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
-    imports: [TableModule, TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
+    imports: [TableModule,TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
-        { field: 'id', header: 'ID' },
+        { field: 'projectName', header: 'Project Name' },
         { field: 'requisitionDate', header: 'Requisition Date' },
-        { field: 'projectId', header: 'Project ID' },
         { field: 'requisitionType', header: 'Requisition Type' },
         { field: 'requisitionStage', header: 'Requisition Stage' },
         { field: 'hiringPoc', header: 'Hiring POC' },
         { field: 'clientPoc', header: 'Client POC' },
-        { field: 'fulfillmentMedium', header: 'Fulfillment Medium' },
         { field: 'urgency', header: 'Urgency' },
         { field: 'requisitionStatus', header: 'Requisition Status' },
         { field: 'fteHeadCount', header: 'FTE Head Count' },
-        { field: 'fteTotalAllocation', header: 'FTE Total Allocation' },
-        { field: 'fulfilledAllocation', header: 'Fulfilled Allocation' },
-        { field: 'notes', header: 'Notes' },
-        { field: 'tentativeOnboardingDate', header: 'Tentative Onboarding Date' },
         { field: 'ageingDays', header: 'Ageing Days' },
-        { field: 'capabilityArea', header: 'Capability Area' },
     ];
-    protected requisitions = [];
+    protected requisitions: ProjectRequisition[] = [];
     protected popupHeader = '';
     protected loading = false;
     protected visible = false;
+    private readonly projectRequisitionService = inject(ProjectRequisitionService);
 
-    ngOnInit(): void { }
-
+    ngOnInit(): void {
+        this.getRequisitions();
+    }
+    
     /**
      * Utility to safely get nested field values
      * @param obj The object to retrieve the value from
@@ -76,4 +75,18 @@ export class RequisitionTableComponent implements OnInit {
         this.visible = false;
     }
 
+    /**
+     * Handles the form cancellation from the requisition form
+     * @return void
+     */
+    protected getRequisitions() {
+        this.projectRequisitionService.GetAllRequisitions().subscribe({
+            next: (data: ProjectRequisition[]) => {
+                this.requisitions = data;
+            },
+            error: (error: string) => {
+                toast.error('Failed to load requisitions: ' + error);
+            }
+        });
+    }
 }

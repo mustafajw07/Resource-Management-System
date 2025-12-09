@@ -3,7 +3,6 @@ CREATE TABLE ProjectAllocation (
   project_allocation_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   project_id INT NOT NULL,
-  role_id INT,
   utilization_percentage INT NOT NULL DEFAULT 100,
   start_date DATE NOT NULL,
   end_date DATE,
@@ -15,8 +14,6 @@ CREATE TABLE ProjectAllocation (
     ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_alloc_project FOREIGN KEY (project_id) REFERENCES Project(project_id)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_alloc_role FOREIGN KEY (role_id) REFERENCES Role(role_id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_alloc_user_dates (user_id, start_date, end_date),
   INDEX idx_alloc_project (project_id)
 );

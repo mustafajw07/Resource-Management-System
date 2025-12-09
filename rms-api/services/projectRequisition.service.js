@@ -3,7 +3,7 @@ const projectRequisition = require("../repository/projectRequisition.repository"
 exports.findAll = async (req, res) => {
     try {
         const data = await projectRequisition.getAll();
-        return res.json(data);
+        return res.status(200).json(data);
     } catch (err) {
         // Log error server-side with details for debugging
         console.error('ProjectRequisition.findAll error:', err);
