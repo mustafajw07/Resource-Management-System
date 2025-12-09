@@ -22,6 +22,7 @@
     "@angular/router": "^20.3.15",
     "@azure/msal-angular": "^4.0.22",
     "@azure/msal-browser": "^4.26.2",
+    "@ngrx/store": "^20.1.0",
     "@primeuix/themes": "^2.0.1",
     "@tailwindcss/postcss": "^4.1.17",
     "chart.js": "^4.4.4",

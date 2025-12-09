@@ -42,7 +42,7 @@ const ProjectRequisition = {
             notes AS notes,
             tentative_onboarding_date AS tentativeOnboardingDate,
             ageing_days AS ageingDays
-            FROM resource_planning_dev.vw_requisition_full;
+            FROM vw_requisition_full;
         `;
 
         return new Promise((resolve, reject) => {
