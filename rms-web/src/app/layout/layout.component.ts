@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { ReferenceDataService } from '@core/services/reference-data.service';
 import { ReferenceDataActions } from '../store/reference-data/reference-data.action';
 import { selectStatus, selectError, selectCategoryByName, selectReferenceDataState } from '../store/reference-data/reference-data.selectors';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-layout',
@@ -18,28 +19,26 @@ export class LayoutComponent implements OnInit {
   private store = inject(Store);
   private referenceDataService = inject(ReferenceDataService);
 
-  readonly categoryName = 'Skills';
-
-  status$ = this.store.select(selectStatus);
-  error$ = this.store.select(selectError);
-  category$ = this.store.select(selectCategoryByName(this.categoryName));
-
   ngOnInit(): void {
+    this.getReferenceData();
+  }
 
-    this.store.dispatch(ReferenceDataActions.load());
-
-    this.referenceDataService.getAll().subscribe({
+  /**
+   * Fetch reference data and update the store
+   * @returns void
+   */
+  getReferenceData(): void {
+     this.store.dispatch(ReferenceDataActions.load());
+     this.referenceDataService.getAll().subscribe({
       next: (rows) => {
         this.store.dispatch(ReferenceDataActions.loadSuccess({ rows }));
       },
       error: (err) => {
         const message = err?.error?.message ?? err?.message ?? 'Failed to load reference data';
+        toast.error(message, { duration: 3000 });
         this.store.dispatch(ReferenceDataActions.loadFailure({ error: message }));
       }
     });
- 
- this.store.select(selectReferenceDataState).subscribe(state => {
-    console.log('Current Store State:', state);
-  });
-}}
+  }
+}
 

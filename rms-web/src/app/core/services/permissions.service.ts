@@ -6,6 +6,11 @@ export class PermissionsService {
   roles$ = signal<string[] | null>(null);
   user$ = signal<User | null>(null);
 
+  /**
+   * Set User and roles
+   * @param user 
+   * @param roles 
+   */
   setUserRolesAndPermissions(user: User, roles: string[] | null) {
     this.user$.set(user);
     this.roles$.set(roles);

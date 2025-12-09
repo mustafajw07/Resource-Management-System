@@ -21,20 +21,21 @@
 
     <ng-template #header>
         <tr>
-            <th style="width:3rem"></th>
-            <th *ngFor="let col of headers" [pSortableColumn]="col.field">
-                <div class="flex items-center justify-between">
+            <th></th>
+             <!-- [pSortableColumn]="col.field" -->
+            <th class="md:px-2.5! md:py-3!" *ngFor="let col of headers">
+                <div class="flex items-center justify-between md:text-nowrap md:gap-2 md:p-0 md:text-sm">
                     <span>{{ col.header }}</span>
-                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
                 </div>
             </th>
-            <th style="width:3rem"></th>
+            <th></th>
         </tr>
     </ng-template>
 
     <ng-template #body let-row let-expanded="expanded">
         <tr>
-            <td class="text-center align-middle">
+            <td class="text-center align-middle md:p-0!">
                 <button severity="contrast" pButton pRowToggler type="button" class="p-button-text p-button-rounded" (click)="dt2.toggleRow(row)" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
                 </button>
             </td>
@@ -46,7 +47,7 @@
                     <span *ngSwitchDefault>{{ getFieldValue(row, col.field) }}</span>
                 </ng-container>
             </td>
-            <td class="text-center align-middle">
+            <td class="text-center align-middle md:p-0!">
                 <button pButton severity="contrast" type="button" class="p-button-text p-button-rounded" (click)="editRequisition()" icon="pi pi-pencil">
                 </button>
             </td>
