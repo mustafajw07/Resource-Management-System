@@ -1,8 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 import { ReferenceRow } from '@core/interfaces/reference-row';
 
+export const ADD_REFERENCE_DATA = '[Reference Data] Add ReferenceData'
 
-export const AddReferenceData = createAction(
-    '[add] referenceData',
-     props<{rows:ReferenceRow[]}>(),
+export const addReferenceData = createAction(
+    ADD_REFERENCE_DATA,
+    props<{referenceData: ReferenceRow[]}>(),
 )

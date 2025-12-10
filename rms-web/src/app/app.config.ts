@@ -162,10 +162,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    importProvidersFrom(StoreModule.forRoot({referenceDataReducer: referenceDataReducer})),
+    importProvidersFrom(StoreModule.forRoot({ referenceData: referenceDataReducer })),
     providePrimeNG({
       theme: {
-        preset: Aura, 
+        preset: Aura,
         options: {
           darkModeSelector: false
         }

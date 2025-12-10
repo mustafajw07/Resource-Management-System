@@ -1,21 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-
-import { ReferenceRow } from '@core/interfaces/reference-row';
-import { AddReferenceData } from './reference-data.action';
-
-export interface ReferenceDataState {
-  referenceData:ReferenceRow[]
-}
-
-
-const initialState: ReferenceDataState = {
-    referenceData:[]
-};
+import { addReferenceData } from './reference-data.action';
+import { initialReferenceDataState } from './reference-data.state';
 
 export const referenceDataReducer = createReducer(
-        initialState,
-        on(AddReferenceData, (state, { rows }) => ({
-            ...state,
-            referenceData:rows
-        })),
+    initialReferenceDataState,
+    on(addReferenceData, (state, { referenceData }) => ({
+        ...state,
+        referenceData: referenceData,
+        error: null
+    })),
 );

@@ -4,9 +4,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from "./footer/footer.component";
 import { Store } from '@ngrx/store';
 import { ReferenceDataService } from '@core/services/reference-data.service';
-
 import { toast } from 'ngx-sonner';
-import { AddReferenceData } from '../store/reference-data/reference-data.action';
+import { addReferenceData } from '../store/reference-data/reference-data.action';
 import { ReferenceRow } from '@core/interfaces/reference-row';
 
 @Component({
@@ -31,7 +30,7 @@ export class LayoutComponent implements OnInit {
   getReferenceData(): void {
      this.referenceDataService.getAll().subscribe({
       next: (data: ReferenceRow[]) => {
-        this.store.dispatch(AddReferenceData({ rows: data }));
+        this.store.dispatch(addReferenceData({ referenceData: data }));
       },
       error: (err) => {
         const message = err?.error?.message ?? err?.message ?? 'Failed to load reference data';

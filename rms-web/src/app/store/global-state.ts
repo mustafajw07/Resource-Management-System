@@ -1,6 +1,5 @@
-import { ReferenceDataState } from "./reference-data/reference-data.selectors";
-
+import { ReferenceDataState } from "./reference-data/reference-data.state";
 
 export interface GlobalState{
-    referenceData: ReferenceDataState
+    referenceData: ReferenceDataState;
 }
