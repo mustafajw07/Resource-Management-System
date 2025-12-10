@@ -14,6 +14,11 @@ function buildValidationErrors(payload, required = []) {
     return errors;
 }
 
+/**
+ * GET /project-requisitions
+ * Returns all project requisition rows.
+ * 
+ */
 exports.findAll = async (req, res) => {
     try {
         const data = await projectRequisition.getAll();

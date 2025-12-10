@@ -5,3 +5,12 @@ export interface User{
     last_name: string;
     full_name?: string;
 }
+
+export interface UserResponse{
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    jobTitleId: number;
+    locationId: number;
+}

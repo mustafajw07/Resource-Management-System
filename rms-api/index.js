@@ -29,5 +29,7 @@ app.get("/api/healthCheck", (req, res) => {
 // Application routes
 require("./routes/referenceData.routes")(app);
 require("./routes/projectRequisition.routes")(app);
+require("./routes/users.routes")(app);
+require("./routes/clients.routes")(app);
 
 app.listen(PORT , () => {console.log(`Server started on port ${PORT}`)})

@@ -6,7 +6,7 @@ import { environment } from '@environments';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectRequisitionService {
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
   private apiUrl = `${environment.API_URL}/project-requisitions`;
 
   /**

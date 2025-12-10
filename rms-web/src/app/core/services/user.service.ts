@@ -1,10 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
+import { UserResponse } from '@core/interfaces/User';
+import { environment } from '@environments';
 import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly msalService = inject(MsalService);
+  private readonly httpClient = inject(HttpClient);
+  private apiUrl = `${environment.API_URL}/users`;
+  
 
   /**
    * Check synchronously whether the current user has a specific role.
@@ -30,5 +36,13 @@ export class UserService {
     const claims = this.msalService.instance.getActiveAccount()?.idTokenClaims;
     const userRoles = claims && (claims as any).roles ? (claims as any).roles as string[] : [];
     return Array.isArray(userRoles) ? userRoles : [];
+  }
+
+  /**
+   * Fetch all users from the API.
+   * @returns Observable of user array
+   */
+  public getAllUsers(): Observable<UserResponse[]> {
+    return this.httpClient.get<UserResponse[]>(this.apiUrl)
   }
 }
