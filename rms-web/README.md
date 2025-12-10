@@ -23,25 +23,3 @@ npm run start:dev
 ```
 
 Open the app at `http://localhost:4200/`. The app will reload automatically on file changes.
-
-## Build
-
-Build the app for production:
-
-```bash
-npm run build:prod
-```
-
-## Code scaffolding
-
-Generate components using Angular CLI:
-
-```bash
-ng generate component component-name
-```
-
-For a full list of schematics:
-
-```bash
-ng generate --help
-```

@@ -9,7 +9,14 @@
     "build:beta": "ng build --configuration=beta",
     "build:prod": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "prepare": "husky"
+  },
+   "engines": {
+    "npm": ">=10.0.0",
+    "node": ">=22.0.0"
   },
   "private": true,
   "dependencies": {
