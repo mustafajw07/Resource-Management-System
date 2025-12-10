@@ -31,5 +31,6 @@ require("./routes/referenceData.routes")(app);
 require("./routes/projectRequisition.routes")(app);
 require("./routes/users.routes")(app);
 require("./routes/clients.routes")(app);
+require("./routes/project.routes")(app);
 
 app.listen(PORT , () => {console.log(`Server started on port ${PORT}`)})
