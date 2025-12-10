@@ -1,15 +1,31 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { Store } from '@ngrx/store';
+import { selectAll } from '../../../store/reference-data/reference-data.selectors';
+
+
+
+
 
 @Component({
   selector: 'app-requisition-form',
   templateUrl: './requisition-form.component.html',
-  imports: [ReactiveFormsModule, ButtonModule],
+   standalone: true,
+  imports: [ReactiveFormsModule, ButtonModule, CommonModule,FormsModule,AutoCompleteModule],
 })
-export class RequisitionFormComponent {
+export class RequisitionFormComponent implements OnInit {
   @Output() submitted = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
+
+  private store=inject(Store);
+  
+  requisitionTypes: string[] = [];
+  requisitionStages: string[] = [];
+  urgencies: string[] = [];
+
 
   form: FormGroup;
 
@@ -17,7 +33,7 @@ export class RequisitionFormComponent {
     this.form = this.fb.group({
       id: [''],
       requisitionDate: [''],
-      projectId: ['', Validators.required],
+      projectName: ['', Validators.required],
       requisitionType: [''],
       requisitionStage: [''],
       hiringPoc: [''],
@@ -32,9 +48,26 @@ export class RequisitionFormComponent {
       tentativeOnboardingDate: [''],
       ageingDays: [0],
       capabilityArea: [''],
-    });
+    }); 
+  
   }
 
+  ngOnInit(): void {
+  
+      this.store.select(selectAll).subscribe(rows => {
+        console.log(rows)
+        if(rows && rows.length > 0){
+          
+             this.requisitionTypes = rows.filter(r => r.categoryName === 'RequisitionType').map(r => r.name);
+        
+      this.requisitionStages = rows.filter(r => r.categoryName === 'RequisitionStage').map(r => r.name);
+
+      this.urgencies = rows.filter(r => r.categoryName === 'Urgency').map(r => r.name);
+        }
+   
+    });
+
+  }
   onSubmit(): void {
     if (this.form.valid) {
       this.submitted.emit(this.form.value);

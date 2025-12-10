@@ -1,8 +1,8 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
     <div class="grid grid-cols-2 gap-4">
         <div>
-            <label class="block text-sm">Project ID</label>
-            <input type="text" formControlName="projectId" class="w-full p-2 border rounded" />
+            <label class="block text-sm">Project Name</label>
+            <input type="text" formControlName="projectName" class="w-full p-2 border rounded" />
         </div>
 
         <div>
@@ -10,15 +10,35 @@
             <input type="date" formControlName="requisitionDate" class="w-full p-2 border rounded" />
         </div>
 
-        <div>
+        <!-- <div>
             <label class="block text-sm">Requisition Type</label>
             <input type="text" formControlName="requisitionType" class="w-full p-2 border rounded" />
-        </div>
+        </div> -->
+        
+<div>
+      <label class="block text-sm">Requisition Type</label>
+      <p-autocomplete
+        [suggestions]="requisitionTypes"
+        formControlName="requisitionType"
+        [dropdown]="true"
+        class="w-full"
+      ></p-autocomplete>
+    </div>
 
-        <div>
+        <!-- <div>
             <label class="block text-sm">Requisition Stage</label>
             <input type="text" formControlName="requisitionStage" class="w-full p-2 border rounded" />
-        </div>
+        </div> -->
+        
+<div>
+      <label class="block text-sm">Requisition Stage</label>
+      <p-autocomplete [suggestions]="requisitionStages" formControlName="requisitionStage" [dropdown]="true" [virtualScroll]="true"
+       [virtualScrollItemSize]="34"
+        optionLabel=""
+        class="w-full"
+      ></p-autocomplete>
+    </div>
+
 
         <div>
             <label class="block text-sm">Hiring POC</label>
@@ -30,10 +50,19 @@
             <input type="text" formControlName="clientPoc" class="w-full p-2 border rounded" />
         </div>
 
-        <div>
+        <!-- <div>
             <label class="block text-sm">Urgency</label>
             <input type="text" formControlName="urgency" class="w-full p-2 border rounded" />
-        </div>
+        </div> -->
+        
+<div>
+      <label class="block text-sm">Urgency</label>
+      <p-autocomplete [suggestions]="urgencies" formControlName="urgency" [dropdown]="true" [virtualScroll]="true" [virtualScrollItemSize]="34"
+        optionLabel=""
+        class="w-full"
+      ></p-autocomplete>
+    </div>
+
 
         <div>
             <label class="block text-sm">FTE Head Count</label>

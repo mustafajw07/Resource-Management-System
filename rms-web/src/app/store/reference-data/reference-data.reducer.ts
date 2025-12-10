@@ -1,31 +1,21 @@
 import { createReducer, on } from '@ngrx/store';
-import { ReferenceDataActions } from './reference-data.action';
-import { groupByCategoryName, ReferenceDataState } from '@core/interfaces/reference-row';
 
+import { ReferenceRow } from '@core/interfaces/reference-row';
+import { AddReferenceData } from './reference-data.action';
+
+export interface ReferenceDataState {
+  referenceData:ReferenceRow[]
+}
 
 
 const initialState: ReferenceDataState = {
-    all: [],
-    byCategoryName: {},
-    status: 'idle',
-    error: null,
-    lastLoadedAt: null
+    referenceData:[]
 };
 
 export const referenceDataReducer = createReducer(
         initialState,
-        on(ReferenceDataActions.load, (state) => ({
-            ...state, status: 'loading', error: null
-        })),
-        on(ReferenceDataActions.loadSuccess, (state, { rows }) => ({
+        on(AddReferenceData, (state, { rows }) => ({
             ...state,
-            status: 'succeeded',
-            all: rows,
-            byCategory: groupByCategoryName(rows),
-            lastLoadedAt: Date.now(),
+            referenceData:rows
         })),
-        on(ReferenceDataActions.loadFailure, (state, { error }) => ({
-            ...state, status: 'failed', error
-        })),
-    
 );
