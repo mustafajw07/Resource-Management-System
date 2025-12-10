@@ -1,5 +1,5 @@
-import { ReferenceDataState } from "@core/interfaces/reference-row";
+import { ReferenceDataState } from "./reference-data/reference-data.state";
 
 export interface GlobalState{
-    referenceData: ReferenceDataState
+    referenceData: ReferenceDataState;
 }

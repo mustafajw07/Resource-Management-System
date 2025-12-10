@@ -1,49 +1,16 @@
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { ReferenceDataState } from './reference-data.state';
+import { ReferenceRow } from '@core/interfaces/reference-row';
 
-// import { createSelector } from '@ngrx/store';
-// import { referenceDataReducer } from './reference-data.reducer';
+export const selectReferenceDataState = createFeatureSelector<ReferenceDataState>('referenceData');
 
-// export const {
-//   name,
-//   selectReferenceDataState,
-//   selectAll,
-//   selectByCategoryName, 
-//   selectStatus,
-//   selectError,
-// } = referenceDataReducer;
-
-// export const selectCategoryByName = (categoryName: string) =>
-//   createSelector(selectByCategoryName, (byCategoryName) =>
-//     byCategoryName[categoryName] || { items: [] }
-//   );
-
-import { ReferenceDataState } from '@core/interfaces/reference-row';
-import { createSelector } from '@ngrx/store';
-
-export interface AppState {
-  referenceData: ReferenceDataState;
-}
-
-export const selectReferenceDataState = (state: AppState) => state.referenceData;
-
-export const selectAll = createSelector(
+export const selectAllReferenceData = createSelector(
   selectReferenceDataState,
-  (state) => state.all
+  (state: ReferenceDataState) => state.referenceData
 );
 
-export const selectByCategory = createSelector(
-  selectReferenceDataState,
-  (state) => state.byCategoryName
+export const selectByCategory = (category:string) => 
+  createSelector(
+    selectAllReferenceData, (referenceData: ReferenceRow[]) => 
+    referenceData.filter(row => row.categoryName === category )
 );
-
-export const selectStatus = createSelector(
-  selectReferenceDataState,
-  (state) => state.status
-);
-
-export const selectError = createSelector(
-  selectReferenceDataState,
-  (state) => state.error
-);
-
-export const selectCategoryByName = (categoryName: string) =>
-  createSelector(selectByCategory, (byCategory) => byCategory[categoryName] ?? { items: [] });

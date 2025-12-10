@@ -1,11 +1,9 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { ReferenceRow } from '@core/interfaces/reference-row';
 
-export const ReferenceDataActions = createActionGroup({
-    source: 'ReferenceData',
-    events: {
-        'Load': emptyProps(),
-        'Load Success': props<{ rows: ReferenceRow[] }>(),
-        'Load Failure': props<{ error: string }>(),
-    },
-});
+export const ADD_REFERENCE_DATA = '[Reference Data] Add ReferenceData'
+
+export const addReferenceData = createAction(
+    ADD_REFERENCE_DATA,
+    props<{referenceData: ReferenceRow[]}>(),
+)
