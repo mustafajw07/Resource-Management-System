@@ -13,3 +13,17 @@ exports.findAll = async (req, res) => {
     return res.status(500).json({ message });
   }
 };
+
+/**
+ * GET /utilization
+ * Returns project utilization data.
+ */
+exports.getProjectUtilization = async (req, res) => {
+  try {
+    const data = await ProjectRepository.getUtilization();
+    return res.status(200).json(data);
+  } catch (err) {
+    const message = (err && err.message) ? err.message : 'Some error occurred while retrieving project utilization';
+    return res.status(500).json({ message });
+  }
+};

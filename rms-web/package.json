@@ -18,6 +18,12 @@
     "npm": ">=10.0.0",
     "node": ">=22.0.0"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
+  },
   "private": true,
   "dependencies": {
     "@angular/common": "^20.3.15",
