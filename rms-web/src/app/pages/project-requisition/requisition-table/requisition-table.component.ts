@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
 import { DialogModule } from 'primeng/dialog';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
-import { ProjectRequisition } from '@core/interfaces/ProjectRequisition';
+import { ProjectRequisition } from '@core/interfaces/project-requisition';
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -90,7 +90,7 @@ export class RequisitionTableComponent implements OnInit {
      */
     protected getRequisitions() {
         this.loading = true;
-        this.projectRequisitionService.GetAllRequisitions().subscribe({
+        this.projectRequisitionService.getAllRequisitions().subscribe({
             next: (data: ProjectRequisition[]) => {
                 this.requisitions = data;
                 this.loading = false;

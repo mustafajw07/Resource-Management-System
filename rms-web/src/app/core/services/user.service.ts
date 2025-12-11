@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
-import { UserResponse } from '@core/interfaces/User';
+import { UserResponse } from '@core/interfaces/user';
 import { environment } from '@environments';
 import { Observable, of } from 'rxjs';
 
@@ -10,7 +10,6 @@ export class UserService {
   private readonly msalService = inject(MsalService);
   private readonly httpClient = inject(HttpClient);
   private apiUrl = `${environment.API_URL}/users`;
-  
 
   /**
    * Check synchronously whether the current user has a specific role.

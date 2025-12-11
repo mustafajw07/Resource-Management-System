@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { User } from '@core/interfaces/User';
+import { User } from '@core/interfaces/user';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionsService {

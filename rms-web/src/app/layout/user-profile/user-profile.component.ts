@@ -7,7 +7,7 @@ import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
-import { User } from '@core/interfaces/User';
+import { User } from '@core/interfaces/user';
 
 @Component({
   selector: 'app-user-profile',
