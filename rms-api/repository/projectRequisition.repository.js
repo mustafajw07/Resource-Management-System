@@ -141,6 +141,7 @@ const ProjectRequisition = {
             'urgencyId',
             'requisitionStatusId',
             'fteHeadCount',
+            'skillId',
             'fteTotalAllocation',
             'fulfilledAllocation',
             'notes',
