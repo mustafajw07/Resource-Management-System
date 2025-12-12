@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
 import { DialogModule } from 'primeng/dialog';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
-import { ProjectRequisition } from '@core/interfaces/project-requisition';
+import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -64,12 +64,16 @@ export class RequisitionTableComponent implements OnInit {
      * Opens the dialog to add a new requisition
      * @return void
      */
-    protected addRequisition() {
+    protected addRequisition(): void{
         this.popupHeader = "New Project Requisition";
         this.visible = true;
     }
 
-    protected editRequisition(){
+    /**
+     * Opens the dialog to edit a new requisition
+     * @return void
+     */
+    protected editRequisition(): void{
         this.popupHeader = "Edit Project Requisition";
         this.visible = true;
     }
@@ -79,8 +83,16 @@ export class RequisitionTableComponent implements OnInit {
      * @param payload 
      * @return void
      */
-    protected handleFormSubmitted(payload: any) {
-        console.log('Requisition form submitted:', payload);
+    protected handleFormSubmitted(payload: ProjectRequisitionCreate): void {
+        this.projectRequisitionService.createRequisition(payload).subscribe({
+            next: (data) => {
+                toast.success('Requisition created successfully');
+                this.getRequisitions();
+            },
+            error: (error: HttpErrorResponse) => {
+                toast.error('Failed to create requisition: ' + error.message);
+            },
+        });
         this.visible = false;
     }
 

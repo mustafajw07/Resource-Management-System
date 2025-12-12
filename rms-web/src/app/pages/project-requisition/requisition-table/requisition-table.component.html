@@ -77,6 +77,8 @@
     </ng-template>
 </p-table>
 
-<p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '50%' }">
-    <app-requisition-form (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
-</p-dialog>
+@if(visible){
+    <p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '80%' }">
+        <app-requisition-form (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
+    </p-dialog>
+}

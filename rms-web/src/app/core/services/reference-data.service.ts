@@ -13,7 +13,7 @@ export class ReferenceDataService {
    * Get all reference data rows.
    * @return Observable<ReferenceRow[]>
    */
-  getAll(): Observable<ReferenceRow[]> {
+  public getAll(): Observable<ReferenceRow[]> {
     return this.httpClient.get<ReferenceRow[]>(this.apiUrl);
   }
 }

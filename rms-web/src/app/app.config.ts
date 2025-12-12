@@ -38,7 +38,7 @@ const appInitializer = () => {
       return loadUserRolesAndPermissions(userService).pipe(
         tap((roles) => {
           if (location.path() === '/auth') {
-            router.navigate(['dashboard']);
+            router.navigate(['project-requisition']);
           }
 
           permissionsService.setUserRolesAndPermissions(
@@ -93,7 +93,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     auth: {
       clientId: environment.msalConfig.auth.clientId,
       authority: environment.msalConfig.auth.authority,
-      redirectUri: '/dashboard',
+      redirectUri: '/project-requisition',
       postLogoutRedirectUri: '/auth',
     },
     cache: {
