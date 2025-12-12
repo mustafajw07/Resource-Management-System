@@ -32,12 +32,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/project-utilization/project-utilization.component').then(
             (c) => c.ProjectUtilizationComponent),
-      },
-      {
-        path: 'project-status-tracker',
-        loadComponent: () =>
-          import('./pages/project-status-tracker/project-status-tracker.component').then(
-            (c) => c.ProjectStatusTrackerComponent),
       }
     ],
   },

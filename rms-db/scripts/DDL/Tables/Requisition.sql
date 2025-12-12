@@ -4,6 +4,7 @@ CREATE TABLE Requisition (
   project_id INT,
   requisition_type_id INT,
   requisition_stage_id INT,
+  skill_id INT,
   hiring_poc_id INT,
   client_poc_id INT,
   fulfillment_medium_id INT,
@@ -25,6 +26,8 @@ CREATE TABLE Requisition (
   CONSTRAINT fk_req_requisition_type FOREIGN KEY (requisition_type_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_requisition_stage FOREIGN KEY (requisition_stage_id) REFERENCES ReferenceData(reference_id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT fk_req_skill FOREIGN KEY (skill_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_hiring_poc FOREIGN KEY (client_poc_id) REFERENCES `OnShoreManager`(id)
     ON DELETE SET NULL ON UPDATE CASCADE,
