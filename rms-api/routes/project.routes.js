@@ -7,5 +7,8 @@ module.exports = app => {
    // Retrieve all projects
     router.get("/", projects.findAll);
 
+    // Retrieve a project utilization
+    router.get("/utilization", projects.getProjectUtilization);
+
     app.use('/api/projects', router);
 };

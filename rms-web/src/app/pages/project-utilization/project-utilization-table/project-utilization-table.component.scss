@@ -1,0 +1,29 @@
+/* Table styles: remove inner column borders but keep outer border */
+:host ::ng-deep .p-table {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* remove internal cell borders */
+:host ::ng-deep .p-table .p-datatable-thead > tr > th,
+:host ::ng-deep .p-table .p-datatable-tbody > tr > td {
+  border: none !important;
+}
+
+/* style header filters and alignment */
+:host ::ng-deep .p-table .p-datatable-thead input[type='text'] {
+  width: 100%;
+}
+
+/* make expansion content subtle */
+:host ::ng-deep .p-table .p-row-toggler .pi {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  :host ::ng-deep .p-icon {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}

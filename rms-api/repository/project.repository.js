@@ -27,7 +27,35 @@ const ProjectRepository = {
             startDate: r.start_date,
             endDate: r.end_date
         }));
+    },
+
+    /**
+     * Get Project Utilization
+     * @returns {Promise<Array<{userId:number,firstName:string,lastName:string,email:string,locationId:number,locationName:string,projectId:number,projectName:string,utilizationPercentage:number,allocationStartDate:Date,allocationEndDate:Date}>>}
+     */
+    async getUtilization() {
+        const sqlStr = `SELECT user_id, first_name, 
+                        last_name, email, location_id, location_name, 
+                        project_id, project_name, utilization_percentage, 
+                        allocation_start_date, allocation_end_date
+                        FROM vw_user_project_utilization_details;`;
+        const rows = await queryAsync(sqlStr);
+        if (!rows || rows.length === 0) return [];
+        return rows.map(r => ({
+            userId: r.user_id,
+            firstName: r.first_name,
+            lastName: r.last_name,
+            email: r.email,
+            locationId: r.location_id,
+            locationName: r.location_name,
+            projectId: r.project_id,
+            projectName: r.project_name,
+            utilizationPercentage: r.utilization_percentage,
+            allocationStartDate: r.allocation_start_date,
+            allocationEndDate: r.allocation_end_date
+        }));
     }
 };
+
 
 module.exports = ProjectRepository;

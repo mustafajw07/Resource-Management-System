@@ -56,11 +56,15 @@
 
     <ng-template #expandedrow let-row>
         <tr>
-            <td [attr.colspan]="headers.length + 1">
+            <td [attr.colspan]="headers.length + 2">
                 <div class="p-4 bg-gray-50">
-                    <p class="mb-2"><strong>Notes:</strong> {{ row.notes }}</p>
-                    <p class="mb-2"><strong>Tentative Onboarding:</strong> {{ row.tentativeOnboardingDate | date:'mediumDate' }}</p>
-                    <p class="mb-0"><strong>Capability Area:</strong> {{ row.capabilityArea }}</p>
+                    <p class="mb-2"><strong>Capability Area:</strong> {{ row.capabilityArea || 'N/A' }}</p>
+                    <p class="mb-2"><strong>Fulfillment Medium:</strong> {{ row.fulfillmentMedium || 'N/A' }}</p>
+                    <p class="mb-2"><strong>Requisition Status:</strong> {{ row.requisitionStatus || 'N/A' }}</p>
+                    <p class="mb-2"><strong>FTE Total Allocation:</strong> {{ row.fteTotalAllocation ?? 'N/A' }}</p>
+                    <p class="mb-2"><strong>FTE Fulfilled Allocation:</strong> {{ row.fulfilledAllocation ?? 'N/A' }}</p>
+                    <p class="mb-2"><strong>Tentative Onboarding:</strong> {{ row.tentativeOnboardingDate ? (row.tentativeOnboardingDate | date:'mediumDate') : 'N/A' }}</p>
+                    <p class="mb-0"><strong>Notes:</strong> {{ row.notes ? row.notes : 'N/A' }}</p>
                 </div>
             </td>
         </tr>

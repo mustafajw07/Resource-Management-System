@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
+import { ProjectUtilizationTableComponent } from './project-utilization-table/project-utilization-table.component';
+
 @Component({
   selector: 'app-project-utilization',
-  imports: [],
   templateUrl: './project-utilization.component.html',
-  styleUrl: './project-utilization.component.scss',
+  imports: [ProjectUtilizationTableComponent],
 })
-export class ProjectUtilizationComponent {
-
-}
+export class ProjectUtilizationComponent {}

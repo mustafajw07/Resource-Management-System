@@ -28,9 +28,12 @@ SELECT
   r.capability_area_id,
   rd_capability.reference_name AS capability_area,
 
+  r.skill_id,
+  rd_skill.reference_name AS skill,
+
   -- People
   r.hiring_poc_id,
-  hiring_poc.first_name || ' ' || COALESCE(hiring_poc.last_name, '') AS hiring_poc_name,
+  hiring_poc.first_name hiring_poc_name,
   hiring_poc.email AS hiring_poc_email,
 
   r.client_poc_id,
@@ -88,4 +91,6 @@ LEFT JOIN ReferenceData rd_urgency
 LEFT JOIN ReferenceData rd_status
   ON rd_status.reference_id = r.requisition_status_id
 LEFT JOIN ReferenceData rd_capability
-  ON rd_capability.reference_id = r.capability_area_id;
+  ON rd_capability.reference_id = r.capability_area_id
+LEFT JOIN ReferenceData rd_skill
+  ON rd_skill.reference_id = r.skill_id;

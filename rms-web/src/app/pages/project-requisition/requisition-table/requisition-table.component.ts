@@ -23,14 +23,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
-        { field: 'projectName', header: 'Project Name' },
         { field: 'requisitionDate', header: 'Requisition Date' },
+        { field: 'projectName', header: 'Project' },
+        { field: 'skill', header: 'Skill' },
         { field: 'requisitionType', header: 'Requisition Type' },
         { field: 'requisitionStage', header: 'Requisition Stage' },
         { field: 'hiringPocName', header: 'Hiring POC' },
         { field: 'clientPocName', header: 'Client POC' },
         { field: 'urgency', header: 'Urgency' },
-        { field: 'requisitionStatus', header: 'Requisition Status' },
         { field: 'fteHeadCount', header: 'FTE Head Count' },
         { field: 'ageingDays', header: 'Ageing Days' },
     ];
