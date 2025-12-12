@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-3 gap-4">
         <div>
             <label class="block text-sm">Project</label>
             <p-autocomplete formControlName="project" [suggestions]="projects"
@@ -10,6 +10,20 @@
             <label class="block text-sm">Client</label>
             <p-autocomplete formControlName="client" [suggestions]="clients"
                 (completeMethod)="filterDropdown($event, 'clients')" [dropdown]="true" class="w-full"></p-autocomplete>
+        </div>
+
+                <div>
+            <label class="block text-sm">Hiring POC</label>
+            <p-autoComplete formControlName="hiringPoc" [suggestions]="users"
+                (completeMethod)="filterDropdown($event, 'users')" [dropdown]="true" [virtualScroll]="true"
+                class="w-full"></p-autoComplete>
+        </div>
+
+        <div>
+            <label class="block text-sm">Client POC</label>
+            <p-autoComplete formControlName="clientPoc" [suggestions]="clientsPoc"
+                (completeMethod)="filterDropdown($event, 'clientsPoc')" [dropdown]="true" [virtualScroll]="true"
+                class="w-full"></p-autoComplete>
         </div>
 
         <div>
@@ -51,20 +65,6 @@
             <p-autocomplete [suggestions]="fulfillmentMedium" formControlName="fulfillmentMedium" [dropdown]="true"
                 [virtualScroll]="true" [virtualScrollItemSize]="34" optionLabel="" class="w-full"
                 (completeMethod)="filterDropdown($event, 'fulfillmentMedium')"></p-autocomplete>
-        </div>
-
-        <div>
-            <label class="block text-sm">Hiring POC</label>
-            <p-autoComplete formControlName="hiringPoc" [suggestions]="users"
-                (completeMethod)="filterDropdown($event, 'users')" [dropdown]="true" [virtualScroll]="true"
-                class="w-full"></p-autoComplete>
-        </div>
-
-        <div>
-            <label class="block text-sm">Client POC</label>
-            <p-autoComplete formControlName="clientPoc" [suggestions]="clientsPoc"
-                (completeMethod)="filterDropdown($event, 'clientsPoc')" [dropdown]="true" [virtualScroll]="true"
-                class="w-full"></p-autoComplete>
         </div>
 
         <div>

@@ -21,6 +21,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/project-requisition/project-requisition.component').then(
             (c) => c.ProjectRequisitionComponent),
+        children:[
+          {
+            path: 'add',
+            loadComponent: () =>
+              import('./pages/project-requisition/requisition-form/requisition-form.component').then(
+                (c) => c.RequisitionFormComponent),
+          },
+        ]
       },
       {
         path: 'interns-pool',

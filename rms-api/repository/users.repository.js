@@ -40,14 +40,14 @@ const UserRepository = {
         const rows = await queryAsync(sqlStr, [id]);
         if (!rows || rows.length === 0) return null;
         const r = rows[0];
-        return {
+        return [{
             id: r.user_id,
             firstName: r.first_name,
             lastName: r.last_name,
             email: r.email,
             jobTitleId: r.job_title_id,
             locationId: r.location_id
-        };
+        }];
     }
 };
 

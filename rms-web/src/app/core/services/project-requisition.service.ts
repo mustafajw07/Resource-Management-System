@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ProjectRequisition } from '@core/interfaces/project-requisition';
+import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
 import { Observable } from 'rxjs';
 import { environment } from '@environments';
 
@@ -15,5 +15,13 @@ export class ProjectRequisitionService {
    */
   public getAllRequisitions(): Observable<ProjectRequisition[]> {
     return this.httpClient.get<ProjectRequisition[]>(this.apiUrl);
+  }
+
+  /**
+   * Creates new project requisition
+   * @returns Observable of boolean indicating success
+   */
+  public createRequisition(payload: ProjectRequisitionCreate): Observable<boolean> {
+    return this.httpClient.post<boolean>(this.apiUrl, payload);
   }
 }

@@ -8,6 +8,14 @@ function toSnake(key) {
     return key.replace(/([A-Z])/g, '_$1').toLowerCase();
 }
 
+// Convert a value to MySQL DATETIME string (YYYY-MM-DD HH:MM:SS)
+function toSqlDate(value) {
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return null;
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 /**
  * Repository for project requisition data access.
  * Exposes async functions that return Promises.
@@ -65,21 +73,42 @@ const ProjectRequisition = {
     async create(data = {}) {
         // Allowed fields we will persist (snake_case derived from these keys)
         const allowed = [
-            'requisitionDate','projectId','projectName','clientId','clientName','projectStatus',
-            'projectStartDate','projectEndDate','requisitionTypeId','requisitionStageId','fulfillmentMediumId',
-            'urgencyId','requisitionStatusId','capabilityAreaId','hiringPocId','hiringPocName','hiringPocEmail',
-            'clientPocName','fteHeadCount','fteTotalAllocation','fulfilledAllocation','notes','tentativeOnboardingDate'
+        'requisitionDate',
+        'projectId',
+        'requisitionTypeId',
+        'requisitionStageId',
+        'hiringPocId',
+        'clientPocId',
+        'fulfillmentMediumId',
+        'urgencyId',
+        'requisitionStatusId',
+        'fteHeadCount',
+        'fteTotalAllocation',
+        'fulfilledAllocation',
+        'notes',
+        'tentativeOnboardingDate',
+        'ageingDays',
+        'capabilityAreaId'
         ];
 
         const cols = [];
         const placeholders = [];
         const values = [];
 
+        const dateFields = new Set(['requisitionDate', 'tentativeOnboardingDate']);
         for (const key of allowed) {
             if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined) {
                 cols.push(toSnake(key));
                 placeholders.push('?');
-                values.push(data[key]);
+                if (dateFields.has(key)) {
+                    const sqlDate = toSqlDate(data[key]);
+                    if (sqlDate === null) {
+                        throw new Error(`${key} is not a valid date`);
+                    }
+                    values.push(sqlDate);
+                } else {
+                    values.push(data[key]);
+                }
             }
         }
 
@@ -87,7 +116,7 @@ const ProjectRequisition = {
             throw new Error('No valid fields provided for insert');
         }
 
-        const sqlStr = `INSERT INTO resource_planning_dev.requisition (${cols.join(',')}) VALUES (${placeholders.join(',')})`;
+        const sqlStr = `INSERT INTO requisition (${cols.join(',')}) VALUES (${placeholders.join(',')})`;
         const result = await queryAsync(sqlStr, values);
         return { insertId: result.insertId };
     },
@@ -102,19 +131,40 @@ const ProjectRequisition = {
         }
 
         const allowed = [
-            'requisitionDate','projectId','projectName','clientId','clientName','projectStatus',
-            'projectStartDate','projectEndDate','requisitionTypeId','requisitionStageId','fulfillmentMediumId',
-            'urgencyId','requisitionStatusId','capabilityAreaId','hiringPocId','hiringPocName','hiringPocEmail',
-            'clientPocName','fteHeadCount','fteTotalAllocation','fulfilledAllocation','notes','tentativeOnboardingDate'
+            'requisitionDate',
+            'projectId',
+            'requisitionTypeId',
+            'requisitionStageId',
+            'hiringPocId',
+            'clientPocId',
+            'fulfillmentMediumId',
+            'urgencyId',
+            'requisitionStatusId',
+            'fteHeadCount',
+            'fteTotalAllocation',
+            'fulfilledAllocation',
+            'notes',
+            'tentativeOnboardingDate',
+            'ageingDays',
+            'capabilityAreaId'
         ];
 
         const sets = [];
         const values = [];
 
+        const dateFields = new Set(['requisitionDate', 'tentativeOnboardingDate']);
         for (const key of allowed) {
             if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined) {
                 sets.push(`${toSnake(key)} = ?`);
-                values.push(data[key]);
+                if (dateFields.has(key)) {
+                    const sqlDate = toSqlDate(data[key]);
+                    if (sqlDate === null) {
+                        throw new Error(`${key} is not a valid date`);
+                    }
+                    values.push(sqlDate);
+                } else {
+                    values.push(data[key]);
+                }
             }
         }
 
@@ -123,7 +173,7 @@ const ProjectRequisition = {
         }
 
         values.push(requisitionId);
-        const sqlStr = `UPDATE resource_planning_dev.requisition SET ${sets.join(', ')} WHERE requisition_id = ?`;
+        const sqlStr = `UPDATE requisition SET ${sets.join(', ')} WHERE requisition_id = ?`;
         const result = await queryAsync(sqlStr, values);
         return { affectedRows: result.affectedRows };
     }

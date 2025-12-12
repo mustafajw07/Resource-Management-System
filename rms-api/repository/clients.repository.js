@@ -34,12 +34,12 @@ const ClientRepository = {
         const rows = await queryAsync(sqlStr, [client_id]);
         if (!rows || rows.length === 0) return [];
         const r = rows[0];
-        return {
+        return [{
             managerId: r.id,
             managerName: r.manager_name,
             projectId: r.project_id,
             clientId: r.client_id
-        };
+        }];
     }
 };
 

@@ -1,18 +1,5 @@
 const projectRequisition = require("../repository/projectRequisition.repository");
-
-function isValidDate(d) {
-    return !isNaN(new Date(d).getTime());
-}
-
-function buildValidationErrors(payload, required = []) {
-    const errors = [];
-    for (const field of required) {
-        if (payload[field] === undefined || payload[field] === null || payload[field] === '') {
-            errors.push({ field, message: `${field} is required` });
-        }
-    }
-    return errors;
-}
+const { check, validationResult } = require('express-validator');
 
 /**
  * GET /project-requisitions
@@ -34,26 +21,19 @@ exports.findAll = async (req, res) => {
  */
 exports.create = async (req, res) => {
     try {
+        // Run express-validator checks programmatically
+        await check('requisitionDate', 'requisitionDate is required').notEmpty().run(req);
+        await check('requisitionDate', 'requisitionDate must be a valid date').optional({ checkFalsy: true }).isISO8601().run(req);
+        await check('fteHeadCount', 'fteHeadCount must be a number').optional({ checkFalsy: true }).isNumeric().run(req);
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
+        }
+
         const payload = req.body || {};
-
-        // Basic validation: require projectName and requisitionDate at minimum
-        const required = ['projectName', 'requisitionDate'];
-        const errors = buildValidationErrors(payload, required);
-
-        if (payload.requisitionDate && !isValidDate(payload.requisitionDate)) {
-            errors.push({ field: 'requisitionDate', message: 'requisitionDate must be a valid date' });
-        }
-
-        if (payload.fteHeadCount !== undefined && isNaN(Number(payload.fteHeadCount))) {
-            errors.push({ field: 'fteHeadCount', message: 'fteHeadCount must be a number' });
-        }
-
-        if (errors.length) {
-            return res.status(400).json({ message: 'Validation failed', errors });
-        }
-
         const result = await projectRequisition.create(payload);
-        return res.status(201).json({ message: 'Created', id: result.insertId });
+        return res.status(201).json(true);
     } catch (err) {
         console.error('projectRequisition.create error:', err);
         const message = (err && err.message) ? err.message : 'Some error occurred while creating Project requisition.';
@@ -72,23 +52,18 @@ exports.update = async (req, res) => {
         if (!requisitionId) {
             return res.status(400).json({ message: 'requisitionId (url param) is required' });
         }
+        // Run express-validator checks for optional fields
+        await check('requisitionDate', 'requisitionDate must be a valid date').optional({ checkFalsy: true }).isISO8601().run(req);
+        await check('fteHeadCount', 'fteHeadCount must be a number').optional({ checkFalsy: true }).isNumeric().run(req);
 
-        // Validate some fields if present
-        const errors = [];
-        if (payload.requisitionDate && !isValidDate(payload.requisitionDate)) {
-            errors.push({ field: 'requisitionDate', message: 'requisitionDate must be a valid date' });
-        }
-        if (payload.fteHeadCount !== undefined && isNaN(Number(payload.fteHeadCount))) {
-            errors.push({ field: 'fteHeadCount', message: 'fteHeadCount must be a number' });
-        }
-
-        if (errors.length) {
-            return res.status(400).json({ message: 'Validation failed', errors });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
         }
 
         const result = await projectRequisition.update(requisitionId, payload);
         if (result.affectedRows && result.affectedRows > 0) {
-            return res.status(200).json({ message: 'Updated' });
+            return res.status(200).json(true);
         }
 
         return res.status(404).json({ message: 'Requisition not found' });
