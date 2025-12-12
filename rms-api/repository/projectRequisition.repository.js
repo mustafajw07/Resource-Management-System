@@ -32,6 +32,8 @@ const ProjectRequisition = {
             requisition_type AS requisitionType,
             requisition_stage_id AS requisitionStageId,
             requisition_stage AS requisitionStage,
+            skill_id AS skillId,
+            skill AS skill,
             fulfillment_medium_id AS fulfillmentMediumId,
             fulfillment_medium AS fulfillmentMedium,
             urgency_id AS urgencyId,

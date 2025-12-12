@@ -35,12 +35,7 @@ export class HeaderComponent implements OnInit {
         label: 'Project Utilization',
         icon: 'pi pi-fw pi-chart-bar',
         command: () => this.router.navigate(['/project-utilization'])
-      },
-      {
-        label: 'Project Status Tracker',
-        icon: 'pi pi-fw pi-briefcase',
-        command: () => this.router.navigate(['/project-status-tracker'])
-      },
+      }
     ]
   }
 }
