@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, MinLengthValidator } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { Store, StoreModule } from '@ngrx/store';
@@ -28,7 +28,7 @@ export class RequisitionFormComponent implements OnInit {
   protected requisitionTypes: string[] = [];
   protected requisitionStages: string[] = [];
   protected urgencies: string[] = [];
-  protected skill: string[] = [];
+  protected skills: string[] = [];
   protected capability: string[] = [];
   protected fulfillmentMedium: string[] = [];
   protected requisitionStatus: string[] = [];
@@ -53,7 +53,7 @@ export class RequisitionFormComponent implements OnInit {
       fulfillmentMedium: ['', Validators.required],
       urgency: ['', Validators.required],
       requisitionStatus: ['', Validators.required],
-      fteHeadCount: [0],
+      fteHeadCount: [0,Validators.min(0)],
       fteTotalAllocation: [0, Validators.pattern('^[0-9]*$')],
       fulfilledAllocation: [0, Validators.pattern('^[0-9]*$')],
       notes: [''],
@@ -118,7 +118,7 @@ export class RequisitionFormComponent implements OnInit {
         this.users = filtered;
         break;
       case 'skill':
-        this.skill = filtered;
+        this.skills = filtered;
         break;
       case 'projects':
         this.projects = filtered;
@@ -178,6 +178,7 @@ export class RequisitionFormComponent implements OnInit {
         ageingDays: this.form.value.ageingDays,
         capabilityAreaId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'CapabilityArea' && r.name === this.form.value.capabilityArea)?.id,
       };
+  
       this.submitted.emit(payload);
       this.form.reset();
     } else {

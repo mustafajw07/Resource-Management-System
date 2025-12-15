@@ -80,6 +80,7 @@ const ProjectRequisition = {
         'hiringPocId',
         'clientPocId',
         'fulfillmentMediumId',
+        'skillId',
         'urgencyId',
         'requisitionStatusId',
         'fteHeadCount',
