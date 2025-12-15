@@ -39,6 +39,7 @@ export class RequisitionTableComponent implements OnInit {
     protected loading = false;
     protected visible = false;
     protected globalFilterFields: string[] = [];
+    protected expandedRows = {};
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
 
     ngOnInit(): void {
