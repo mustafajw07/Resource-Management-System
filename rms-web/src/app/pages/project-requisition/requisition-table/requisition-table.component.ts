@@ -120,9 +120,8 @@ export class RequisitionTableComponent implements OnInit {
     protected urgencyClass(value: string): string {
         if (!value) return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
         switch ((value || '').toString().toLowerCase()) {
-            case 'high': return 'bg-red-100 text-red-800 px-2 py-0.5 rounded';
-            case 'medium': return 'bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded';
-            case 'low': return 'bg-green-100 text-green-800 px-2 py-0.5 rounded';
+            case 'long term': return 'bg-green-100 text-green-800 px-2 py-0.5 rounded';
+            case 'immediate': return 'bg-red-100 text-yellow-800 px-2 py-0.5 rounded';
             default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
         }
     }

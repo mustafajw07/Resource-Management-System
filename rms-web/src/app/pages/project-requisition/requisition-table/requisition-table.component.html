@@ -43,7 +43,7 @@
                 <ng-container [ngSwitch]="col.field">
                     <span *ngSwitchCase="'requisitionDate'">{{ getFieldValue(row, col.field) | date:'mediumDate' }}</span>
                     <span *ngSwitchCase="'tentativeOnboardingDate'">{{ getFieldValue(row, col.field) | date:'mediumDate' }}</span>
-                    <p-tag *ngSwitchCase="'urgency'" [value]="getFieldValue(row, col.field)" [styleClass]="urgencyClass(getFieldValue(row, col.field))"></p-tag>
+                    <p *ngSwitchCase="'urgency'" [ngClass]="urgencyClass(getFieldValue(row, col.field))">{{getFieldValue(row, col.field)}}</p>
                     <span *ngSwitchDefault>{{ getFieldValue(row, col.field) }}</span>
                 </ng-container>
             </td>

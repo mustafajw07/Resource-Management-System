@@ -3,33 +3,33 @@
         <div>
             <label class="block text-sm">Project</label>
             <p-autocomplete formControlName="project" [suggestions]="projects"
-                (completeMethod)="filterDropdown($event, 'projects')" [dropdown]="true" class="w-full"></p-autocomplete>
+                (completeMethod)="filterDropdown($event, 'projects')" [virtualScrollItemSize]="34"  [dropdown]="true" class="w-full"></p-autocomplete>
         </div>
 
         <div>
             <label class="block text-sm">Client</label>
             <p-autocomplete formControlName="client" [suggestions]="clients"
-                (completeMethod)="filterDropdown($event, 'clients')" [dropdown]="true" class="w-full"></p-autocomplete>
-        </div>
-
-                <div>
-            <label class="block text-sm">Hiring POC</label>
-            <p-autoComplete formControlName="hiringPoc" [suggestions]="users"
-                (completeMethod)="filterDropdown($event, 'users')" [dropdown]="true" [virtualScroll]="true"
-                class="w-full"></p-autoComplete>
+                (completeMethod)="filterDropdown($event, 'clients')" [virtualScrollItemSize]="34" [dropdown]="true" class="w-full"></p-autocomplete>
         </div>
 
         <div>
             <label class="block text-sm">Client POC</label>
-            <p-autoComplete formControlName="clientPoc" [suggestions]="clientsPoc"
+            <p-autoComplete formControlName="clientPoc" [suggestions]="clientsPoc" [virtualScrollItemSize]="34"
                 (completeMethod)="filterDropdown($event, 'clientsPoc')" [dropdown]="true" [virtualScroll]="true"
+                class="w-full"></p-autoComplete>
+        </div>
+
+        <div>
+            <label class="block text-sm">Hiring POC</label>
+            <p-autoComplete formControlName="hiringPoc" [suggestions]="users" [virtualScrollItemSize]="34"
+                (completeMethod)="filterDropdown($event, 'users')" [dropdown]="true" [virtualScroll]="true"
                 class="w-full"></p-autoComplete>
         </div>
 
         <div>
             <label class="block text-sm">Requisition Type</label>
             <p-autocomplete [suggestions]="requisitionTypes" formControlName="requisitionType" [dropdown]="true"
-                class="w-full" (completeMethod)="filterDropdown($event, 'requisitionTypes')"></p-autocomplete>
+                class="w-full" [virtualScrollItemSize]="34" (completeMethod)="filterDropdown($event, 'requisitionTypes')"></p-autocomplete>
         </div>
 
         <div>
@@ -55,7 +55,7 @@
 
         <div>
             <label class="block text-sm">Skills</label>
-            <p-autocomplete [suggestions]="skill" formControlName="skills" [dropdown]="true" [virtualScroll]="true"
+            <p-autocomplete [suggestions]="skills" formControlName="skills" [dropdown]="true" [virtualScroll]="true"
                 [virtualScrollItemSize]="34" optionLabel="" class="w-full"
                 (completeMethod)="filterDropdown($event, 'skill')"></p-autocomplete>
         </div>
@@ -76,12 +76,12 @@
 
         <div>
             <label class="block text-sm">FTE Head Count</label>
-            <input type="number" formControlName="fteHeadCount" class="w-full p-2 border rounded" />
+            <input type="number" formControlName="fteHeadCount" min="0" class="w-full p-2 border rounded" />
         </div>
 
         <div>
             <label class="block text-sm">FTE Total Allocation</label>
-            <input type="number" formControlName="fteTotalAllocation" class="w-full p-2 border rounded" />
+            <input type="number" formControlName="fteTotalAllocation" min="0" class="w-full p-2 border rounded" />
         </div>
 
         <div>
