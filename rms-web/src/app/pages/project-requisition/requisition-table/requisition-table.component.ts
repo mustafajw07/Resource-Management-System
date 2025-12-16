@@ -40,6 +40,7 @@ export class RequisitionTableComponent implements OnInit {
     protected visible = false;
     protected globalFilterFields: string[] = [];
     protected expandedRows = {};
+    protected selectedRequisition: ProjectRequisition | null = null;
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
 
     ngOnInit(): void {
@@ -67,6 +68,7 @@ export class RequisitionTableComponent implements OnInit {
      */
     protected addRequisition(): void{
         this.popupHeader = "New Project Requisition";
+        this.selectedRequisition = null;
         this.visible = true;
     }
 
@@ -74,8 +76,9 @@ export class RequisitionTableComponent implements OnInit {
      * Opens the dialog to edit a new requisition
      * @return void
      */
-    protected editRequisition(): void{
+    protected editRequisition(item:ProjectRequisition): void{
         this.popupHeader = "Edit Project Requisition";
+        this.selectedRequisition = item;
         this.visible = true;
     }
 
