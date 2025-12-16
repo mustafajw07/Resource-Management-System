@@ -29,7 +29,6 @@ export class RequisitionFormComponent implements OnInit {
   protected requisitionStages: string[] = [];
   protected urgencies: string[] = [];
   protected skills: string[] = [];
-  protected capability: string[] = [];
   protected fulfillmentMedium: string[] = [];
   protected requisitionStatus: string[] = [];
   protected users: String[] = [];
@@ -58,8 +57,7 @@ export class RequisitionFormComponent implements OnInit {
       fulfilledAllocation: [0, Validators.pattern('^[0-9]*$')],
       notes: [''],
       tentativeOnboardingDate: [''],
-      ageingDays: [0],
-      capabilityArea: ['', Validators.required],
+      ageingDays: [0]
     });
   }
 
@@ -83,7 +81,6 @@ export class RequisitionFormComponent implements OnInit {
           ['RequisitionStage', 'requisitionStages'],
           ['Urgency', 'urgencies'],
           ['Skills', 'skill'],
-          ['CapabilityArea', 'capability'],
           ['RequisitionStatus', 'requisitionStatus'],
           ['FulfillmentMedium', 'fulfillmentMedium'],
         ];
@@ -122,9 +119,6 @@ export class RequisitionFormComponent implements OnInit {
         break;
       case 'projects':
         this.projects = filtered;
-        break;
-      case 'capability':
-        this.capability = filtered;
         break;
       case 'fulfillmentMedium':
         this.fulfillmentMedium = filtered;
@@ -175,8 +169,7 @@ export class RequisitionFormComponent implements OnInit {
         fulfilledAllocation: 0,
         notes: this.form.value.notes,
         tentativeOnboardingDate: new Date(this.form.value.tentativeOnboardingDate),
-        ageingDays: this.form.value.ageingDays,
-        capabilityAreaId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'CapabilityArea' && r.name === this.form.value.capabilityArea)?.id,
+        ageingDays: this.form.value.ageingDays
       };
   
       this.submitted.emit(payload);

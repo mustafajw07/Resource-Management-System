@@ -2,40 +2,61 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MenubarModule } from 'primeng/menubar';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [UserProfileComponent, MenubarModule],
+  imports: [UserProfileComponent, MenubarModule, RouterModule],
 })
 export class HeaderComponent implements OnInit {
   protected items: MenuItem[] = [];
+  private activeRoute = '';
   private router = inject(Router);
+
+  constructor(){
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: NavigationEnd) => {
+      this.activeRoute = event.urlAfterRedirects;
+      this.setActiveClass();
+    });
+  }
 
   ngOnInit(): void {
     this.items = [
       {
         label: 'Dashboard',
         icon: 'pi pi-fw pi-home',
-        command: () => this.router.navigate(['/dashboard'])
+        routerLink: '/dashboard'
       },
       {
         label: 'Project Requisition',
         icon: 'pi pi-fw pi-file',
-        command: () => this.router.navigate(['/project-requisition'])
+        routerLink: '/project-requisition'
       },
       {
         label: 'Interns Pool',
         icon: 'pi pi-fw pi-users',
-        command: () => this.router.navigate(['/interns-pool'])
+        routerLink: '/interns-pool'
       },
       {
         label: 'Project Utilization',
         icon: 'pi pi-fw pi-chart-bar',
-        command: () => this.router.navigate(['/project-utilization'])
+        routerLink: '/project-utilization'
       }
-    ]
+    ];
+      this.setActiveClass();
+  }
+
+  setActiveClass() {
+    this.items = this.items.map(item => ({
+      ...item,
+      styleClass: item.routerLink === this.activeRoute
+        ? 'active-menu'
+        : ''
+    }));
   }
 }

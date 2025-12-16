@@ -1,7 +1,7 @@
 <p-table #dt2 [value]="requisitions" dataKey="requisitionId" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-    [loading]="loading" [paginator]="true" [globalFilterFields]="globalFilterFields" [showGridlines]="false"
-    [expandedRowKeys]="expandedRows">
+    [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false" sortField="ageingDays" [sortOrder]="-1">
 
+    <!-- CAPTION -->
     <ng-template #caption>
         <div class="flex">
             <div class="mr-auto w-64">
@@ -20,59 +20,154 @@
         </div>
     </ng-template>
 
+    <!-- HEADER -->
     <ng-template #header>
         <tr>
             <th></th>
-            <!-- [pSortableColumn]="col.field" -->
-            <th class="md:px-2.5! md:py-3!" *ngFor="let col of headers">
-                <div class="flex items-center justify-between md:text-nowrap md:gap-2 md:p-0 md:text-sm">
-                    <span>{{ col.header }}</span>
-                    <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
-                </div>
+            <th *ngFor="let col of headers" [pSortableColumn]="col.field">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
             <th></th>
         </tr>
     </ng-template>
 
+    <!-- BODY -->
     <ng-template #body let-row let-expanded="expanded">
-        <tr>
-            <td class="text-center align-middle md:p-0!">
+        <tr [ngClass]="{
+        'bg-red-50': row.ageingDays && row.ageingDays > 30,
+        'bg-yellow-50': row.urgency === 'Immediate' && row.ageingDays! <= 30
+      }">
+
+            <!-- EXPAND -->
+            <td>
                 <p-button type="button" pRipple [pRowToggler]="row" [text]="true" severity="secondary" [rounded]="true"
                     [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
+
+            <!-- COLUMNS -->
             <td *ngFor="let col of headers">
                 <ng-container [ngSwitch]="col.field">
-                    <span *ngSwitchCase="'requisitionDate'">{{ getFieldValue(row, col.field) | date:'mediumDate' }}</span>
-                    <span *ngSwitchCase="'tentativeOnboardingDate'">{{ getFieldValue(row, col.field) | date:'mediumDate' }}</span>
+
+                    <!-- Dates -->
+                    <span *ngSwitchCase="'requisitionDate'">
+                        {{ row.requisitionDate | date:'mediumDate' }}
+                    </span>
+
+                    <span *ngSwitchCase="'tentativeOnboardingDate'"
+                        [ngClass]="onboardingClass(row.tentativeOnboardingDate)">
+                        {{ row.tentativeOnboardingDate | date:'mediumDate' }}
+                    </span>
+
+                    <!-- Urgency -->
                     <p *ngSwitchCase="'urgency'" [ngClass]="urgencyClass(getFieldValue(row, col.field))">{{getFieldValue(row, col.field)}}</p>
-                    <span *ngSwitchDefault>{{ getFieldValue(row, col.field) }}</span>
+
+                    <!-- Ageing -->
+                    <span *ngSwitchCase="'ageingDays'" [ngClass]="ageingClass(row.ageingDays)">
+                        {{ row.ageingDays }} days
+                        <i *ngIf="row.ageingDays! > 30" class="pi pi-exclamation-triangle ml-1"></i>
+                    </span>
+
+                    <!-- FTE -->
+                    <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
+                        <span>
+                            {{ row.fulfilledAllocation }} / {{ row.fteHeadCount }} Filled
+                        </span>
+                        <p-progressBar [value]="fteProgress(row)" [showValue]="false" styleClass="h-2">
+                        </p-progressBar>
+                    </div>
+
+                    <!-- Project Tooltip -->
+                    <span *ngSwitchCase="'projectName'" pTooltip="{{ row.projectName }}" tooltipPosition="top">
+                        {{ row.projectName | slice:0:15 }}{{ row.projectName?.length! > 15 ? '…' : '' }}
+                    </span>
+
+                    <!-- Default -->
+                    <span *ngSwitchDefault>
+                        {{ getFieldValue(row, col.field) }}
+                    </span>
+
                 </ng-container>
             </td>
-            <td class="text-center align-middle md:p-0!">
-                <button pButton severity="contrast" type="button" class="p-button-text p-button-rounded"
-                    (click)="editRequisition()" icon="pi pi-pencil">
+
+            <!-- ACTION -->
+            <td>
+                <button severity="contrast" pButton icon="pi pi-pencil" class="p-button-text p-button-text p-button-rounded" (click)="editRequisition()">
                 </button>
             </td>
         </tr>
     </ng-template>
 
     <ng-template #expandedrow let-row>
-        <tr>
-            <td [attr.colspan]="headers.length + 2">
-                <div class="p-4 bg-gray-50">
-                    <p class="mb-2"><strong>Capability Area:</strong> {{ row.capabilityArea || 'N/A' }}</p>
-                    <p class="mb-2"><strong>Fulfillment Medium:</strong> {{ row.fulfillmentMedium || 'N/A' }}</p>
-                    <p class="mb-2"><strong>Requisition Status:</strong> {{ row.requisitionStatus || 'N/A' }}</p>
-                    <p class="mb-2"><strong>FTE Total Allocation:</strong> {{ row.fteTotalAllocation ?? 'N/A' }}</p>
-                    <p class="mb-2"><strong>FTE Fulfilled Allocation:</strong> {{ row.fulfilledAllocation ?? 'N/A' }}
+    <tr>
+        <td [attr.colspan]="headers.length + 2">
+            <div class="p-4 bg-gray-50 rounded-md">
+
+                <!-- TOP INFO GRID -->
+                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+
+                    <p>
+                        <i class="pi pi-send mr-2 text-gray-500"></i>
+                        <strong>Fulfillment Medium:</strong>
+                        {{ row.fulfillmentMedium || 'N/A' }}
                     </p>
-                    <p class="mb-2"><strong>Tentative Onboarding:</strong> {{ row.tentativeOnboardingDate ?
-                        (row.tentativeOnboardingDate | date:'mediumDate') : 'N/A' }}</p>
-                    <p class="mb-0"><strong>Notes:</strong> {{ row.notes ? row.notes : 'N/A' }}</p>
+
+                    <p class="flex items-center gap-2">
+                        <i class="pi pi-flag mr-1 text-gray-500"></i>
+                        <strong>Requisition Status:</strong>
+                        {{row.requisitionStatus || 'N/A'}}
+                    </p>
+
+                    <p>
+                        <i class="pi pi-calendar mr-2 text-gray-500"></i>
+                        <strong>Tentative Onboarding:</strong>
+                        <span [ngClass]="onboardingClass(row.tentativeOnboardingDate)">
+                            {{ row.tentativeOnboardingDate
+                                ? (row.tentativeOnboardingDate | date:'mediumDate')
+                                : 'N/A' }}
+                        </span>
+                    </p>
+
                 </div>
-            </td>
-        </tr>
-    </ng-template>
+
+                <!-- FTE SECTION -->
+                <div class="mb-4">
+                    <p class="font-semibold mb-1">
+                        <i class="pi pi-users mr-2 text-gray-500"></i>
+                        FTE Allocation
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm">
+                            {{ row.fulfilledAllocation ?? 0 }}
+                            /
+                            {{ row.fteTotalAllocation ?? 0 }}
+                            Filled
+                        </span>
+
+                        <p-progressBar
+                            [value]="fteProgress(row)"
+                            [showValue]="false"
+                            styleClass="h-2 w-64">
+                        </p-progressBar>
+                    </div>
+                </div>
+
+                <!-- NOTES -->
+                <div class="border-t pt-3">
+                    <p class="font-semibold mb-1">
+                        <i class="pi pi-file-edit mr-2 text-gray-500"></i>
+                        Notes
+                    </p>
+                    <p class="text-sm text-gray-700">
+                        {{ row.notes || 'No notes available.' }}
+                    </p>
+                </div>
+
+            </div>
+        </td>
+    </tr>
+</ng-template>
 
     <ng-template #emptymessage>
         <tr>
