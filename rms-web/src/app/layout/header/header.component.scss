@@ -3,3 +3,7 @@
   justify-content: center !important;
   width: 100%;
 }
+
+::ng-deep .active-menu{
+  background-color: #f1f5f9;
+}

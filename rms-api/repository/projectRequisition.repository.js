@@ -60,7 +60,7 @@ const ProjectRequisition = {
             notes AS notes,
             tentative_onboarding_date AS tentativeOnboardingDate,
             ageing_days AS ageingDays
-            FROM vw_requisition_full;
+            FROM vw_requisition_full WHERE requisition_status <> 'Complete' AND requisition_stage <> 'Closure';
         `;
 
         return queryAsync(query);

@@ -10,7 +10,9 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
+import { TooltipModule } from 'primeng/tooltip';
 import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -19,7 +21,20 @@ import { HttpErrorResponse } from '@angular/common/http';
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
     styleUrls: ['./requisition-table.component.scss'],
-    imports: [TableModule,TagModule, IconFieldModule, InputTextModule, InputIconModule, MultiSelectModule, SelectModule, CommonModule, ButtonModule, DialogModule, RequisitionFormComponent],
+    imports: [
+        TableModule, 
+        TagModule, 
+        IconFieldModule, 
+        InputTextModule, 
+        InputIconModule, 
+        MultiSelectModule, 
+        SelectModule, 
+        CommonModule, 
+        ButtonModule, 
+        DialogModule,
+        TooltipModule,
+        ProgressBarModule,
+        RequisitionFormComponent],
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
@@ -48,19 +63,6 @@ export class RequisitionTableComponent implements OnInit {
         this.getRequisitions();
     }
     
-    /**
-     * Utility to safely get nested field values
-     * @param obj The object to retrieve the value from
-     * @param path The dot-separated path string
-     * @returns The value at the specified path or an empty string if not found
-    */
-    protected getFieldValue(obj: any, path: string): any {
-        if (!obj || !path) return '';
-        return path.split('.').reduce((acc: any, key: string) => {
-            if (acc === null || acc === undefined) return '';
-            return acc[key];
-        }, obj) ?? '';
-    }
 
     /**
      * Opens the dialog to add a new requisition
@@ -89,7 +91,7 @@ export class RequisitionTableComponent implements OnInit {
      */
     protected handleFormSubmitted(payload: ProjectRequisitionCreate): void {
         this.projectRequisitionService.createRequisition(payload).subscribe({
-            next: (data) => {
+            next: () => {
                 toast.success('Requisition created successfully');
                 this.getRequisitions();
             },
@@ -129,4 +131,51 @@ export class RequisitionTableComponent implements OnInit {
             default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
         }
     }
+
+    ageingClass(days?: number): string {
+        if (!days) return '';
+        if (days > 30) return 'text-red-600 font-bold';
+        if (days > 20) return 'text-yellow-600 font-semibold';
+        return 'text-green-600';
+    }
+
+    urgencySeverity(urgency?: string) {
+        switch (urgency) {
+        case 'Immediate': return 'danger';
+        case 'High': return 'warning';
+        case 'Medium': return 'info';
+        default: return 'success';
+        }
+    }
+
+    onboardingClass(date?: string | Date): string {
+        if (!date) return '';
+
+        const target = new Date(date).getTime();
+        const today = Date.now();
+        const diffDays = (target - today) / (1000 * 60 * 60 * 24);
+
+        if (diffDays < 0) return 'text-red-600 font-bold';
+        if (diffDays <= 7) return 'text-yellow-600 font-semibold';
+        return 'text-green-600';
+    }
+
+    fteProgress(row: ProjectRequisition): number {
+        if (!row.fteHeadCount || !row.fulfilledAllocation) return 0;
+        return Math.round((row.fulfilledAllocation / row.fteHeadCount) * 100);
+    }
+
+    getFieldValue(row: ProjectRequisition, field: string): any {
+        return (row as any)[field] ?? 'N/A';
+    }
+
+    stageSeverity(status?: string) {
+        switch (status) {
+            case 'Closed': return 'success';
+            case 'Offered': return 'info';
+            case 'Interviewing': return 'warning';
+            default: return 'secondary';
+        }
+    }
+
 }
