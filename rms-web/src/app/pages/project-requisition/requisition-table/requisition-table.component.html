@@ -92,7 +92,7 @@
 
             <!-- ACTION -->
             <td>
-                <button severity="contrast" pButton icon="pi pi-pencil" class="p-button-text p-button-text p-button-rounded" (click)="editRequisition()">
+                <button severity="contrast" pButton icon="pi pi-pencil" class="p-button-text p-button-text p-button-rounded" (click)="editRequisition(row)">
                 </button>
             </td>
         </tr>
@@ -178,6 +178,6 @@
 
 @if(visible){
 <p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '70%' }">
-    <app-requisition-form (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
+    <app-requisition-form [model]="selectedRequisition" (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
 </p-dialog>
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, MinLengthValidator } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
@@ -9,6 +9,7 @@ import { UserService } from '@core/services/user.service';
 import { ClientService } from '@core/services/client.service';
 import { ProjectService } from '@core/services/project.service';
 import { forkJoin } from 'rxjs';
+import { ProjectRequisition } from '@core/interfaces/project-requisition';
 
 @Component({
   selector: 'app-requisition-form',
@@ -19,6 +20,7 @@ import { forkJoin } from 'rxjs';
 export class RequisitionFormComponent implements OnInit {
   @Output() submitted = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
+  @Input() model: ProjectRequisition | null = null;
 
   private store = inject(Store);
   private referenceLists: Record<string, string[]> = {};
@@ -52,7 +54,7 @@ export class RequisitionFormComponent implements OnInit {
       fulfillmentMedium: ['', Validators.required],
       urgency: ['', Validators.required],
       requisitionStatus: ['', Validators.required],
-      fteHeadCount: [0,Validators.min(0)],
+      fteHeadCount: [0, Validators.min(0)],
       fteTotalAllocation: [0, Validators.pattern('^[0-9]*$')],
       fulfilledAllocation: [0, Validators.pattern('^[0-9]*$')],
       notes: [''],
@@ -68,6 +70,30 @@ export class RequisitionFormComponent implements OnInit {
   }
 
   /**
+     * Loads the data for Edit form 
+     * @returns void
+     */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['model']) return;
+
+    if (!this.model) {
+      this.form.reset();
+      return;
+    }
+    this.form.patchValue({
+      requisitionDate: this.model.requisitionDate,
+      ageingDays: this.model.ageingDays,
+      fteHeadCount: this.model.fteHeadCount,
+      client: this.model.clientName,
+      project: this.model.projectName,
+      skills: this.model.skill,
+      hiringPoc: this.model.hiringPocName,
+      clientPoc: this.model.clientPocName,
+      notes: this.model.notes
+    });
+  }
+
+  /**
    * Fetch reference data from the store and populate local lists for dropdowns.
    * @returns void
    */
@@ -75,6 +101,15 @@ export class RequisitionFormComponent implements OnInit {
     this.store.select(selectAllReferenceData).subscribe((data) => {
       if (data && data.length > 0) {
         this.metaData = { "referenceData": data };
+
+        this.form.patchValue({
+          requisitionStage: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && this.model?.requisitionStageId === r.id)?.name,
+          requisitionStatus: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && this.model?.requisitionStatusId === r.id)?.name,
+          capabilityArea: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'CapabilityArea' && this.model?.capabilityAreaId === r.id)?.name,
+          requisitionType: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionType' && this.model?.requisitionTypeId === r.id)?.name,
+          urgency: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Urgency' && this.model?.urgencyId === r.id)?.name,
+          fulfillmentMedium: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && this.model?.fulfillmentMediumId === r.id)?.name,
+        })
 
         const mapping: [string, string][] = [
           ['RequisitionType', 'requisitionTypes'],
@@ -171,7 +206,7 @@ export class RequisitionFormComponent implements OnInit {
         tentativeOnboardingDate: new Date(this.form.value.tentativeOnboardingDate),
         ageingDays: this.form.value.ageingDays
       };
-  
+
       this.submitted.emit(payload);
       this.form.reset();
     } else {
