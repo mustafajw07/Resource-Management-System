@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NotesService } from '@core/services/notes.service';
 
 @Component({
     selector: 'app-requisition-table',
@@ -57,6 +58,7 @@ export class RequisitionTableComponent implements OnInit {
     protected expandedRows = {};
     protected selectedRequisition: ProjectRequisition | null = null;
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
+    private readonly notesService = inject(NotesService)
 
     ngOnInit(): void {
         this.globalFilterFields = this.headers.map(h => h.field);
@@ -178,4 +180,10 @@ export class RequisitionTableComponent implements OnInit {
         }
     }
 
+
+    getRequisitionNotes(requisitionId: number): void{
+        this.notesService.getAllNotesForRequisitionId(requisitionId).subscribe((notes) => {
+            console.log(notes);
+        });
+    }
 }
