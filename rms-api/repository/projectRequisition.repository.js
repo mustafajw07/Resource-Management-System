@@ -66,30 +66,24 @@ const ProjectRequisition = {
         return queryAsync(query);
     },
 
-    /**
-     * Create a new requisition record. Accepts an object with properties in camelCase.
-     * Returns the newly created insertId.
-     */
     async create(data = {}) {
-        // Allowed fields we will persist (snake_case derived from these keys)
         const allowed = [
-        'requisitionDate',
-        'projectId',
-        'requisitionTypeId',
-        'requisitionStageId',
-        'hiringPocId',
-        'clientPocId',
-        'fulfillmentMediumId',
-        'skillId',
-        'urgencyId',
-        'requisitionStatusId',
-        'fteHeadCount',
-        'fteTotalAllocation',
-        'fulfilledAllocation',
-        'notes',
-        'tentativeOnboardingDate',
-        'ageingDays',
-        'capabilityAreaId'
+            'requisitionDate',
+            'projectId',
+            'requisitionTypeId',
+            'requisitionStageId',
+            'hiringPocId',
+            'clientPocId',
+            'fulfillmentMediumId',
+            'skillId',
+            'urgencyId',
+            'requisitionStatusId',
+            'fteHeadCount',
+            'fteTotalAllocation',
+            'fulfilledAllocation',
+            'tentativeOnboardingDate',
+            'ageingDays',
+            'capabilityAreaId'
         ];
 
         const cols = [];
@@ -97,10 +91,12 @@ const ProjectRequisition = {
         const values = [];
 
         const dateFields = new Set(['requisitionDate', 'tentativeOnboardingDate']);
+
         for (const key of allowed) {
             if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined) {
                 cols.push(toSnake(key));
                 placeholders.push('?');
+
                 if (dateFields.has(key)) {
                     const sqlDate = toSqlDate(data[key]);
                     if (sqlDate === null) {
@@ -117,10 +113,32 @@ const ProjectRequisition = {
             throw new Error('No valid fields provided for insert');
         }
 
-        const sqlStr = `INSERT INTO requisition (${cols.join(',')}) VALUES (${placeholders.join(',')})`;
+        // 1️⃣ Insert requisition
+        const sqlStr =
+            `INSERT INTO requisition (${cols.join(',')})
+         VALUES (${placeholders.join(',')})`;
+
         const result = await queryAsync(sqlStr, values);
-        return { insertId: result.insertId };
+        const requisitionId = result.insertId;
+
+        // 2️⃣ Insert note if present
+        if (data.notes && data.notes.trim()) {
+            const noteSql = `
+            INSERT INTO RequisitionNote
+            (requisition_id, note_text, created_by)
+            VALUES (?, ?, ?)
+        `;
+
+            await queryAsync(noteSql, [
+                requisitionId,
+                data.notes,
+                data.hiringPocId || null
+            ]);
+        }
+
+        return { insertId: requisitionId };
     },
+
 
     /**
      * Update an existing requisition by requisitionId. Data is camelCase

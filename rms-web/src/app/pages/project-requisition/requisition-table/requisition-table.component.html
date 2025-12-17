@@ -41,7 +41,7 @@
 
             <!-- EXPAND -->
             <td>
-                <p-button type="button" pRipple [pRowToggler]="row" [text]="true" severity="secondary" [rounded]="true"
+                <p-button (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row" [text]="true" severity="secondary" [rounded]="true"
                     [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
 
@@ -104,7 +104,7 @@
             <div class="p-4 bg-gray-50 rounded-md">
 
                 <!-- TOP INFO GRID -->
-                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                <div class="grid grid-cols-1 gap-4 mb-4 text-md">
 
                     <p>
                         <i class="pi pi-send mr-2 text-gray-500"></i>
@@ -131,7 +131,7 @@
                 </div>
 
                 <!-- FTE SECTION -->
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                     <p class="font-semibold mb-1">
                         <i class="pi pi-users mr-2 text-gray-500"></i>
                         FTE Allocation
@@ -151,7 +151,7 @@
                             styleClass="h-2 w-64">
                         </p-progressBar>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- NOTES -->
                 <div class="border-t pt-3">

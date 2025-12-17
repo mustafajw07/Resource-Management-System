@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Client, ClientManager } from "@core/interfaces/Client";
+import { Client, ClientManager } from "@core/interfaces/client";
 import { environment } from "@environments";
 import { Observable } from "rxjs";
 
@@ -24,6 +24,6 @@ export class ClientService {
      * @returns Observable of client manager array
      */
     public getAllClientManagers(clientId: number): Observable<ClientManager[]> {
-        return this.httpClient.get<ClientManager[]>(`${this.apiUrl}/managers/${clientId}`)
+        return this.httpClient.get<ClientManager[]>(`${this.apiUrl}/managers/${clientId}`);
     }
 }
