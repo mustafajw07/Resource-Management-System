@@ -19,9 +19,6 @@ SELECT
   r.fulfillment_medium_id,
   rd_fulfillment.reference_name AS fulfillment_medium,
 
-  r.urgency_id,
-  rd_urgency.reference_name AS urgency,
-
   r.requisition_status_id,
   rd_status.reference_name AS requisition_status,
 
@@ -86,8 +83,6 @@ LEFT JOIN ReferenceData rd_stage
   ON rd_stage.reference_id = r.requisition_stage_id
 LEFT JOIN ReferenceData rd_fulfillment
   ON rd_fulfillment.reference_id = r.fulfillment_medium_id
-LEFT JOIN ReferenceData rd_urgency
-  ON rd_urgency.reference_id = r.urgency_id
 LEFT JOIN ReferenceData rd_status
   ON rd_status.reference_id = r.requisition_status_id
 LEFT JOIN ReferenceData rd_capability
