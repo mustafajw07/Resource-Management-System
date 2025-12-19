@@ -12,18 +12,16 @@
 }
 
 /* style header filters and alignment */
-:host ::ng-deep .p-table .p-datatable-thead input[type="text"] {
+:host ::ng-deep .p-table .p-datatable-thead{
   width: 100%;
 }
 
-/* make expansion content subtle */
-:host ::ng-deep .p-table .p-row-toggler .pi {
-  font-size: 1rem;
-}
+// :host ::ng-deep table input{
+//   width: 7em;
+//   height: 2rem;
+// }
 
-@media (min-width: 768px) and (max-width: 991.98px) {
-    :host ::ng-deep .p-icon {
-        width: 0.8rem;
-        height: 0.8rem;
-    }
+:host ::ng-deep table .p-icon{
+  width: 0.75rem;
+  height: 0.75rem;
 }

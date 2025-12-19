@@ -1,5 +1,6 @@
 <p-table #dt2 [value]="requisitions" dataKey="requisitionId" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-    [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false" sortField="ageingDays" [sortOrder]="-1">
+    [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
+    sortField="ageingDays" [sortOrder]="-1" filterDisplay="row">
 
     <!-- CAPTION -->
     <ng-template #caption>
@@ -24,12 +25,25 @@
     <ng-template #header>
         <tr>
             <th></th>
-            <th *ngFor="let col of headers" [pSortableColumn]="col.field">
+            <th class="text-sm p-3!" *ngFor="let col of headers" [pSortableColumn]="col.field">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
             <th></th>
         </tr>
+
+        <!-- FILTER ROW -->
+        <!-- <tr>
+            <th></th>
+
+            <th class="text-sm p-3!" *ngFor="let col of headers">
+                <p-columnFilter [field]="col.field" matchMode="contains" [showMenu]="false" [showClearButton]="true"
+                    placeholder="Search {{ col.header }}">
+                </p-columnFilter>
+            </th>
+
+            <th></th>
+        </tr> -->
     </ng-template>
 
     <!-- BODY -->
@@ -41,7 +55,8 @@
 
             <!-- EXPAND -->
             <td>
-                <p-button (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row" [text]="true" severity="secondary" [rounded]="true"
+                <p-button (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row"
+                    [text]="true" severity="secondary" [rounded]="true"
                     [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
 
@@ -60,7 +75,8 @@
                     </span>
 
                     <!-- Urgency -->
-                    <p *ngSwitchCase="'urgency'" [ngClass]="urgencyClass(getFieldValue(row, col.field))">{{getFieldValue(row, col.field)}}</p>
+                    <p *ngSwitchCase="'urgency'" [ngClass]="urgencyClass(getFieldValue(row, col.field))">
+                        {{getFieldValue(row, col.field)}}</p>
 
                     <!-- Ageing -->
                     <span *ngSwitchCase="'ageingDays'" [ngClass]="ageingClass(row.ageingDays)">
@@ -69,13 +85,13 @@
                     </span>
 
                     <!-- FTE -->
-                    <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
+                    <!-- <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
                         <span>
                             {{ row.fulfilledAllocation }} / {{ row.fteHeadCount }} Filled
                         </span>
                         <p-progressBar [value]="fteProgress(row)" [showValue]="false" styleClass="h-2">
                         </p-progressBar>
-                    </div>
+                    </div> -->
 
                     <!-- Project Tooltip -->
                     <span *ngSwitchCase="'projectName'" pTooltip="{{ row.projectName }}" tooltipPosition="top">
@@ -92,46 +108,47 @@
 
             <!-- ACTION -->
             <td>
-                <button severity="contrast" pButton icon="pi pi-pencil" class="p-button-text p-button-text p-button-rounded" (click)="editRequisition(row)">
+                <button severity="contrast" pButton icon="pi pi-pencil"
+                    class="p-button-text p-button-text p-button-rounded" (click)="editRequisition(row)">
                 </button>
             </td>
         </tr>
     </ng-template>
 
     <ng-template #expandedrow let-row>
-    <tr>
-        <td [attr.colspan]="headers.length + 2">
-            <div class="p-4 bg-gray-50 rounded-md">
+        <tr>
+            <td [attr.colspan]="headers.length + 2">
+                <div class="p-4 bg-gray-50 rounded-md">
 
-                <!-- TOP INFO GRID -->
-                <div class="grid grid-cols-1 gap-4 mb-4 text-md">
+                    <!-- TOP INFO GRID -->
+                    <div class="grid grid-cols-1 gap-4 mb-4 text-md">
 
-                    <p>
-                        <i class="pi pi-send mr-2 text-gray-500"></i>
-                        <strong>Fulfillment Medium:</strong>
-                        {{ row.fulfillmentMedium || 'N/A' }}
-                    </p>
+                        <p>
+                            <i class="pi pi-send mr-2 text-gray-500"></i>
+                            <strong>Fulfillment Medium:</strong>
+                            {{ row.fulfillmentMedium || 'N/A' }}
+                        </p>
 
-                    <p class="flex items-center gap-2">
-                        <i class="pi pi-flag mr-1 text-gray-500"></i>
-                        <strong>Requisition Status:</strong>
-                        {{row.requisitionStatus || 'N/A'}}
-                    </p>
+                        <p class="flex items-center gap-2">
+                            <i class="pi pi-flag mr-1 text-gray-500"></i>
+                            <strong>Requisition Status:</strong>
+                            {{row.requisitionStatus || 'N/A'}}
+                        </p>
 
-                    <p>
-                        <i class="pi pi-calendar mr-2 text-gray-500"></i>
-                        <strong>Tentative Onboarding:</strong>
-                        <span [ngClass]="onboardingClass(row.tentativeOnboardingDate)">
-                            {{ row.tentativeOnboardingDate
+                        <p>
+                            <i class="pi pi-calendar mr-2 text-gray-500"></i>
+                            <strong>Tentative Onboarding:</strong>
+                            <span [ngClass]="onboardingClass(row.tentativeOnboardingDate)">
+                                {{ row.tentativeOnboardingDate
                                 ? (row.tentativeOnboardingDate | date:'mediumDate')
                                 : 'N/A' }}
-                        </span>
-                    </p>
+                            </span>
+                        </p>
 
-                </div>
+                    </div>
 
-                <!-- FTE SECTION -->
-                <!-- <div class="mb-4">
+                    <!-- FTE SECTION -->
+                    <!-- <div class="mb-4">
                     <p class="font-semibold mb-1">
                         <i class="pi pi-users mr-2 text-gray-500"></i>
                         FTE Allocation
@@ -153,21 +170,21 @@
                     </div>
                 </div> -->
 
-                <!-- NOTES -->
-                <div class="border-t pt-3">
-                    <p class="font-semibold mb-1">
-                        <i class="pi pi-file-edit mr-2 text-gray-500"></i>
-                        Notes
-                    </p>
-                    <p class="text-sm text-gray-700">
-                        {{ row.notes || 'No notes available.' }}
-                    </p>
-                </div>
+                    <!-- NOTES -->
+                    <div class="border-t pt-3">
+                        <p class="font-semibold mb-1">
+                            <i class="pi pi-file-edit mr-2 text-gray-500"></i>
+                            Notes
+                        </p>
+                        <p class="text-sm text-gray-700">
+                            {{ row.notes || 'No notes available.' }}
+                        </p>
+                    </div>
 
-            </div>
-        </td>
-    </tr>
-</ng-template>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
 
     <ng-template #emptymessage>
         <tr>
@@ -178,6 +195,7 @@
 
 @if(visible){
 <p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '70%' }">
-    <app-requisition-form [model]="selectedRequisition" (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
+    <app-requisition-form [model]="selectedRequisition" (submitted)="handleFormSubmitted($event)"
+        (cancel)="visible = false"></app-requisition-form>
 </p-dialog>
 }
