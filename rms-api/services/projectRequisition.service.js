@@ -9,7 +9,33 @@ const { check, validationResult } = require('express-validator');
 exports.findAll = async (req, res) => {
     try {
         const data = await projectRequisition.getAll();
-        return res.status(200).json(data);
+        const THRESHOLD_DAYS = 15;
+        const today = new Date();
+        const updatedData = data.map(item => {
+            const onboardingDate = new Date(item.tentativeOnboardingDate);
+            let diffDays = null;
+            let urgency = 'UNKNOWN';
+
+            if (!isNaN(onboardingDate)) {
+                const diffTime = onboardingDate - today;
+                diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays <= 0) {
+                    urgency = 'OVERDUE';
+                } else if (diffDays <= THRESHOLD_DAYS) {
+                    urgency = 'Immediate';
+                } else {
+                    urgency = 'Long Term';
+                }
+            }
+
+            return {
+                ...item,
+                urgency
+            };
+        });
+
+        return res.status(200).json(updatedData);
     } catch (err) {
         const message = (err && err.message) ? err.message : 'Some error occurred while retrieving Project requisition data.';
         return res.status(500).json({ message });

@@ -8,7 +8,6 @@ CREATE TABLE Requisition (
   hiring_poc_id INT,
   client_poc_id INT,
   fulfillment_medium_id INT,
-  urgency_id INT,
   requisition_status_id INT,
   fte_head_count INT NOT NULL DEFAULT 1,
   fte_total_allocation INT,
@@ -16,7 +15,6 @@ CREATE TABLE Requisition (
   notes TEXT,
   tentative_onboarding_date DATE,
   ageing_days INT,
-  capability_area_id INT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
@@ -35,11 +33,7 @@ CREATE TABLE Requisition (
     ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_fulfillment_medium FOREIGN KEY (fulfillment_medium_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT fk_req_urgency FOREIGN KEY (urgency_id) REFERENCES ReferenceData(reference_id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_req_status FOREIGN KEY (requisition_status_id) REFERENCES ReferenceData(reference_id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT fk_req_capability_area FOREIGN KEY (capability_area_id) REFERENCES ReferenceData(reference_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   INDEX idx_req_project (project_id),
   INDEX idx_req_status (requisition_status_id)

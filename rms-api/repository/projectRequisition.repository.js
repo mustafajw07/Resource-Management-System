@@ -44,12 +44,8 @@ const ProjectRequisition = {
             skill AS skill,
             fulfillment_medium_id AS fulfillmentMediumId,
             fulfillment_medium AS fulfillmentMedium,
-            urgency_id AS urgencyId,
-            urgency AS urgency,
             requisition_status_id AS requisitionStatusId,
             requisition_status AS requisitionStatus,
-            capability_area_id AS capabilityAreaId,
-            capability_area AS capabilityArea,
             hiring_poc_id AS hiringPocId,
             hiring_poc_name AS hiringPocName,
             hiring_poc_email AS hiringPocEmail,
@@ -76,14 +72,12 @@ const ProjectRequisition = {
             'clientPocId',
             'fulfillmentMediumId',
             'skillId',
-            'urgencyId',
             'requisitionStatusId',
             'fteHeadCount',
             'fteTotalAllocation',
             'fulfilledAllocation',
             'tentativeOnboardingDate',
-            'ageingDays',
-            'capabilityAreaId'
+            'ageingDays'
         ];
 
         const cols = [];
