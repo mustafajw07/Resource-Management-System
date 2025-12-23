@@ -1,15 +1,11 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
     <div class="grid grid-cols-3 gap-4">
-        <div>
-            <label class="block text-sm">Project</label>
-            <p-autocomplete formControlName="project" [suggestions]="projects"
-                (completeMethod)="filterDropdown($event, 'projects')" [virtualScrollItemSize]="34"  [dropdown]="true" class="w-full"></p-autocomplete>
-        </div>
 
         <div>
             <label class="block text-sm">Client</label>
             <p-autocomplete formControlName="client" [suggestions]="clients"
-                (completeMethod)="filterDropdown($event, 'clients')" [virtualScrollItemSize]="34" [dropdown]="true" class="w-full"></p-autocomplete>
+                (completeMethod)="filterDropdown($event, 'clients')" [virtualScrollItemSize]="34" [dropdown]="true"
+                class="w-full"></p-autocomplete>
         </div>
 
         <div>
@@ -17,6 +13,13 @@
             <p-autoComplete formControlName="clientPoc" [suggestions]="clientsPoc" [virtualScrollItemSize]="34"
                 (completeMethod)="filterDropdown($event, 'clientsPoc')" [dropdown]="true" [virtualScroll]="true"
                 class="w-full"></p-autoComplete>
+        </div>
+
+        <div>
+            <label class="block text-sm">Project</label>
+            <p-autocomplete formControlName="project" [suggestions]="projects"
+                (completeMethod)="filterDropdown($event, 'projects')" [virtualScrollItemSize]="34" [dropdown]="true"
+                class="w-full"></p-autocomplete>
         </div>
 
         <div>
@@ -29,7 +32,8 @@
         <div>
             <label class="block text-sm">Requisition Type</label>
             <p-autocomplete [suggestions]="requisitionTypes" formControlName="requisitionType" [dropdown]="true"
-                class="w-full" [virtualScrollItemSize]="34" (completeMethod)="filterDropdown($event, 'requisitionTypes')"></p-autocomplete>
+                class="w-full" [virtualScrollItemSize]="34"
+                (completeMethod)="filterDropdown($event, 'requisitionTypes')"></p-autocomplete>
         </div>
 
         <div>
@@ -45,7 +49,7 @@
                 [virtualScroll]="true" [virtualScrollItemSize]="34" optionLabel="" class="w-full"
                 (completeMethod)="filterDropdown($event, 'requisitionStatus')"></p-autocomplete>
         </div>
-        
+
         <div>
             <label class="block text-sm">Skills</label>
             <p-autocomplete [suggestions]="skills" formControlName="skills" [dropdown]="true" [virtualScroll]="true"
@@ -61,13 +65,6 @@
         </div>
 
         <div>
-            <label class="block text-sm">Urgency</label>
-            <p-autocomplete [suggestions]="urgencies" formControlName="urgency" [dropdown]="true" [virtualScroll]="true"
-                [virtualScrollItemSize]="34" optionLabel="" class="w-full"
-                (completeMethod)="filterDropdown($event, 'urgencies')"></p-autocomplete>
-        </div>
-
-        <div>
             <label class="block text-sm">FTE Head Count</label>
             <input type="number" formControlName="fteHeadCount" min="0" class="w-full p-2 border rounded" />
         </div>
@@ -77,7 +74,7 @@
             <input type="number" formControlName="fteTotalAllocation" min="0" class="w-full p-2 border rounded" />
         </div>
 
-        <div>
+        <div [hidden]="isAdd">
             <label class="block text-sm">Requisition Date</label>
             <input type="date" formControlName="requisitionDate" class="w-full p-2 border rounded" />
         </div>

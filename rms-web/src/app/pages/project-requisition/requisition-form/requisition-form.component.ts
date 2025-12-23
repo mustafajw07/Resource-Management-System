@@ -21,6 +21,7 @@ export class RequisitionFormComponent implements OnInit {
   @Output() submitted = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
   @Input() model: ProjectRequisition | null = null;
+  @Input() isAdd = false;
 
   private store = inject(Store);
   private referenceLists: Record<string, string[]> = {};
@@ -52,7 +53,6 @@ export class RequisitionFormComponent implements OnInit {
       hiringPoc: ['', Validators.required],
       clientPoc: [{ value: '', disabled: true }, Validators.required],
       fulfillmentMedium: ['', Validators.required],
-      urgency: ['', Validators.required],
       requisitionStatus: ['', Validators.required],
       fteHeadCount: [0, Validators.min(0)],
       fteTotalAllocation: [0, Validators.pattern('^[0-9]*$')],
@@ -101,20 +101,16 @@ export class RequisitionFormComponent implements OnInit {
     this.store.select(selectAllReferenceData).subscribe((data) => {
       if (data && data.length > 0) {
         this.metaData = { "referenceData": data };
-
         this.form.patchValue({
           requisitionStage: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && this.model?.requisitionStageId === r.id)?.name,
           requisitionStatus: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && this.model?.requisitionStatusId === r.id)?.name,
-          capabilityArea: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'CapabilityArea' && this.model?.capabilityAreaId === r.id)?.name,
           requisitionType: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionType' && this.model?.requisitionTypeId === r.id)?.name,
-          urgency: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Urgency' && this.model?.urgencyId === r.id)?.name,
           fulfillmentMedium: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && this.model?.fulfillmentMediumId === r.id)?.name,
-        })
+        });
 
         const mapping: [string, string][] = [
           ['RequisitionType', 'requisitionTypes'],
           ['RequisitionStage', 'requisitionStages'],
-          ['Urgency', 'urgencies'],
           ['Skills', 'skill'],
           ['RequisitionStatus', 'requisitionStatus'],
           ['FulfillmentMedium', 'fulfillmentMedium'],
@@ -125,6 +121,21 @@ export class RequisitionFormComponent implements OnInit {
           this.referenceLists[key] = list;
           (this as any)[key] = [...list];
         });
+
+        const reqCtrl = this.form.get('requisitionStage');
+        if (this.isAdd) {
+          const approval = this.requisitionStages?.find(s => s?.toLowerCase() === 'approval');
+          if (approval) {
+            reqCtrl?.setValue(approval, { emitEvent: false });
+          } else if (!reqCtrl?.value && this.requisitionStages?.length) {
+            reqCtrl?.setValue(this.requisitionStages[0], { emitEvent: false });
+          }
+          reqCtrl?.disable({ emitEvent: false });
+        }
+        if (this.isAdd) {
+          const today = new Date().toISOString().split('T')[0];
+          this.form.get('requisitionDate')?.setValue(today);
+        }
       }
     });
   }
@@ -170,9 +181,6 @@ export class RequisitionFormComponent implements OnInit {
       case 'requisitionStatus':
         this.requisitionStatus = filtered;
         break;
-      case 'urgencies':
-        this.urgencies = filtered;
-        break;
       default:
         break;
     }
@@ -185,28 +193,24 @@ export class RequisitionFormComponent implements OnInit {
    */
   onSubmit(): void {
     if (this.form.valid) {
+      const raw = this.form.getRawValue();
       const payload = {
         requisitionDate: new Date(this.form.value.requisitionDate),
         projectId: this.metaData['projects']?.find((p: any) => (p.projectName || '').trim() === (this.form.value.project || '').trim())?.projectId,
         requisitionTypeId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionType' && r.name === this.form.value.requisitionType)?.id,
-        requisitionStageId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && r.name === this.form.value.requisitionStage)?.id,
-        hiringPocId: this.metaData['users']?.find((u: any) => {
-          const fullName = `${(u.firstName || '').trim()} ${(u.lastName || '').trim()}`.trim();
-          return fullName === (this.form.value.hiringPoc || '').trim();
-        })?.id,
+        requisitionStageId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && r.name === raw.requisitionStage)?.id,
+        hiringPocId: this.metaData['users']?.find((u: any) => {const fullName = `${(u.firstName || '').trim()} ${(u.lastName || '').trim()}`.trim(); return fullName === (this.form.value.hiringPoc || '').trim();})?.id,
         skillId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Skills' && r.name === this.form.value.skills)?.id,
         clientPocId: this.metaData['managers']?.find((m: any) => (m.managerName || '').trim() === (this.form.value.clientPoc || '').trim())?.managerId,
         fulfillmentMediumId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && r.name === this.form.value.fulfillmentMedium)?.id,
-        urgencyId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Urgency' && r.name === this.form.value.urgency)?.id,
         requisitionStatusId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && r.name === this.form.value.requisitionStatus)?.id,
         fteHeadCount: this.form.value.fteHeadCount,
         fteTotalAllocation: this.form.value.fteTotalAllocation,
         fulfilledAllocation: 0,
-        notes: this.form.value.notes,
+        notes: raw.notes,
         tentativeOnboardingDate: new Date(this.form.value.tentativeOnboardingDate),
         ageingDays: this.form.value.ageingDays
       };
-
       this.submitted.emit(payload);
       this.form.reset();
     } else {

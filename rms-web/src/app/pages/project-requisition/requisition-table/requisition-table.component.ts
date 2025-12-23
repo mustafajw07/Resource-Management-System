@@ -17,21 +17,22 @@ import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/p
 import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotesService } from '@core/services/notes.service';
+import { Notes } from '@core/interfaces/notes';
 
 @Component({
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
     styleUrls: ['./requisition-table.component.scss'],
     imports: [
-        TableModule, 
-        TagModule, 
-        IconFieldModule, 
-        InputTextModule, 
-        InputIconModule, 
-        MultiSelectModule, 
-        SelectModule, 
-        CommonModule, 
-        ButtonModule, 
+        TableModule,
+        TagModule,
+        IconFieldModule,
+        InputTextModule,
+        InputIconModule,
+        MultiSelectModule,
+        SelectModule,
+        CommonModule,
+        ButtonModule,
         DialogModule,
         TooltipModule,
         ProgressBarModule,
@@ -59,18 +60,20 @@ export class RequisitionTableComponent implements OnInit {
     protected selectedRequisition: ProjectRequisition | null = null;
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
     private readonly notesService = inject(NotesService)
+    private readonly notesLoaded = new Set<number>();
+    protected notesMap = new Map<number, Notes[]>();
 
     ngOnInit(): void {
         this.globalFilterFields = this.headers.map(h => h.field);
         this.getRequisitions();
     }
-    
+
 
     /**
      * Opens the dialog to add a new requisition
      * @return void
      */
-    protected addRequisition(): void{
+    protected addRequisition(): void {
         this.popupHeader = "New Project Requisition";
         this.selectedRequisition = null;
         this.visible = true;
@@ -80,7 +83,7 @@ export class RequisitionTableComponent implements OnInit {
      * Opens the dialog to edit a new requisition
      * @return void
      */
-    protected editRequisition(item:ProjectRequisition): void{
+    protected editRequisition(item: ProjectRequisition): void {
         this.popupHeader = "Edit Project Requisition";
         this.selectedRequisition = item;
         this.visible = true;
@@ -143,10 +146,10 @@ export class RequisitionTableComponent implements OnInit {
 
     urgencySeverity(urgency?: string) {
         switch (urgency) {
-        case 'Immediate': return 'danger';
-        case 'High': return 'warning';
-        case 'Medium': return 'info';
-        default: return 'success';
+            case 'Immediate': return 'danger';
+            case 'High': return 'warning';
+            case 'Medium': return 'info';
+            default: return 'success';
         }
     }
 
@@ -180,10 +183,20 @@ export class RequisitionTableComponent implements OnInit {
         }
     }
 
-
-    getRequisitionNotes(requisitionId: number): void{
+    /**
+     * returns Requisition Notes on row expansion
+     * @return void
+     */
+    protected getRequisitionNotes(requisitionId: number): void {
+        if (this.notesLoaded.has(requisitionId)) return;
         this.notesService.getAllNotesForRequisitionId(requisitionId).subscribe((notes) => {
-            console.log(notes);
+            const list = Array.isArray(notes) ? notes : [];
+            this.notesMap.set(requisitionId, list);
+            const row = this.requisitions.find(r => r.requisitionId === requisitionId);
+            if (row) {
+                row.notes = list.map(n => n.noteText).join('\n\n');
+                this.notesLoaded.add(requisitionId);
+            }
         });
     }
 }
