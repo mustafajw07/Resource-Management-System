@@ -37,20 +37,6 @@
         </div>
 
         <div>
-            <label class="block text-sm">Requisition Stage</label>
-            <p-autocomplete [suggestions]="requisitionStages" formControlName="requisitionStage" [dropdown]="true"
-                [virtualScroll]="true" [virtualScrollItemSize]="34" optionLabel="" class="w-full"
-                (completeMethod)="filterDropdown($event, 'requisitionStages')"></p-autocomplete>
-        </div>
-
-        <div>
-            <label class="block text-sm">Requisition Status</label>
-            <p-autocomplete [suggestions]="requisitionStatus" formControlName="requisitionStatus" [dropdown]="true"
-                [virtualScroll]="true" [virtualScrollItemSize]="34" optionLabel="" class="w-full"
-                (completeMethod)="filterDropdown($event, 'requisitionStatus')"></p-autocomplete>
-        </div>
-
-        <div>
             <label class="block text-sm">Skills</label>
             <p-autocomplete [suggestions]="skills" formControlName="skills" [dropdown]="true" [virtualScroll]="true"
                 [virtualScrollItemSize]="34" optionLabel="" class="w-full"

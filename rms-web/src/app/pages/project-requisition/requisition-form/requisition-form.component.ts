@@ -123,6 +123,7 @@ export class RequisitionFormComponent implements OnInit {
         });
 
         const reqCtrl = this.form.get('requisitionStage');
+        const reqReq = this.form.get('requisitionStatus');
         if (this.isAdd) {
           const approval = this.requisitionStages?.find(s => s?.toLowerCase() === 'approval');
           if (approval) {
@@ -131,6 +132,15 @@ export class RequisitionFormComponent implements OnInit {
             reqCtrl?.setValue(this.requisitionStages[0], { emitEvent: false });
           }
           reqCtrl?.disable({ emitEvent: false });
+        }
+        if(this.isAdd){
+          const reqApproval =this.requisitionStatus?.find(s => s?.toLowerCase() === 'requisition approval pending - internal');
+          if(reqApproval){
+             reqReq?.setValue(reqApproval, { emitEvent: false });
+          } else if (!reqReq?.value && this.requisitionStatus?.length) {
+            reqReq?.setValue(this.requisitionStatus[0], { emitEvent: false });
+          }
+          reqReq?.disable({ emitEvent: false });
         }
         if (this.isAdd) {
           const today = new Date().toISOString().split('T')[0];
@@ -203,7 +213,7 @@ export class RequisitionFormComponent implements OnInit {
         skillId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Skills' && r.name === this.form.value.skills)?.id,
         clientPocId: this.metaData['managers']?.find((m: any) => (m.managerName || '').trim() === (this.form.value.clientPoc || '').trim())?.managerId,
         fulfillmentMediumId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && r.name === this.form.value.fulfillmentMedium)?.id,
-        requisitionStatusId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && r.name === this.form.value.requisitionStatus)?.id,
+        requisitionStatusId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && r.name === raw.requisitionStatus)?.id,
         fteHeadCount: this.form.value.fteHeadCount,
         fteTotalAllocation: this.form.value.fteTotalAllocation,
         fulfilledAllocation: 0,
@@ -236,6 +246,7 @@ export class RequisitionFormComponent implements OnInit {
     this.form.get('client')!.valueChanges.subscribe(clientName => {
       const ctrl = this.form.get('clientPoc')!;
       const name = (clientName ?? '').toString().trim();
+      ctrl.reset();
       const resetDisable = () => { ctrl.reset(); ctrl.disable(); this.referenceLists['clientsPoc'] = []; this.clientsPoc = []; };
 
       if (!name) { resetDisable(); return; }
