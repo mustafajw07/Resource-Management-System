@@ -58,16 +58,16 @@ export class RequisitionTableComponent implements OnInit {
     protected globalFilterFields: string[] = [];
     protected expandedRows = {};
     protected selectedRequisition: ProjectRequisition | null = null;
+    protected notesMap = new Map<number, Notes[]>();
+
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
     private readonly notesService = inject(NotesService)
     private readonly notesLoaded = new Set<number>();
-    protected notesMap = new Map<number, Notes[]>();
 
     ngOnInit(): void {
         this.globalFilterFields = this.headers.map(h => h.field);
         this.getRequisitions();
     }
-
 
     /**
      * Opens the dialog to add a new requisition
@@ -127,6 +127,7 @@ export class RequisitionTableComponent implements OnInit {
 
     /**
      * Return tailwind-style classes for urgency levels
+     * @return string
      */
     protected urgencyClass(value: string): string {
         if (!value) return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
@@ -136,24 +137,23 @@ export class RequisitionTableComponent implements OnInit {
             default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
         }
     }
-
-    ageingClass(days?: number): string {
+    
+    /**
+     * Return tailwind-style classes for ageing
+     * @return string
+     */
+    protected ageingClass(days?: number): string {
         if (!days) return '';
         if (days > 30) return 'text-red-600 font-bold';
         if (days > 20) return 'text-yellow-600 font-semibold';
         return 'text-green-600';
     }
 
-    urgencySeverity(urgency?: string) {
-        switch (urgency) {
-            case 'Immediate': return 'danger';
-            case 'High': return 'warning';
-            case 'Medium': return 'info';
-            default: return 'success';
-        }
-    }
-
-    onboardingClass(date?: string | Date): string {
+    /**
+     * Return tailwind-style classes for onboarding date
+     * @return string
+     */
+     protected onboardingClass(date?: string | Date): string {
         if (!date) return '';
 
         const target = new Date(date).getTime();
@@ -165,22 +165,20 @@ export class RequisitionTableComponent implements OnInit {
         return 'text-green-600';
     }
 
-    fteProgress(row: ProjectRequisition): number {
+    /**
+     * Return progress for fte
+     * @return number
+     */
+    protected fteProgress(row: ProjectRequisition): number {
         if (!row.fteHeadCount || !row.fulfilledAllocation) return 0;
         return Math.round((row.fulfilledAllocation / row.fteHeadCount) * 100);
     }
-
-    getFieldValue(row: ProjectRequisition, field: string): any {
+    
+    /**
+     * Return field values
+     */
+    protected getFieldValue(row: ProjectRequisition, field: string): any {
         return (row as any)[field] ?? 'N/A';
-    }
-
-    stageSeverity(status?: string) {
-        switch (status) {
-            case 'Closed': return 'success';
-            case 'Offered': return 'info';
-            case 'Interviewing': return 'warning';
-            default: return 'secondary';
-        }
     }
 
     /**

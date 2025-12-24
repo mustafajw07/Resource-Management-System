@@ -21,7 +21,7 @@ exports.findAll = async (req, res) => {
                 diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                 if (diffDays <= 0) {
-                    urgency = 'OVERDUE';
+                    urgency = 'Over Due';
                 } else if (diffDays <= THRESHOLD_DAYS) {
                     urgency = 'Immediate';
                 } else {

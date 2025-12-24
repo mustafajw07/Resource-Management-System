@@ -25,10 +25,23 @@
     <ng-template #header>
         <tr>
             <th></th>
-            <th *ngFor="let col of headers" [pSortableColumn]="col.field">
+            <th class="text-sm p-3!" *ngFor="let col of headers" [pSortableColumn]="col.field">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
+            <th></th>
+        </tr>
+
+        <!-- FILTER ROW -->
+        <tr>
+            <th></th>
+
+            <th class="text-sm p-3!" *ngFor="let col of headers">
+                <p-columnFilter [field]="col.field" matchMode="contains" [showMenu]="false" [showClearButton]="true"
+                    placeholder="Search {{ col.header }}">
+                </p-columnFilter>
+            </th>
+
             <th></th>
         </tr>
     </ng-template>
@@ -72,13 +85,13 @@
                     </span>
 
                     <!-- FTE -->
-                    <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
+                    <!-- <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
                         <span>
                             {{ row.fulfilledAllocation }} / {{ row.fteHeadCount }} Filled
                         </span>
                         <p-progressBar [value]="fteProgress(row)" [showValue]="false" styleClass="h-2">
                         </p-progressBar>
-                    </div>
+                    </div> -->
 
                     <!-- Project Tooltip -->
                     <span *ngSwitchCase="'projectName'" pTooltip="{{ row.projectName }}" tooltipPosition="top">
