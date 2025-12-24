@@ -191,7 +191,7 @@
 
 @if(visible){
 <p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '70%' }">
-    <app-requisition-form [model]="selectedRequisition" [isAdd]="!selectedRequisition"
+    <app-requisition-form 
         (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
 </p-dialog>
 }

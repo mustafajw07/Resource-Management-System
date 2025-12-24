@@ -21,14 +21,11 @@ export interface ProjectRequisition {
     requisitionStageName: string;
     fulfillmentMediumId: number;
     fulfillmentMediumName: string;
-    urgencyId: number;
     urgencyName: string;
     skillId: number;
     skill: string;
     requisitionStatusId: number;
     requisitionStatusName: string;
-    capabilityAreaId: number;
-    capabilityAreaName: string;
     hiringPocId: number;
     hiringPocName: string;
     hiringPocEmail: string;
