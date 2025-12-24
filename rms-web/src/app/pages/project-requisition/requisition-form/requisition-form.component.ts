@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, MinLengthValidator } from '@angular/forms';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { Store, StoreModule } from '@ngrx/store';
@@ -9,7 +9,6 @@ import { UserService } from '@core/services/user.service';
 import { ClientService } from '@core/services/client.service';
 import { ProjectService } from '@core/services/project.service';
 import { forkJoin } from 'rxjs';
-import { ProjectRequisition } from '@core/interfaces/project-requisition';
 
 @Component({
   selector: 'app-requisition-form',
@@ -20,8 +19,6 @@ import { ProjectRequisition } from '@core/interfaces/project-requisition';
 export class RequisitionFormComponent implements OnInit {
   @Output() submitted = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
-  @Input() model: ProjectRequisition | null = null;
-  @Input() isAdd = false;
 
   private store = inject(Store);
   private referenceLists: Record<string, string[]> = {};
@@ -70,30 +67,6 @@ export class RequisitionFormComponent implements OnInit {
   }
 
   /**
-     * Loads the data for Edit form 
-     * @returns void
-     */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['model']) return;
-
-    if (!this.model) {
-      this.form.reset();
-      return;
-    }
-    this.form.patchValue({
-      requisitionDate: this.model.requisitionDate,
-      ageingDays: this.model.ageingDays,
-      fteHeadCount: this.model.fteHeadCount,
-      client: this.model.clientName,
-      project: this.model.projectName,
-      skills: this.model.skill,
-      hiringPoc: this.model.hiringPocName,
-      clientPoc: this.model.clientPocName,
-      notes: this.model.notes
-    });
-  }
-
-  /**
    * Fetch reference data from the store and populate local lists for dropdowns.
    * @returns void
    */
@@ -101,12 +74,6 @@ export class RequisitionFormComponent implements OnInit {
     this.store.select(selectAllReferenceData).subscribe((data) => {
       if (data && data.length > 0) {
         this.metaData = { "referenceData": data };
-        this.form.patchValue({
-          requisitionStage: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && this.model?.requisitionStageId === r.id)?.name,
-          requisitionStatus: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStatus' && this.model?.requisitionStatusId === r.id)?.name,
-          requisitionType: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionType' && this.model?.requisitionTypeId === r.id)?.name,
-          fulfillmentMedium: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && this.model?.fulfillmentMediumId === r.id)?.name,
-        });
 
         const mapping: [string, string][] = [
           ['RequisitionType', 'requisitionTypes'],
@@ -122,29 +89,23 @@ export class RequisitionFormComponent implements OnInit {
           (this as any)[key] = [...list];
         });
 
-        const reqCtrl = this.form.get('requisitionStage');
-        const reqReq = this.form.get('requisitionStatus');
-        if (this.isAdd) {
-          const approval = this.requisitionStages?.find(s => s?.toLowerCase() === 'approval');
-          if (approval) {
-            reqCtrl?.setValue(approval, { emitEvent: false });
-          } else if (!reqCtrl?.value && this.requisitionStages?.length) {
-            reqCtrl?.setValue(this.requisitionStages[0], { emitEvent: false });
-          }
-          reqCtrl?.disable({ emitEvent: false });
+        const reqStageCtrl = this.form.get('requisitionStage');
+        const reqStatusCtrl = this.form.get('requisitionStatus');
+        if (!reqStageCtrl?.value) {
+          const defaultStage = this.requisitionStages.find(s => (s || '').toLowerCase() === 'approval') || this.requisitionStages[0] || '';
+          reqStageCtrl?.setValue(defaultStage, { emitEvent: false });
         }
-        if(this.isAdd){
-          const reqApproval =this.requisitionStatus?.find(s => s?.toLowerCase() === 'requisition approval pending - internal');
-          if(reqApproval){
-             reqReq?.setValue(reqApproval, { emitEvent: false });
-          } else if (!reqReq?.value && this.requisitionStatus?.length) {
-            reqReq?.setValue(this.requisitionStatus[0], { emitEvent: false });
-          }
-          reqReq?.disable({ emitEvent: false });
+        reqStageCtrl?.disable({ emitEvent: false });
+        if (!reqStatusCtrl?.value) {
+          const defaultStatus =
+            this.requisitionStatus.find( s => (s || '').toLowerCase() === 'requisition approval pending - internal') || this.requisitionStatus[0] || '';
+          reqStatusCtrl?.setValue(defaultStatus, { emitEvent: false });
         }
-        if (this.isAdd) {
+        reqStatusCtrl?.disable({ emitEvent: false });
+        const reqDateCtrl = this.form.get('requisitionDate');
+        if (!reqDateCtrl?.value) {
           const today = new Date().toISOString().split('T')[0];
-          this.form.get('requisitionDate')?.setValue(today);
+          reqDateCtrl?.setValue(today, { emitEvent: false });
         }
       }
     });
@@ -209,7 +170,7 @@ export class RequisitionFormComponent implements OnInit {
         projectId: this.metaData['projects']?.find((p: any) => (p.projectName || '').trim() === (this.form.value.project || '').trim())?.projectId,
         requisitionTypeId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionType' && r.name === this.form.value.requisitionType)?.id,
         requisitionStageId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'RequisitionStage' && r.name === raw.requisitionStage)?.id,
-        hiringPocId: this.metaData['users']?.find((u: any) => {const fullName = `${(u.firstName || '').trim()} ${(u.lastName || '').trim()}`.trim(); return fullName === (this.form.value.hiringPoc || '').trim();})?.id,
+        hiringPocId: this.metaData['users']?.find((u: any) => { const fullName = `${(u.firstName || '').trim()} ${(u.lastName || '').trim()}`.trim(); return fullName === (this.form.value.hiringPoc || '').trim(); })?.id,
         skillId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'Skills' && r.name === this.form.value.skills)?.id,
         clientPocId: this.metaData['managers']?.find((m: any) => (m.managerName || '').trim() === (this.form.value.clientPoc || '').trim())?.managerId,
         fulfillmentMediumId: this.metaData['referenceData']?.find((r: any) => r.categoryName === 'FulfillmentMedium' && r.name === this.form.value.fulfillmentMedium)?.id,
