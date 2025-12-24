@@ -7,7 +7,7 @@ export type ISODateString = string;
  */
 export interface ProjectRequisition {
     requisitionId: number;
-    requisitionDate: ISODateString;
+    requisitionDate: ISODateString | Date;
     projectId: number;
     projectName: string;
     clientId: number;
