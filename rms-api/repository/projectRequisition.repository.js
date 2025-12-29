@@ -53,13 +53,50 @@ const ProjectRequisition = {
             fte_head_count AS fteHeadCount,
             fte_total_allocation AS fteTotalAllocation,
             fulfilled_allocation AS fulfilledAllocation,
-            notes AS notes,
             tentative_onboarding_date AS tentativeOnboardingDate,
             ageing_days AS ageingDays
             FROM vw_requisition_full WHERE requisition_status <> 'Complete' AND requisition_stage <> 'Closure' AND requisition_date   >= (CURDATE() - INTERVAL 15 DAY);
         `;
 
         return queryAsync(query);
+    },
+
+    async getAllRequisitionById(requisition_id){
+        const query = `
+            SELECT
+            requisition_id AS requisitionId,
+            requisition_date AS requisitionDate,
+            project_id AS projectId,
+            project_name AS projectName,
+            client_id AS clientId,
+            client_name AS clientName,
+            project_status AS projectStatus,
+            project_start_date AS projectStartDate,
+            project_end_date AS projectEndDate,
+            requisition_type_id AS requisitionTypeId,
+            requisition_type AS requisitionType,
+            requisition_stage_id AS requisitionStageId,
+            requisition_stage AS requisitionStage,
+            skill_id AS skillId,
+            skill AS skill,
+            fulfillment_medium_id AS fulfillmentMediumId,
+            fulfillment_medium AS fulfillmentMedium,
+            requisition_status_id AS requisitionStatusId,
+            requisition_status AS requisitionStatus,
+            hiring_poc_id AS hiringPocId,
+            hiring_poc_name AS hiringPocName,
+            hiring_poc_email AS hiringPocEmail,
+            client_poc_name AS clientPocName,
+            fte_head_count AS fteHeadCount,
+            fte_total_allocation AS fteTotalAllocation,
+            fulfilled_allocation AS fulfilledAllocation,
+            tentative_onboarding_date AS tentativeOnboardingDate,
+            ageing_days AS ageingDays
+            FROM vw_requisition_full WHERE requisition_id = ?;;
+        `;
+        const rows = await queryAsync(query, [requisition_id]);
+        if (!rows || rows.length === 0) return [];
+        return rows;
     },
 
     async create(data = {}) {

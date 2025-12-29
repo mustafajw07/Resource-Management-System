@@ -12,7 +12,6 @@ CREATE TABLE Requisition (
   fte_head_count INT NOT NULL DEFAULT 1,
   fte_total_allocation INT,
   fulfilled_allocation INT NOT NULL DEFAULT 0,
-  notes TEXT,
   tentative_onboarding_date DATE,
   ageing_days INT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
