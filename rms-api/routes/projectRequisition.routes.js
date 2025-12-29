@@ -8,6 +8,9 @@ module.exports = app => {
     // Retrieve all project requisitions
     router.get("/",projectRequisition.findAll);
 
+    // Retrieve project requisition by id
+    router.get("/:id",projectRequisition.findById);
+
     // Create a new project requisition
     router.post("/", projectRequisition.create);
 
