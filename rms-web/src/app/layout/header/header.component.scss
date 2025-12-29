@@ -4,7 +4,29 @@
   width: 100%;
 }
 
-::ng-deep .active-menu{
-  background-color: #f1f5f9;
+:host ::ng-deep .p-menubar{
+  background-color: #D1DFF7 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+:host ::ng-deep .p-menubar-item-link-active{
+  background-color: #a0bff4;
   border-radius: 7px; 
+}
+
+:host ::ng-deep .p-menubar-item-label{
+  color: black;
+}
+
+:host ::ng-deep .pi-home:before,
+::ng-deep .pi-file:before,
+::ng-deep .pi-users:before,
+::ng-deep .pi-chart-bar:before {
+  color: black;
+}
+
+:host ::ng-deep .p-menubar .p-menubar-item-content:hover {
+  background-color: #a0bff4 !important;
+  transition: 0.5s ease;
 }
