@@ -53,7 +53,6 @@ const ProjectRequisition = {
             fte_head_count AS fteHeadCount,
             fte_total_allocation AS fteTotalAllocation,
             fulfilled_allocation AS fulfilledAllocation,
-            notes AS notes,
             tentative_onboarding_date AS tentativeOnboardingDate,
             ageing_days AS ageingDays
             FROM vw_requisition_full WHERE requisition_status <> 'Complete' AND requisition_stage <> 'Closure' AND requisition_date   >= (CURDATE() - INTERVAL 15 DAY);

@@ -22,9 +22,6 @@ SELECT
   r.requisition_status_id,
   rd_status.reference_name AS requisition_status,
 
-  r.capability_area_id,
-  rd_capability.reference_name AS capability_area,
-
   r.skill_id,
   rd_skill.reference_name AS skill,
 
