@@ -14,8 +14,8 @@
             </div>
             <div class="ml-auto w-64">
                 <div class="relative">
-                    <p-button severity="contrast" label="Add New Request" icon="pi pi-plus"
-                        (click)="addRequisition()" />
+                    <p-button styleClass="!bg-[#307EF7] hover:!bg-[#0962EB] !border-[#307EF7] !text-white"
+                        severity="contrast" label="Add New Request" icon="pi pi-plus" (click)="addRequisition()" />
                 </div>
             </div>
         </div>
@@ -33,17 +33,45 @@
         </tr>
 
         <!-- FILTER ROW -->
-        <tr>
+        <!-- <tr>
             <th></th>
+            @for (col of headers; track col) {
+            <th>
+                <ng-container [ngSwitch]="col.filterType">
 
-            <th class="text-sm p-3!" *ngFor="let col of headers">
-                <p-columnFilter [field]="col.field" matchMode="contains" [showMenu]="false" [showClearButton]="true"
-                    placeholder="Search {{ col.header }}">
-                </p-columnFilter>
+                    Text Field Filter
+                    <p-columnFilter *ngSwitchCase="'text'" [field]="col.field" matchMode="contains" [showMenu]="false"
+                        [showClearButton]="true" placeholder="Search {{ col.header }}">
+                    </p-columnFilter>
+
+                    Date Filters
+                    <p-columnFilter *ngSwitchCase="'date'" [field]="col.field" matchMode="between" [showMenu]="false">
+
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+
+                            <p-datepicker (ngModelChange)="filter($event)" selectionMode="range" [readonlyInput]="true"
+                                [showButtonBar]="true" placeholder="Select range">
+                            </p-datepicker>
+
+                        </ng-template>
+                    </p-columnFilter>
+
+                    Range
+                    <p-columnFilter *ngSwitchCase="'range'" [field]="col.field" matchMode="between" [showMenu]="false">
+
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+
+                            <p-slider (onChange)="filter($event)" [range]="true" [min]="0" [max]="15" class="w-25">
+                            </p-slider>
+
+                        </ng-template>
+                    </p-columnFilter>
+                    <span *ngSwitchDefault></span>
+                </ng-container>
             </th>
-
+            }
             <th></th>
-        </tr>
+        </tr> -->
     </ng-template>
 
     <!-- BODY -->
@@ -55,7 +83,8 @@
 
             <!-- EXPAND -->
             <td>
-                <p-button (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row"
+                <p-button styleClass="text-blue-500! hover:text-blue-500!"
+                    (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row"
                     [text]="true" severity="secondary" [rounded]="true"
                     [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
@@ -84,16 +113,6 @@
                         <i *ngIf="row.ageingDays! > 30" class="pi pi-exclamation-triangle ml-1"></i>
                     </span>
 
-                    <!-- FTE -->
-                    <!-- <div *ngSwitchCase="'fteHeadCount'" class="flex flex-col gap-1">
-                        <span>
-                            {{ row.fulfilledAllocation }} / {{ row.fteHeadCount }} Filled
-                        </span>
-                        <p-progressBar [value]="fteProgress(row)" [showValue]="false" styleClass="h-2">
-                        </p-progressBar>
-                    </div> -->
-
-                    <!-- Project Tooltip -->
                     <span *ngSwitchCase="'projectName'" pTooltip="{{ row.projectName }}" tooltipPosition="top">
                         {{ row.projectName | slice:0:15 }}{{ row.projectName?.length! > 15 ? '…' : '' }}
                     </span>
@@ -109,7 +128,8 @@
             <!-- ACTION -->
             <td>
                 <button severity="contrast" pButton icon="pi pi-pencil"
-                    class="p-button-text p-button-text p-button-rounded" (click)="editRequisition(row)">
+                    class="p-button-text p-button-text p-button-rounded text-blue-500! hover:text-blue-500!"
+                    (click)="editRequisition(row)">
                 </button>
             </td>
         </tr>
@@ -146,41 +166,18 @@
                         </p>
                     </div>
 
-                    <!-- FTE SECTION -->
-                    <!-- <div class="mb-4">
-                    <p class="font-semibold mb-1">
-                        <i class="pi pi-users mr-2 text-gray-500"></i>
-                        FTE Allocation
-                    </p>
-
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm">
-                            {{ row.fulfilledAllocation ?? 0 }}
-                            /
-                            {{ row.fteTotalAllocation ?? 0 }}
-                            Filled
-                        </span>
-
-                        <p-progressBar
-                            [value]="fteProgress(row)"
-                            [showValue]="false"
-                            styleClass="h-2 w-64">
-                        </p-progressBar>
-                    </div>
-                </div> -->
-
                     <!-- NOTES -->
                     <div class="border-t pt-3">
                         <p class="font-semibold mb-1">
                             <i class="pi pi-file-edit mr-2 text-gray-500"></i>
-                            Notes
+                            Notes:
                         </p>
 
                         <ng-container *ngIf="notesMap.get(row.requisitionId) as list;">
                             <div class="space-y-3">
                                 <div *ngFor="let n of list" class="text-sm text-gray-700">
                                     <div style="white-space: pre-wrap;">{{ n.noteText }}</div>
-                                    <div class="text-xs text-gray-500 mt-1">
+                                    <div class="text-md text-gray-500 mt-1">
                                         <i class="pi pi-users mr-2 text-gray-500"></i>
                                         {{ n.createdBy }}
                                         <i class="pi pi-calendar mr-2 text-gray-500"></i>
@@ -203,7 +200,7 @@
 </p-table>
 
 @if(visible){
-<p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '70%' }">
+<p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '45%' }">
     <app-requisition-form 
         (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
 </p-dialog>

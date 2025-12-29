@@ -18,6 +18,9 @@ import { toast } from 'ngx-sonner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotesService } from '@core/services/notes.service';
 import { Notes } from '@core/interfaces/notes';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SliderModule } from 'primeng/slider';
 
 @Component({
     selector: 'app-requisition-table',
@@ -34,22 +37,31 @@ import { Notes } from '@core/interfaces/notes';
         CommonModule,
         ButtonModule,
         DialogModule,
+        AutoCompleteModule,
         TooltipModule,
         ProgressBarModule,
+        DatePickerModule,
+        SliderModule,
         RequisitionFormComponent],
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
-        { field: 'requisitionDate', header: 'Requisition Date' },
-        { field: 'projectName', header: 'Project' },
-        { field: 'skill', header: 'Skill' },
-        { field: 'requisitionType', header: 'Requisition Type' },
-        { field: 'requisitionStage', header: 'Requisition Stage' },
-        { field: 'hiringPocName', header: 'Hiring POC' },
-        { field: 'clientPocName', header: 'Client POC' },
-        { field: 'urgency', header: 'Urgency' },
-        { field: 'fteHeadCount', header: 'FTE Head Count' },
-        { field: 'ageingDays', header: 'Ageing Days' },
+        { field: 'requisitionDate', header: 'Requisition Date', filterType: 'date' },
+        { field: 'projectName', header: 'Project', filterType: 'text' },
+        { field: 'skill', header: 'Skill', filterType: 'dropdown' },
+        { field: 'requisitionType', header: 'Requisition Type', filterType: 'dropdown' },
+        { field: 'requisitionStage', header: 'Requisition Stage', filterType: 'dropdown' },
+        { field: 'hiringPocName', header: 'Hiring POC', filterType: 'text' },
+        { field: 'clientPocName', header: 'Client POC', filterType: 'text' },
+        {
+            field: 'urgency', header: 'Urgency', filterType: 'dropdown', options: [
+                { label: 'Immediate', value: 'Open' },
+                { label: 'Long Term', value: 'Closed' },
+                { label: 'Over Due', value: 'Over Due' },
+            ]
+        },
+        { field: 'fteHeadCount', header: 'FTE Head Count', filterType: null, },
+        { field: 'ageingDays', header: 'Ageing Days', filterType: 'range' },
     ];
     protected requisitions: ProjectRequisition[] = [];
     protected popupHeader = '';
@@ -115,7 +127,10 @@ export class RequisitionTableComponent implements OnInit {
         this.loading = true;
         this.projectRequisitionService.getAllRequisitions().subscribe({
             next: (data: ProjectRequisition[]) => {
-                this.requisitions = data;
+                this.requisitions = data.map((r) => ({
+                    ...r,
+                    requisitionDate: new Date(r.requisitionDate)
+                }));
                 this.loading = false;
             },
             error: (error: HttpErrorResponse) => {
@@ -137,7 +152,7 @@ export class RequisitionTableComponent implements OnInit {
             default: return 'bg-gray-100 text-gray-800 px-2 py-0.5 rounded';
         }
     }
-    
+
     /**
      * Return tailwind-style classes for ageing
      * @return string
@@ -153,7 +168,7 @@ export class RequisitionTableComponent implements OnInit {
      * Return tailwind-style classes for onboarding date
      * @return string
      */
-     protected onboardingClass(date?: string | Date): string {
+    protected onboardingClass(date?: string | Date): string {
         if (!date) return '';
 
         const target = new Date(date).getTime();
@@ -173,7 +188,7 @@ export class RequisitionTableComponent implements OnInit {
         if (!row.fteHeadCount || !row.fulfilledAllocation) return 0;
         return Math.round((row.fulfilledAllocation / row.fteHeadCount) * 100);
     }
-    
+
     /**
      * Return field values
      */
