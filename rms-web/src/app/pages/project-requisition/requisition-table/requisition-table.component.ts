@@ -21,28 +21,31 @@ import { Notes } from '@core/interfaces/notes';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SliderModule } from 'primeng/slider';
+import { RouterModule } from "@angular/router";
 
 @Component({
     selector: 'app-requisition-table',
     templateUrl: './requisition-table.component.html',
     styleUrls: ['./requisition-table.component.scss'],
     imports: [
-        TableModule,
-        TagModule,
-        IconFieldModule,
-        InputTextModule,
-        InputIconModule,
-        MultiSelectModule,
-        SelectModule,
-        CommonModule,
-        ButtonModule,
-        DialogModule,
-        AutoCompleteModule,
-        TooltipModule,
-        ProgressBarModule,
-        DatePickerModule,
-        SliderModule,
-        RequisitionFormComponent],
+    TableModule,
+    TagModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIconModule,
+    MultiSelectModule,
+    SelectModule,
+    CommonModule,
+    ButtonModule,
+    DialogModule,
+    AutoCompleteModule,
+    TooltipModule,
+    ProgressBarModule,
+    DatePickerModule,
+    SliderModule,
+    RequisitionFormComponent,
+    RouterModule
+],
 })
 export class RequisitionTableComponent implements OnInit {
     protected headers = [
@@ -88,16 +91,6 @@ export class RequisitionTableComponent implements OnInit {
     protected addRequisition(): void {
         this.popupHeader = "New Project Requisition";
         this.selectedRequisition = null;
-        this.visible = true;
-    }
-
-    /**
-     * Opens the dialog to edit a new requisition
-     * @return void
-     */
-    protected editRequisition(item: ProjectRequisition): void {
-        this.popupHeader = "Edit Project Requisition";
-        this.selectedRequisition = item;
         this.visible = true;
     }
 
