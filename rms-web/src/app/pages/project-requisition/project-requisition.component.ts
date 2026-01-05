@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-
-import { RequisitionTableComponent } from './requisition-table/requisition-table.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-project-requisition',
   templateUrl: './project-requisition.component.html',
-  imports: [RequisitionTableComponent],
+  imports: [RouterOutlet],
 })
 export class ProjectRequisitionComponent {}

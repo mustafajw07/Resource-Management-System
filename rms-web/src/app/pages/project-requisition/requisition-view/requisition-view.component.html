@@ -1,0 +1,77 @@
+<div class="card" *ngIf="requisition as req">
+    <p-stepper [value]="1" styleClass="custom-stepper">
+        <p-step-item [value]="1">
+            <p-step>Approval</p-step>
+            <p-step-panel>
+                <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                    <form #f="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Requisition Type</label>
+                            <p-autoComplete name="requisitionType" class="w-full" [(ngModel)]="req.requisitionType"
+                                [suggestions]="requisitionTypes" [dropdown]="true" [forceSelection]="true"
+                                [minLength]="0" placeholder="Select or type"
+                                (completeMethod)="filterDropdown($event, 'requisitionTypes')"></p-autoComplete>
+
+                            <label class="block text-sm font-medium">Fulfilled Allocation</label>
+                            <input pInputText type="number" min="0" class="w-full" name="fulfilledAllocation"
+                                [(ngModel)]="req.fulfilledAllocation" />
+
+                            <label class="block text-sm font-medium">Tentative Onboarding</label>
+                            <input pInputText class="w-full" type="date" name="tentativeOnboardingDate"
+                                [(ngModel)]="req.tentativeOnboardingDate" />
+
+                            <label class="block text-sm font-medium">Total Allocation</label>
+                            <input pInputText type="number" min="0" class="w-full" name="fteTotalAllocation"
+                                [(ngModel)]="req.fteTotalAllocation" />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Fulfillment Medium</label>
+                            <p-autoComplete name="fulfillmentMedium" class="w-full" [(ngModel)]="req.fulfillmentMedium"
+                                [suggestions]="fulfillmentMedium" [dropdown]="true" [forceSelection]="true"
+                                [minLength]="0" placeholder="Select or type"
+                                (completeMethod)="filterDropdown($event, 'fulfillmentMedium')"></p-autoComplete>
+
+                            <label class="block text-sm font-medium">Status</label>
+                            <p-autoComplete name="requisitionStatus" class="w-full" [(ngModel)]="req.requisitionStatus"
+                                [suggestions]="requisitionStatus" [dropdown]="true" [forceSelection]="true"
+                                [minLength]="0" placeholder="Select or type"
+                                (completeMethod)="filterDropdown($event, 'requisitionStatus')"></p-autoComplete>
+
+                            <label class="block text-sm font-medium">FTE Headcount</label>
+                            <input pInputText type="number" min="0" class="w-full" name="fteHeadCount"
+                                [(ngModel)]="req.fteHeadCount" />
+                        </div>
+                    </form>
+
+                    <div class="py-6">
+                        <p-button label="Save" (onClick)="onSave()" [disabled]="!f.dirty" />
+                        <p-button class="px-2" label="Cancel" (onClick)="onCancel()" [disabled]="!f.dirty" />
+                        <p-button label="Move To Next Stage" (onClick)="activateCallback(2)" />
+                    </div>
+                </ng-template>
+            </p-step-panel>
+        </p-step-item>
+
+        <p-step-item [value]="2">
+            <p-step>Planning</p-step>
+            <p-step-panel>
+                <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                    <div class="text-sm text-muted">
+                        <p-button label="Back" severity="secondary" (onClick)="activateCallback(1)" />
+                    </div>
+                </ng-template>
+            </p-step-panel>
+        </p-step-item>
+
+        <p-step-item [value]="3">
+            <p-step>Fulfillment</p-step>
+            <p-step-panel>
+                <ng-template pTemplate="content">
+                    <div class="text-sm text-muted">—</div>
+                </ng-template>
+            </p-step-panel>
+        </p-step-item>
+    </p-stepper>
+</div>

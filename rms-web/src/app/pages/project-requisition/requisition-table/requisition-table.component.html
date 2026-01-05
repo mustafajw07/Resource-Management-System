@@ -81,12 +81,8 @@
         'bg-yellow-50': row.urgency === 'Immediate' && row.ageingDays! <= 30
       }">
 
-            <!-- EXPAND -->
+            <!-- DETAIL -->
             <td>
-                <p-button styleClass="text-blue-500! hover:text-blue-500!"
-                    (onClick)="getRequisitionNotes(row.requisitionId)" type="button" pRipple [pRowToggler]="row"
-                    [text]="true" severity="secondary" [rounded]="true"
-                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
 
             <!-- COLUMNS -->
@@ -124,86 +120,10 @@
 
                 </ng-container>
             </td>
-
-            <!-- ACTION -->
             <td>
-                <button severity="contrast" pButton icon="pi pi-pencil"
-                    class="p-button-text p-button-text p-button-rounded text-blue-500! hover:text-blue-500!"
-                    (click)="editRequisition(row)">
-                </button>
-            </td>
-        </tr>
-    </ng-template>
-
-    <ng-template #expandedrow let-row>
-        <tr>
-            <td [attr.colspan]="headers.length + 2">
-                <div class="p-4 bg-gray-50 rounded-md">
-
-                    <!-- TOP INFO GRID -->
-                    <div class="grid grid-cols-1 gap-4 mb-4 text-md">
-
-                        <p>
-                            <i class="pi pi-send mr-2 text-gray-500"></i>
-                            <strong>Fulfillment Medium:</strong>
-                            {{ row.fulfillmentMedium || 'N/A' }}
-                        </p>
-
-                        <p class="flex items-center gap-2">
-                            <i class="pi pi-flag mr-1 text-gray-500"></i>
-                            <strong>Requisition Status:</strong>
-                            {{row.requisitionStatus || 'N/A'}}
-                        </p>
-
-                        <p>
-                            <i class="pi pi-calendar mr-2 text-gray-500"></i>
-                            <strong>Tentative Onboarding:</strong>
-                            <span [ngClass]="onboardingClass(row.tentativeOnboardingDate)">
-                                {{ row.tentativeOnboardingDate
-                                ? (row.tentativeOnboardingDate | date:'mediumDate')
-                                : 'N/A' }}
-                            </span>
-                        </p>
-                    </div>
-
-                    <!-- NOTES -->
-                    <div class="border-t pt-3">
-                        <p class="font-semibold mb-1">
-                            <i class="pi pi-file-edit mr-2 text-gray-500"></i>
-                            Notes:
-                        </p>
-
-                        <ng-container *ngIf="notesMap.get(row.requisitionId) as list">
-                            <div class="card">
-                                <p-table [value]="list" sortField="createdAt" sortMode="single" [scrollable]="true"
-                                    scrollHeight="300px" [tableStyle]="{ 'min-width': '10rem' }">
-                                    <ng-template #header>
-                                        <tr>
-                                            <th>Note</th>
-                                            <th>Added By</th>
-                                            <th>Created At</th>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template #body let-n>
-                                        <tr>
-                                            <td>
-                                                <div style="white-space: pre-wrap;">{{ n.noteText }}</div>
-                                            </td>
-                                            <td>
-                                                <i class="pi pi-users mr-2 text-gray-500"></i>
-                                                {{ n.createdBy }}
-                                            </td>
-                                            <td>
-                                                <i class="pi pi-calendar mr-2 text-gray-500"></i>
-                                                {{ n.createdAt | date: 'medium' }}
-                                            </td>
-                                        </tr>
-                                    </ng-template>
-                                </p-table>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
+                <p-button [routerLink]="['/project-requisition/details', row.requisitionId]" styleClass="text-blue-500! hover:text-blue-500!" type="button" 
+                    [text]="true" severity="secondary" [rounded]="true">
+                     <i  class="pi pi-eye"></i></p-button>
             </td>
         </tr>
     </ng-template>
