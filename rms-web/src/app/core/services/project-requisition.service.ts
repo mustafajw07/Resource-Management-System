@@ -30,6 +30,6 @@ export class ProjectRequisitionService {
    * @returns Observable of ProjectRequisition array
    */
   public getRequisitionById(requisitionId: string): Observable<ProjectRequisition> {
-    return this.httpClient.get<ProjectRequisition[]>(`${this.apiUrl}/${requisitionId}`).pipe(map(res => res[0]));
+    return this.httpClient.get<ProjectRequisition>(`${this.apiUrl}/${requisitionId}`);
   }
 }

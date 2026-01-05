@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Store } from '@ngrx/store';
 import { selectAllReferenceData } from '../../../store/reference-data/reference-data.selectors';
 import { AutoComplete } from 'primeng/autocomplete';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -31,11 +32,11 @@ export class RequisitionViewComponent {
   protected requisitionStatus: string[] = [];
   protected metaData: Record<string, any> = {};
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('requisitionId')!;
-    this.requisitionService.getRequisitionById(id).subscribe(res => {
-      this.requisition = res;
-      this.originalReq = structuredClone(res);
+ngOnInit(): void {
+  const id = this.route.snapshot.paramMap.get('requisitionId')!;
+  this.requisitionService.getRequisitionById(id).pipe(map((res: any) => Array.isArray(res) ? res[0] : res)).subscribe(req => {
+      this.requisition = req;
+      this.originalReq=structuredClone(req);
     });
     this.getReferenceData();
   }
