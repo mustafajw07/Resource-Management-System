@@ -8,8 +8,26 @@
 
 :host ::ng-deep .p-button{
     background: #77a6f1;
+    border: none !important;
 }
 
 :host ::ng-deep .p-stepitem .p-stepper-separator{
     background-color:  #77a6f1;
+}
+
+:host ::ng-deep  .p-button:not(:disabled):hover {
+    background: #3e69ae !important;
+}
+
+:host ::ng-deep .p-autocomplete-input .p-component{
+    border: none !important;
+}
+
+:host ::ng-deep  .p-autocomplete-option-selected.p-focus {
+    background:  #77a6f1 !important;
+    color: white;
+}
+
+:host ::ng-deep .p-button-text{
+    color:white !important;
 }

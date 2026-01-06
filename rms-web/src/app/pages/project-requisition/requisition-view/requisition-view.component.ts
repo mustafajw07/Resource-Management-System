@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -15,7 +15,7 @@ import { map } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-requisition-view',
-  imports: [StepperModule, ButtonModule, CommonModule, FormsModule, AutoComplete, InputTextModule],
+  imports: [StepperModule, ButtonModule, CommonModule, FormsModule, AutoComplete, InputTextModule, RouterModule],
   templateUrl: './requisition-view.component.html',
   styleUrl: './requisition-view.component.scss',
 })
