@@ -1,8 +1,10 @@
+<button pButton type="button" icon="pi pi-arrow-circle-left" class="p-button-text" 
+        routerLink="/project-requisition/list">Back</button>
 <div class="card" *ngIf="requisition as req">
     <p-stepper [value]="1" styleClass="custom-stepper">
         <p-step-item [value]="1">
             <p-step>Approval</p-step>
-            <p-step-panel>
+            <p-step-panel>  
                 <ng-template pTemplate="content" let-activateCallback="activateCallback">
                     <form #f="ngForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -16,10 +18,10 @@
                             <label class="block text-sm font-medium">Fulfilled Allocation</label>
                             <input pInputText type="number" min="0" class="w-full" name="fulfilledAllocation"
                                 [(ngModel)]="req.fulfilledAllocation" />
-
+                                
                             <label class="block text-sm font-medium">Tentative Onboarding</label>
-                            <input pInputText class="w-full" type="date" name="tentativeOnboardingDate"
-                                [(ngModel)]="req.tentativeOnboardingDate" />
+                            <input pInputText class="w-full" type="date" name="tentativeOnboardingDate" [ngModel]="req.tentativeOnboardingDate | date:'yyyy-MM-dd':'UTC'"
+                            (ngModelChange)="req.tentativeOnboardingDate = $event"/>
 
                             <label class="block text-sm font-medium">Total Allocation</label>
                             <input pInputText type="number" min="0" class="w-full" name="fteTotalAllocation"
@@ -59,7 +61,7 @@
             <p-step-panel>
                 <ng-template pTemplate="content" let-activateCallback="activateCallback">
                     <div class="text-sm text-muted">
-                        <p-button label="Back" severity="secondary" (onClick)="activateCallback(1)" />
+                        <p-button label="Back" (onClick)="activateCallback(1)" />
                     </div>
                 </ng-template>
             </p-step-panel>
