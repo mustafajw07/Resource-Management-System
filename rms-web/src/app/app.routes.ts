@@ -23,27 +23,10 @@ export const routes: Routes = [
             .then(c => c.ProjectRequisitionComponent),
         children: [
           {
-            path: '',
-            pathMatch: 'full',
-            redirectTo: 'list',
-          },
-          {
-            path: 'list',
-            loadComponent: () =>
-              import('./pages/project-requisition/requisition-table/requisition-table.component')
-                .then(c => c.RequisitionTableComponent),
-          },
-          {
             path: 'add',
             loadComponent: () =>
               import('./pages/project-requisition/requisition-form/requisition-form.component')
                 .then(c => c.RequisitionFormComponent),
-          },
-          {
-            path: 'details/:requisitionId',
-            loadComponent: () =>
-              import('./pages/project-requisition/requisition-view/requisition-view.component')
-                .then(c => c.RequisitionViewComponent),
           },
         ],
 

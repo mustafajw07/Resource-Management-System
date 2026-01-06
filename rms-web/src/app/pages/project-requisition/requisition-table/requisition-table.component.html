@@ -2,25 +2,6 @@
     [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
     sortField="ageingDays" [sortOrder]="-1">
 
-    <!-- CAPTION -->
-    <ng-template #caption>
-        <div class="flex">
-            <div class="mr-auto w-64">
-                <div class="relative">
-                    <i class="pi pi-search absolute right-3 top-1/2 -translate-y-1/2"></i>
-                    <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')"
-                        placeholder="Search keyword" class="pl-10 w-full" />
-                </div>
-            </div>
-            <div class="ml-auto w-64">
-                <div class="relative">
-                    <p-button styleClass="!bg-[#307EF7] hover:!bg-[#0962EB] !border-[#307EF7] !text-white"
-                        severity="contrast" label="Add New Request" icon="pi pi-plus" (click)="addRequisition()" />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
     <!-- HEADER -->
     <ng-template #header>
         <tr>
@@ -121,9 +102,11 @@
                 </ng-container>
             </td>
             <td>
-                <p-button [routerLink]="['/project-requisition/details', row.requisitionId]" styleClass="text-blue-500! hover:text-blue-500!" type="button" 
-                    [text]="true" severity="secondary" [rounded]="true">
-                     <i  class="pi pi-eye"></i></p-button>
+                @if(currentStage !== 0){
+                    <p-button (onClick)="moveToNextStage(row)" styleClass="text-blue-500! hover:text-blue-500!" type="button" 
+                        [text]="true" severity="secondary" [rounded]="true">
+                         <i  class="pi pi-angle-double-right"></i></p-button>
+                }
             </td>
         </tr>
     </ng-template>
@@ -135,9 +118,3 @@
     </ng-template>
 </p-table>
 
-@if(visible){
-<p-dialog [header]="popupHeader" [modal]="true" [(visible)]="visible" [style]="{ width: '45%' }">
-    <app-requisition-form 
-    (submitted)="handleFormSubmitted($event)" (cancel)="visible = false"></app-requisition-form>
-</p-dialog>
-}
