@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -7,21 +7,16 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { RequisitionFormComponent } from '../requisition-form/requisition-form.component';
-import { DialogModule } from 'primeng/dialog';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { ProjectRequisitionService } from '@core/services/project-requisition.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
-import { toast } from 'ngx-sonner';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NotesService } from '@core/services/notes.service';
 import { Notes } from '@core/interfaces/notes';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SliderModule } from 'primeng/slider';
 import { RouterModule } from "@angular/router";
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-requisition-table',
@@ -35,19 +30,23 @@ import { RouterModule } from "@angular/router";
     InputIconModule,
     MultiSelectModule,
     SelectModule,
-    CommonModule,
     ButtonModule,
-    DialogModule,
+    CommonModule,
     AutoCompleteModule,
     TooltipModule,
     ProgressBarModule,
     DatePickerModule,
     SliderModule,
-    RequisitionFormComponent,
     RouterModule
 ],
 })
 export class RequisitionTableComponent implements OnInit {
+    @Input() requisitions: ProjectRequisition[] = [];
+    @Input() loading: boolean = false;
+    @Input() currentStage: number = 0;
+
+    @Output() move = new EventEmitter<ProjectRequisition>();
+
     protected headers = [
         { field: 'requisitionDate', header: 'Requisition Date', filterType: 'date' },
         { field: 'projectName', header: 'Project', filterType: 'text' },
@@ -66,71 +65,15 @@ export class RequisitionTableComponent implements OnInit {
         { field: 'fteHeadCount', header: 'FTE Head Count', filterType: null, },
         { field: 'ageingDays', header: 'Ageing Days', filterType: 'range' },
     ];
-    protected requisitions: ProjectRequisition[] = [];
-    protected popupHeader = '';
-    protected loading = false;
-    protected visible = false;
     protected globalFilterFields: string[] = [];
     protected expandedRows = {};
-    protected selectedRequisition: ProjectRequisition | null = null;
-    protected notesMap = new Map<number, Notes[]>();
 
-    private readonly projectRequisitionService = inject(ProjectRequisitionService);
+    protected notesMap = new Map<number, Notes[]>();
     private readonly notesService = inject(NotesService)
     private readonly notesLoaded = new Set<number>();
 
     ngOnInit(): void {
         this.globalFilterFields = this.headers.map(h => h.field);
-        this.getRequisitions();
-    }
-
-    /**
-     * Opens the dialog to add a new requisition
-     * @return void
-     */
-    protected addRequisition(): void {
-        this.popupHeader = "New Project Requisition";
-        this.selectedRequisition = null;
-        this.visible = true;
-    }
-
-    /**
-     * Handles the form submission from the requisition form
-     * @param payload 
-     * @return void
-     */
-    protected handleFormSubmitted(payload: ProjectRequisitionCreate): void {
-        this.projectRequisitionService.createRequisition(payload).subscribe({
-            next: () => {
-                toast.success('Requisition created successfully');
-                this.getRequisitions();
-            },
-            error: (error: HttpErrorResponse) => {
-                toast.error('Failed to create requisition: ' + error.message);
-            },
-        });
-        this.visible = false;
-    }
-
-    /**
-     * Handles the form cancellation from the requisition form
-     * @return void
-     */
-    protected getRequisitions() {
-        this.loading = true;
-        this.projectRequisitionService.getAllRequisitions().subscribe({
-            next: (data: ProjectRequisition[]) => {
-                this.requisitions = data.map((r) => ({
-                    ...r,
-                    requisitionDate: new Date(r.requisitionDate)
-                }));
-                this.loading = false;
-            },
-            error: (error: HttpErrorResponse) => {
-                this.loading = false;
-                toast.error('Failed to load requisitions: ' + error.message);
-            }
-        });
     }
 
     /**
@@ -204,5 +147,14 @@ export class RequisitionTableComponent implements OnInit {
                 this.notesLoaded.add(requisitionId);
             }
         });
+    }
+
+    /**
+     * Move to next stage
+     * @returns void
+     * @param row 
+     */
+    protected moveToNextStage(row: ProjectRequisition): void {
+        this.move.emit(row);
     }
 }
