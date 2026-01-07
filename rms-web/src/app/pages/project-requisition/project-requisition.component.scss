@@ -7,7 +7,7 @@
 }
 
 :host ::ng-deep .p-button{
-    background: #77a6f1;
+    background: #307EF7;
     border: none !important;
 }
 
@@ -41,6 +41,9 @@
 }
 
 :host ::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted{
-    background:  #77a6f1 !important;
     color: black;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus{
+    border-color: black;
 }
