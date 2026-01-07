@@ -1,6 +1,6 @@
 <p-table #dt2 [value]="requisitions" dataKey="requisitionId" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
     [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
-    sortField="ageingDays" [sortOrder]="-1">
+    sortField="ageingDays" [globalFilterFields]="globalFilterFields" [sortOrder]="-1">
 
     <!-- HEADER -->
     <ng-template #header>
@@ -10,50 +10,42 @@
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
-            <th></th>
+            <th>Action</th>
         </tr>
 
         <!-- FILTER ROW -->
-        <!-- <tr>
+         <tr>
             <th></th>
             @for (col of headers; track col) {
-            <th>
-                <ng-container [ngSwitch]="col.filterType">
+                <th>
+                    <ng-container [ngSwitch]="col.filterType">
+                        <!-- Text Filter -->
+                         <p-columnFilter *ngSwitchCase="'text'" [field]="col.field" matchMode="contains" [showMenu]="false"
+                         [showClearButton]="true" placeholder="Search {{ col.header }}">
+                        </p-columnFilter>
 
-                    Text Field Filter
-                    <p-columnFilter *ngSwitchCase="'text'" [field]="col.field" matchMode="contains" [showMenu]="false"
-                        [showClearButton]="true" placeholder="Search {{ col.header }}">
-                    </p-columnFilter>
-
-                    Date Filters
-                    <p-columnFilter *ngSwitchCase="'date'" [field]="col.field" matchMode="between" [showMenu]="false">
-
-                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-
-                            <p-datepicker (ngModelChange)="filter($event)" selectionMode="range" [readonlyInput]="true"
-                                [showButtonBar]="true" placeholder="Select range">
-                            </p-datepicker>
-
+                        <!-- Dropdown Filter -->
+                         <p-columnFilter *ngSwitchCase="'dropdown'" [field]="col.field" matchMode="in" [showMenu]="false">
+                            <ng-template pTemplate="filter" let-filter="filterCallback">
+                                <p-multiSelect [options]="col.options || []" optionLabel="label" optionValue="value" display="chip"
+                                placeholder="Filter {{ col.header }}" (onChange)="filter($event.value)">
+                            </p-multiSelect>
                         </ng-template>
                     </p-columnFilter>
 
-                    Range
-                    <p-columnFilter *ngSwitchCase="'range'" [field]="col.field" matchMode="between" [showMenu]="false">
+                    <p-columnFilter *ngSwitchCase="'date'" [field]="col.field" [type]="'date'" matchMode="equals" [showMenu]="false">
+                        <ng-template pTemplate="filter" let-filter="filterCallback">
+                            <p-datePicker [readonlyInput]="true" dateFormat="yy-mm-dd" placeholder="Select date" (onSelect)="filter($event)">
 
-                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-
-                            <p-slider (onChange)="filter($event)" [range]="true" [min]="0" [max]="15" class="w-25">
-                            </p-slider>
-
+                            </p-datePicker>
                         </ng-template>
                     </p-columnFilter>
                     <span *ngSwitchDefault></span>
                 </ng-container>
             </th>
-            }
-            <th></th>
-        </tr> -->
-    </ng-template>
+        }
+    </tr>
+</ng-template>
 
     <!-- BODY -->
     <ng-template #body let-row let-expanded="expanded">
@@ -103,7 +95,7 @@
             </td>
             <td>
                 @if(currentStage !== 0){
-                    <p-button (onClick)="moveToNextStage(row)" styleClass="text-blue-500! hover:text-blue-500!" type="button" 
+                    <p-button (onClick)="moveToNextStage(row)" styleClass="text-white-500! hover:text-blue-500!" type="button" 
                         [text]="true" severity="secondary" [rounded]="true">
                          <i  class="pi pi-angle-double-right"></i></p-button>
                 }
