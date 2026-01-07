@@ -1,0 +1,15 @@
+<form [formGroup]="noteForm" (ngSubmit)="submit()" class="space-y-4">
+    <!-- TEXTAREA WITH FLOAT LABEL -->
+    <div class="w-full">
+        <textarea placeholder="Write a note here..." formControlName="noteText" class="w-full p-2 border rounded"
+            rows="3"></textarea>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex justify-end">
+        <button pButton type="button" label="Cancel" class="p-button-sm p-button-secondary mr-2"
+            (click)="cancel()"></button>
+        <button pButton type="submit" label="Save" class="p-button-sm"
+            [disabled]="noteForm.invalid"></button>
+    </div>
+</form>

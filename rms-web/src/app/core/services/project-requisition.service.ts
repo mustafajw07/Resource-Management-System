@@ -32,4 +32,14 @@ export class ProjectRequisitionService {
   public getRequisitionById(requisitionId: string): Observable<ProjectRequisition> {
     return this.httpClient.get<ProjectRequisition>(`${this.apiUrl}/${requisitionId}`);
   }
+
+  /**
+   * Update the stage of a project requisition
+   * @param requisitionId - ID of the requisition to update
+   * @param requisitionStageId - New stage ID to set
+   * @returns Observable of string message
+   */
+  public updateRequisitionStage(requisitionId: number, requisitionStageId: number): Observable<string> {
+    return this.httpClient.patch<string>(`${this.apiUrl}/${requisitionId}/stage`, { requisitionStageId });
+  }
 }

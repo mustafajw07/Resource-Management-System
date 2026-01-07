@@ -16,7 +16,12 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SliderModule } from 'primeng/slider';
 import { RouterModule } from "@angular/router";
+import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
+import { NotesDrawerComponent } from "../notes-drawer/notes-drawer.component";
+import { NotesDialogComponent } from "../notes-dialog/notes-dialog.component";
+import { Dialog } from "primeng/dialog";
+import { toast } from 'ngx-sonner';
 
 @Component({
     selector: 'app-requisition-table',
@@ -37,7 +42,11 @@ import { ButtonModule } from 'primeng/button';
     ProgressBarModule,
     DatePickerModule,
     SliderModule,
-    RouterModule
+    RouterModule,
+    DrawerModule,
+    NotesDrawerComponent,
+    NotesDialogComponent,
+    Dialog
 ],
 })
 export class RequisitionTableComponent implements OnInit {
@@ -67,6 +76,9 @@ export class RequisitionTableComponent implements OnInit {
     ];
     protected globalFilterFields: string[] = [];
     protected expandedRows = {};
+    protected isNotesVisible: boolean = false;
+    protected isAddNoteVisible: boolean = false;
+    protected selectedRequisitionId: number | null = null;
 
     protected notesMap = new Map<number, Notes[]>();
     private readonly notesService = inject(NotesService)
@@ -136,16 +148,11 @@ export class RequisitionTableComponent implements OnInit {
      * returns Requisition Notes on row expansion
      * @return void
      */
-    protected getRequisitionNotes(requisitionId: number): void {
-        if (this.notesLoaded.has(requisitionId)) return;
+    protected getRequisitionNotes(requisitionId: number, refresh: boolean = false): void {
+        if (this.notesLoaded.has(requisitionId) && !refresh) return;
         this.notesService.getAllNotesForRequisitionId(requisitionId).subscribe((notes) => {
-            const list = Array.isArray(notes) ? notes : [];
-            this.notesMap.set(requisitionId, list);
-            const row = this.requisitions.find(r => r.requisitionId === requisitionId);
-            if (row) {
-                row.notes = list.map(n => n.noteText).join('\n\n');
-                this.notesLoaded.add(requisitionId);
-            }
+            this.notesMap.set(requisitionId, notes);
+            this.notesLoaded.add(requisitionId);
         });
     }
 
@@ -156,5 +163,45 @@ export class RequisitionTableComponent implements OnInit {
      */
     protected moveToNextStage(row: ProjectRequisition): void {
         this.move.emit(row);
+    }
+
+    /**
+     * Open notes drawer
+     * @returns void
+     * @param row 
+     */
+    protected openNotes(row: ProjectRequisition): void {
+        this.selectedRequisitionId = row.requisitionId;
+        this.getRequisitionNotes(row.requisitionId);
+        this.isNotesVisible = true;
+    }
+
+    /**
+     * Open add notes drawer
+     * @returns void
+     * @param isAddNoteVisible 
+     */
+    protected openAddNotes(isAddNoteVisible: boolean): void {
+        this.isAddNoteVisible = isAddNoteVisible;
+    }
+
+    /**
+     * Handle added note
+     * @returns void
+     * @param noteText
+     * @param requisitionId
+     */
+    protected handleAddNote(noteText: string): void {
+        this.isAddNoteVisible = false;
+        if (!noteText || !this.selectedRequisitionId) return;
+        this.notesService.createNote(this.selectedRequisitionId, noteText).subscribe({
+            next: () => {
+                toast.success('Note added successfully.');
+                this.getRequisitionNotes(this.selectedRequisitionId! , true);
+            },
+            error: (err) => {
+                toast.error('Failed to add note. Please try again.');
+            }
+        });
     }
 }

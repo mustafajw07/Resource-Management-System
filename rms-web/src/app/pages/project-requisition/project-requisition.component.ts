@@ -10,6 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from './requisition-form/requisition-form.component';
 import { MoveStageDialogComponent } from './move-stage-dialog/move-stage-dialog.component';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { selectByCategory } from '../../store/reference-data/reference-data.selectors';
+import { ReferenceRow } from '@core/interfaces/reference-row';
 
 @Component({
     selector: 'app-project-requisition',
@@ -22,7 +25,8 @@ import { CommonModule } from '@angular/common';
         CommonModule,
         StepperModule,
         ButtonModule,
-        DialogModule],
+        DialogModule
+    ],
 })
 export class ProjectRequisitionComponent implements OnInit {
     protected loading = false;
@@ -31,11 +35,26 @@ export class ProjectRequisitionComponent implements OnInit {
     protected activeStep = 0;
     protected requisitions: ProjectRequisition[] = [];
     protected popupHeader = '';
+    protected requisitionStages: ReferenceRow[] = [];
     protected selectedRequisition: ProjectRequisition | null = null;
 
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
+    private readonly store = inject(Store);
 
-    ngOnInit(): void { this.getAllRequisitions(); }
+    ngOnInit(): void {
+        this.getAllRequisitions();
+        this.getReferenceData();
+    }
+
+    /**
+     * Fetches reference data for requisition stages
+     * @return void
+     */
+    protected getReferenceData(): void {
+        this.store.select(selectByCategory('RequisitionStage')).subscribe((data) => {
+            this.requisitionStages = data;
+        });
+    }
 
     /**
      * Handles the form cancellation from the requisition form
@@ -90,9 +109,18 @@ export class ProjectRequisitionComponent implements OnInit {
      * Handles the stage update dialog close and refreshes the requisition list
      * @return void
      */
-    protected handleStageUpdated(updated: boolean): void {
+    protected handleStageUpdated(requisitionStageId: number): void {
         this.stageDialogVisible = false;
+        this.projectRequisitionService.updateRequisitionStage(this.selectedRequisition?.requisitionId || 0, requisitionStageId).subscribe({
+            next: () => {
+                toast.success('Requisition stage updated successfully');
+            },
+            error: (error: HttpErrorResponse) => {
+                toast.error('Failed to update requisition stage: ' + error.message);
+            }
+        });
         this.getAllRequisitions();
+        this.activeStep += 1;
     }
 
     /**
@@ -101,9 +129,22 @@ export class ProjectRequisitionComponent implements OnInit {
      * @param requisition 
      */
     protected openMoveDialog(requisition: ProjectRequisition): void {
-        console.log('Opening move dialog for requisition:', requisition);
+        const currentStage = requisition.requisitionStage;
         this.selectedRequisition = requisition;
-        this.stageDialogVisible = true;
+        this.popupHeader = `Move Requisition to next stage: ${currentStage})`;
+        let nextStage = '';
+        if (currentStage === 'Approval') {
+            nextStage = 'Planning';
+        }
+        if (currentStage === 'Planning') {
+            nextStage = 'Fulfillment';
+        }
+        if (currentStage === 'Fulfillment') {
+            nextStage = 'Closure';
+        }
+        const requisitionStageId = this.requisitionStages.find(rs => rs.name === nextStage)?.id || 0;
+        this.handleStageUpdated(requisitionStageId);
+        // this.stageDialogVisible = true;
     }
 
     /**
@@ -114,5 +155,4 @@ export class ProjectRequisitionComponent implements OnInit {
     protected getByStage(stage: string): ProjectRequisition[] {
         return this.requisitions.filter(r => r.requisitionStage === stage);
     }
-    
 }

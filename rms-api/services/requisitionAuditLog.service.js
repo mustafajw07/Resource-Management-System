@@ -1,4 +1,4 @@
-const requisitionAuditLog = require('../repository/requisitionAuditLog');
+const requisitionAuditLog = require('../repository/requisitionAuditLog.repository');
 
 /**
  * GET /requisitions-log

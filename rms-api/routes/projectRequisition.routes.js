@@ -1,7 +1,6 @@
 module.exports = app => {
     const projectRequisition = require("../services/projectRequisition.service");
     const roleMiddleware = require("../middleware/auth");
-     
 
     let router = require("express").Router();
 
@@ -16,6 +15,8 @@ module.exports = app => {
 
     // Update an existing project requisition by id
     router.put("/:id", projectRequisition.update);
+
+    router.patch("/:id/stage", projectRequisition.updateRequisitionStage);
 
     app.use('/api/project-requisitions', router);
 };

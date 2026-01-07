@@ -7,5 +7,8 @@ module.exports = app => {
     // Retrieve notes by requisitionId
     router.get("/:id", note.getRequisitionNotes);
 
+    // Create a new note
+    router.post("/", note.createNote);
+
     app.use('/api/notes', router);
 };

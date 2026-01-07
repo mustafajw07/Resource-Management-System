@@ -8,7 +8,7 @@ CREATE TABLE RequisitionAuditLog (
   old_value TEXT,
   new_value TEXT,
 
-  action_type ENUM('CREATE', 'UPDATE', 'DELETE') NOT NULL DEFAULT 'UPDATE',
+  action_type ENUM('UPDATE', 'DELETE') NOT NULL DEFAULT 'UPDATE',
 
   changed_by VARCHAR(255) NOT NULL,
   changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

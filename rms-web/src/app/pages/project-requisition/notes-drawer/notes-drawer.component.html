@@ -1,0 +1,37 @@
+<div class="relative h-full">
+
+    <!-- WATERMARK -->
+    @if(notes.length === 0) {
+    <div class="flex items-center justify-center pointer-events-none opacity-6">
+        <img src="notes.png" alt="Watermark" class="w-60" />
+    </div>
+    }
+
+    <!-- NOTES LIST -->
+    @if (notes.length > 0) {
+    <ng-container>
+        <div class="space-y-4 relative z-10">
+            <div *ngFor="let note of notes" class="p-4 rounded-xl bg-white shadow-sm border border-gray-100">
+                <p class="text-sm text-gray-700 leading-relaxed">
+                    {{ note.noteText }}
+                </p>
+
+                <div class="flex items-center justify-between mt-3 text-xs text-gray-500">
+                    <span class="flex items-center gap-1">
+                        <i class="pi pi-user"></i>
+                        {{ note.createdBy }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <i class="pi pi-calendar"></i>
+                        {{ note.createdAt | date: 'mediumDate' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    }
+
+    <div class="mt-2 flex justify-center">
+        <p-button (onClick)="isAddNoteVisible.emit(true)"><span><i class="pi pi-plus"></i></span>Add note</p-button>
+    </div>
+</div>
