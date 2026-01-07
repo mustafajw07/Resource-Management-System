@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectByCategory } from '../../store/reference-data/reference-data.selectors';
 import { ReferenceRow } from '@core/interfaces/reference-row';
+import { FormsModule } from '@angular/forms';
+import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
     selector: 'app-project-requisition',
@@ -26,7 +28,9 @@ import { ReferenceRow } from '@core/interfaces/reference-row';
         StepperModule,
         ButtonModule,
         DialogModule
-    ],
+    ,
+        FormsModule,
+        FloatLabel],
 })
 export class ProjectRequisitionComponent implements OnInit {
     protected loading = false;
@@ -37,6 +41,7 @@ export class ProjectRequisitionComponent implements OnInit {
     protected popupHeader = '';
     protected requisitionStages: ReferenceRow[] = [];
     protected selectedRequisition: ProjectRequisition | null = null;
+    protected searchTerm: string = '';
 
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
     private readonly store = inject(Store);

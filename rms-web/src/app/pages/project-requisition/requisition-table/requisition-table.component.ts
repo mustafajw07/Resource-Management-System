@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -6,10 +6,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TooltipModule } from 'primeng/tooltip';
-import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
+import { ProjectRequisition } from '@core/interfaces/project-requisition';
 import { NotesService } from '@core/services/notes.service';
 import { Notes } from '@core/interfaces/notes';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -22,6 +22,7 @@ import { NotesDrawerComponent } from "../notes-drawer/notes-drawer.component";
 import { NotesDialogComponent } from "../notes-dialog/notes-dialog.component";
 import { Dialog } from "primeng/dialog";
 import { toast } from 'ngx-sonner';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-requisition-table',
@@ -46,14 +47,16 @@ import { toast } from 'ngx-sonner';
     DrawerModule,
     NotesDrawerComponent,
     NotesDialogComponent,
-    Dialog
+    Dialog,
+    FormsModule,
 ],
 })
 export class RequisitionTableComponent implements OnInit {
     @Input() requisitions: ProjectRequisition[] = [];
     @Input() loading: boolean = false;
     @Input() currentStage: number = 0;
-
+    @Input() globalSearch: string = '';
+    @ViewChild('dt2') dt2!: Table;
     @Output() move = new EventEmitter<ProjectRequisition>();
 
     protected headers = [
@@ -86,7 +89,23 @@ export class RequisitionTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.globalFilterFields = this.headers.map(h => h.field);
+        this.populateDropdownOptions();
     }
+    
+    ngOnChanges(changes: SimpleChanges): void {
+    if (changes['requisitions']) {
+      this.populateDropdownOptions();
+    }
+    if (changes['globalSearch']) {
+      const term = (this.globalSearch || '').trim();
+      if (this.dt2) {
+        if (term) {
+          this.dt2.filterGlobal(term, 'contains');
+        } else {
+          this.dt2.clear();
+        }
+    }}
+  }
 
     /**
      * Return tailwind-style classes for urgency levels
@@ -201,6 +220,24 @@ export class RequisitionTableComponent implements OnInit {
             },
             error: (err) => {
                 toast.error('Failed to add note. Please try again.');
+            }
+        });
+    }
+    
+    /**
+     * Maps each value for dropdown filteration
+     * @returns void
+     */
+    protected populateDropdownOptions(): void {
+        if (!Array.isArray(this.requisitions) || this.requisitions.length === 0) return;
+        const dropdownFields = ['skill', 'requisitionType', 'requisitionStage'];
+        dropdownFields.forEach(field => {
+            const header = this.headers.find(h => h.field === field);
+            if (header) {
+                const uniqueValues = Array.from(
+                    new Set(this.requisitions.map(r => (r as any)[field]).filter(v => v))
+                );
+                header.options = uniqueValues.map(v => ({ label: v, value: v }));
             }
         });
     }
