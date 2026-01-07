@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { RequisitionFormComponent } from './requisition-form/requisition-form.component';
 import { MoveStageDialogComponent } from './move-stage-dialog/move-stage-dialog.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
     selector: 'app-project-requisition',
@@ -22,7 +24,9 @@ import { CommonModule } from '@angular/common';
         CommonModule,
         StepperModule,
         ButtonModule,
-        DialogModule],
+        DialogModule,
+        FormsModule,
+        FloatLabel],
 })
 export class ProjectRequisitionComponent implements OnInit {
     protected loading = false;
@@ -32,6 +36,7 @@ export class ProjectRequisitionComponent implements OnInit {
     protected requisitions: ProjectRequisition[] = [];
     protected popupHeader = '';
     protected selectedRequisition: ProjectRequisition | null = null;
+    protected searchTerm: string = '';
 
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
 

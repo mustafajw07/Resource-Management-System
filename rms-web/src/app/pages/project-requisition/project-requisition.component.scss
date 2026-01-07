@@ -31,3 +31,16 @@
 :host ::ng-deep .p-button-text{
     color:white !important;
 }
+
+:host ::ng-deep .p-step:has(~ .p-step-active) .p-stepper-separator{
+    background:  #3e69ae !important;
+}
+
+:host ::ng-deep .p-button-text.p-button-secondary{
+    background: #77a6f1;
+}
+
+:host ::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted{
+    background:  #77a6f1 !important;
+    color: black;
+}
