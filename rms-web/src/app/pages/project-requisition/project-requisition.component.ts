@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 import { selectByCategory } from '../../store/reference-data/reference-data.selectors';
 import { ReferenceRow } from '@core/interfaces/reference-row';
 import { FormsModule } from '@angular/forms';
-import { FloatLabel } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-project-requisition',
@@ -27,10 +27,10 @@ import { FloatLabel } from 'primeng/floatlabel';
         CommonModule,
         StepperModule,
         ButtonModule,
-        DialogModule
-    ,
+        DialogModule,
         FormsModule,
-        FloatLabel],
+        InputTextModule
+    ],
 })
 export class ProjectRequisitionComponent implements OnInit {
     protected loading = false;

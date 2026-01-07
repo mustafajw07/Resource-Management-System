@@ -20,3 +20,17 @@
   width: 0.75rem;
   height: 0.75rem;
 }
+
+
+:host ::ng-deep .p-datatable .p-datatable-wrapper {
+  overflow-x: auto;
+}
+
+:host ::ng-deep .p-datatable th:last-child,
+:host ::ng-deep .p-datatable td:last-child {
+  position: sticky;
+  right: 0;
+  background: #fff;
+  z-index: 2;
+  min-width: 6rem; 
+}

@@ -1,9 +1,6 @@
 <div class="w-screen p-6 block">
     <div class="flex">
-        <p-floatlabel variant="on">
-            <input pInputText id="on_label" [(ngModel)]="searchTerm" autocomplete="off" />
-            <label for="on_label">Search requisitions</label>
-        </p-floatlabel>
+            <input pInputText [(ngModel)]="searchTerm" type="text" placeholder="Search Requisitions" />
         <div class="ml-auto w-64">
             <div class="relative">
                 <p-button styleClass="!bg-[#307EF7] cursor-pointer hover:!bg-[#0962EB] !border-[#307EF7] !text-white"
