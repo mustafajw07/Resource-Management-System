@@ -16,4 +16,15 @@ export class NotesService {
   public getAllNotesForRequisitionId(requisitionId: number): Observable<Notes[]> {
     return this.httpClient.get<Notes[]>(`${this.apiUrl}/${requisitionId}`);
   }
+
+  /**
+   * Create a new note for a requisition
+   * @param requisitionId The ID of the requisition
+   * @param noteText The text of the note
+   * @returns Observable of the created Note
+   */
+  public createNote(requisitionId: number, noteText: string): Observable<boolean> {
+    const payload = { requisitionId, noteText };
+    return this.httpClient.post<boolean>(this.apiUrl, payload);
+  }
 }

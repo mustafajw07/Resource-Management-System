@@ -142,3 +142,28 @@ exports.update = async (req, res) => {
         return res.status(500).json({ message });
     }
 };
+
+/**
+ * Update requisition stage
+ */
+exports.updateRequisitionStage = async (req, res) => {
+    try {
+        const requisitionId = req.params && req.params.id;
+        const { requisitionStageId } = req.body || {};
+        if (!requisitionId) {
+            return res.status(400).json({ message: 'requisitionId (url param) is required' });
+        }
+        if (requisitionStageId === undefined) {
+            return res.status(400).json({ message: 'requisitionStageId (body param) is required' });
+        }
+        const result = await projectRequisition.updateRequisitionStage(requisitionId, requisitionStageId);
+        if (result.affectedRows && result.affectedRows > 0) {
+            return res.status(200).json(true);
+        }
+        return res.status(404).json({ message: 'Requisition not found' });
+    } catch (err) {
+        console.error('projectRequisition.updateRequisitionStage error:', err);
+        const message = (err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
+        return res.status(500).json({ message });
+    }
+};

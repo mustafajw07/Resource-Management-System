@@ -61,6 +61,10 @@ const ProjectRequisition = {
         return queryAsync(query);
     },
 
+    /**
+     * Retrieve all project requisition data rows by requisition ID.
+     * @param {number} requisition_id
+     */
     async getAllRequisitionById(requisition_id){
         const query = `
             SELECT
@@ -99,6 +103,10 @@ const ProjectRequisition = {
         return rows;
     },
 
+    /**
+     * Create a new requisition. Data is camelCase
+     * @Returns { insertId }
+     */
     async create(data = {}) {
         const allowed = [
             'requisitionDate',
@@ -174,7 +182,7 @@ const ProjectRequisition = {
 
     /**
      * Update an existing requisition by requisitionId. Data is camelCase
-     * Returns { affectedRows }
+     * @Returns { affectedRows }
      */
     async update(requisitionId, data = {}) {
         if (!requisitionId) {
@@ -227,6 +235,16 @@ const ProjectRequisition = {
         values.push(requisitionId);
         const sqlStr = `UPDATE requisition SET ${sets.join(', ')} WHERE requisition_id = ?`;
         const result = await queryAsync(sqlStr, values);
+        return { affectedRows: result.affectedRows };
+    },
+
+    /**
+     * Update requisition stage by requisitionId.
+     * @Returns { affectedRows }
+     */
+    async updateRequisitionStage(requisitionId, requisitionStageId) {
+        const sqlStr = `UPDATE requisition SET requisition_stage_id = ? WHERE requisition_id = ?`;
+        const result = await queryAsync(sqlStr, [requisitionStageId, requisitionId]);
         return { affectedRows: result.affectedRows };
     }
 };

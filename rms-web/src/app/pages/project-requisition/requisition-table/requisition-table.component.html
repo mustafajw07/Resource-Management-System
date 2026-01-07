@@ -97,8 +97,11 @@
                 @if(currentStage !== 0){
                     <p-button (onClick)="moveToNextStage(row)" styleClass="text-white-500! hover:text-blue-500!" type="button" 
                         [text]="true" severity="secondary" [rounded]="true">
-                         <i  class="pi pi-angle-double-right"></i></p-button>
+                         <i  class="pi pi-arrow-circle-right" pTooltip="Move to Next Stage"></i></p-button>
                 }
+                <p-button (onClick)="openNotes(row)" styleClass="text-blue-500! hover:text-blue-500!" type="button" 
+                        [text]="true" severity="secondary" [rounded]="true">
+                         <i  class="pi pi-comment"></i></p-button>
             </td>
         </tr>
     </ng-template>
@@ -110,3 +113,17 @@
     </ng-template>
 </p-table>
 
+
+@if (isNotesVisible) {
+    <p-drawer [(visible)]="isNotesVisible" header="Notes" position="right" [style]="{ width: '400px' }" modal="true" closeOnEscape="true">
+        <app-notes-drawer [notes]="notesMap.get(selectedRequisitionId || 0) || []" (isAddNoteVisible)="openAddNotes($event)"></app-notes-drawer>
+    </p-drawer>
+}
+
+
+
+@if(isAddNoteVisible){
+    <p-dialog position="top" [header]="'Add note'" [modal]="true" [(visible)]="isAddNoteVisible" [style]="{ width: '45%' }">
+        <app-notes-dialog (addNote)="handleAddNote($event)"></app-notes-dialog>
+    </p-dialog>
+}

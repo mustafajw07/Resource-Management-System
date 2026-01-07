@@ -24,12 +24,28 @@ const NoteRepository = {
                     ORDER BY rn.created_at DESC;`;
         const rows = await queryAsync(sqlStr, [id]);
         if (!rows || rows.length === 0) return null;
-        const r = rows[0];
-        return [{
-            noteText: r.note_text,
-            createdBy: r.created_by_name,
-            createdAt: r.created_at,
-        }];
+        const r = rows;
+        return r.map((item) => {
+            return {
+                noteText: item.note_text,
+                createdByName: item.created_by_name,
+                createdAt: item.created_at
+            };
+        });
+    },
+
+    /**
+     * Create a new note
+     * @param {Object} noteData
+     * @param {number} noteData.requisitionId
+     * @param {string} noteData.noteText
+     * @param {number} createdBy
+     */
+    async create(noteData, createdBy) {
+        const sqlStr = `INSERT INTO RequisitionNote (requisition_id, note_text, created_by, created_at)
+                        VALUES (?, ?, ?, NOW());`;
+        const rows = await queryAsync(sqlStr, [noteData.requisitionId, noteData.noteText, createdBy]);
+        return rows;
     }
 };
 
