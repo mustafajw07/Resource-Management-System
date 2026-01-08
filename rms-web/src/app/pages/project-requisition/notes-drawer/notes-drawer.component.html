@@ -11,7 +11,8 @@
     @if (notes.length > 0) {
     <ng-container>
         <div class="space-y-4 relative z-10">
-            <div *ngFor="let note of notes" class="p-4 rounded-xl bg-white shadow-sm border border-gray-100">
+            @for (note of notes; track $index) {
+            <div class="p-4 rounded-xl bg-white shadow-sm border border-gray-100">
                 <p class="text-sm text-gray-700 leading-relaxed">
                     {{ note.noteText }}
                 </p>
@@ -27,11 +28,13 @@
                     </span>
                 </div>
             </div>
+            }
         </div>
     </ng-container>
     }
 
-    <div class="mt-2 flex justify-center">
-        <p-button styleClass="!bg-[#307EF7]" (onClick)="isAddNoteVisible.emit(true)"><span><i class="pi pi-plus"></i></span>Add note</p-button>
+    <div class="mt-4 flex justify-center">
+        <p-button styleClass="!bg-[#307EF7]" (onClick)="isAddNoteVisible.emit(true)"><span><i
+                    class="pi pi-plus"></i></span>Add note</p-button>
     </div>
 </div>

@@ -1,4 +1,5 @@
-const projectRequisition = require("../repository/projectRequisition.repository");
+const ProjectRequisitionRepository = require("../repository/projectRequisition.repository");
+const NotesRepository = require("../repository/notes.repository");
 const { check, validationResult } = require('express-validator');
 
 /**
@@ -7,7 +8,7 @@ const { check, validationResult } = require('express-validator');
  */
 exports.findAll = async (req, res) => {
     try {
-        const data = await projectRequisition.getAll();
+        const data = await ProjectRequisitionRepository.getAll();
         const THRESHOLD_DAYS = 15;
         const today = new Date();
         const updatedData = data.map(item => {
@@ -51,7 +52,7 @@ exports.findById = async (req, res) => {
         if (!requisitionId) {
             return res.status(400).json({ message: 'requisitionId is required' });
         }
-        const data = await projectRequisition.getAllRequisitionById(requisitionId);
+        const data = await ProjectRequisitionRepository.getAllRequisitionById(requisitionId);
         const THRESHOLD_DAYS = 15;
         const today = new Date();
         const updatedData = data.map(item => {
@@ -101,10 +102,10 @@ exports.create = async (req, res) => {
         }
 
         const payload = req.body || {};
-        const result = await projectRequisition.create(payload);
+        const result = await ProjectRequisitionRepository.create(payload);
         return res.status(200).json(true);
     } catch (err) {
-        console.error('projectRequisition.create error:', err);
+        console.error('ProjectRequisitionRepository.create error:', err);
         const message = (err && err.message) ? err.message : 'Some error occurred while creating Project requisition.';
         return res.status(500).json({ message });
     }
@@ -130,14 +131,14 @@ exports.update = async (req, res) => {
             return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
         }
 
-        const result = await projectRequisition.update(requisitionId, payload);
+        const result = await ProjectRequisitionRepository.update(requisitionId, payload);
         if (result.affectedRows && result.affectedRows > 0) {
             return res.status(200).json(true);
         }
 
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
-        console.error('projectRequisition.update error:', err);
+        console.error('ProjectRequisitionRepository.update error:', err);
         const message = (err && err.message) ? err.message : 'Some error occurred while updating Project requisition.';
         return res.status(500).json({ message });
     }
@@ -149,20 +150,26 @@ exports.update = async (req, res) => {
 exports.updateRequisitionStage = async (req, res) => {
     try {
         const requisitionId = req.params && req.params.id;
-        const { requisitionStageId } = req.body || {};
+        const { requisitionStageId, note } = req.body || {};
         if (!requisitionId) {
             return res.status(400).json({ message: 'requisitionId (url param) is required' });
         }
         if (requisitionStageId === undefined) {
             return res.status(400).json({ message: 'requisitionStageId (body param) is required' });
         }
-        const result = await projectRequisition.updateRequisitionStage(requisitionId, requisitionStageId);
+        const result = await ProjectRequisitionRepository.updateRequisitionStage(requisitionId, requisitionStageId);
+        if(note){
+           await NotesRepository.create({
+                requisitionId: requisitionId,
+                noteText: note
+            }, 1);
+        }
         if (result.affectedRows && result.affectedRows > 0) {
             return res.status(200).json(true);
         }
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
-        console.error('projectRequisition.updateRequisitionStage error:', err);
+        console.error('ProjectRequisitionRepository.updateRequisitionStage error:', err);
         const message = (err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
         return res.status(500).json({ message });
     }

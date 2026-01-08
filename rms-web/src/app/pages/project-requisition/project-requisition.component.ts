@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RequisitionTableComponent } from './requisition-table/requisition-table.component';
 import { StepperModule } from 'primeng/stepper';
 import { ProjectRequisitionService } from '@core/services/project-requisition.service';
-import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
+import { ProjectRequisition, ProjectRequisitionCreate, UpdateRequisitionStagePayload } from '@core/interfaces/project-requisition';
 import { HttpErrorResponse } from '@angular/common/http';
 import { toast } from 'ngx-sonner';
 import { DialogModule } from 'primeng/dialog';
@@ -114,9 +114,12 @@ export class ProjectRequisitionComponent implements OnInit {
      * Handles the stage update dialog close and refreshes the requisition list
      * @return void
      */
-    protected handleStageUpdated(requisitionStageId: number): void {
-        this.stageDialogVisible = false;
-        this.projectRequisitionService.updateRequisitionStage(this.selectedRequisition?.requisitionId || 0, requisitionStageId).subscribe({
+    protected handleStageUpdated(payload: UpdateRequisitionStagePayload): void {
+        if(!payload || payload.requisitionStageId === 0 || payload.requisitionStageId === this.selectedRequisition?.requisitionStageId) {
+            this.stageDialogVisible = false;
+            return;
+        };
+        this.projectRequisitionService.updateRequisitionStage(this.selectedRequisition?.requisitionId || 0, payload).subscribe({
             next: () => {
                 toast.success('Requisition stage updated successfully');
             },
@@ -124,7 +127,7 @@ export class ProjectRequisitionComponent implements OnInit {
                 toast.error('Failed to update requisition stage: ' + error.message);
             }
         });
-        this.getAllRequisitions();
+        this.stageDialogVisible = false;
         this.activeStep += 1;
     }
 
@@ -134,22 +137,9 @@ export class ProjectRequisitionComponent implements OnInit {
      * @param requisition 
      */
     protected openMoveDialog(requisition: ProjectRequisition): void {
-        const currentStage = requisition.requisitionStage;
         this.selectedRequisition = requisition;
-        this.popupHeader = `Move Requisition to next stage: ${currentStage})`;
-        let nextStage = '';
-        if (currentStage === 'Approval') {
-            nextStage = 'Planning';
-        }
-        if (currentStage === 'Planning') {
-            nextStage = 'Fulfillment';
-        }
-        if (currentStage === 'Fulfillment') {
-            nextStage = 'Closure';
-        }
-        const requisitionStageId = this.requisitionStages.find(rs => rs.name === nextStage)?.id || 0;
-        this.handleStageUpdated(requisitionStageId);
-        // this.stageDialogVisible = true;
+        this.popupHeader = `Move Requisition to next stage`;
+        this.stageDialogVisible = true;
     }
 
     /**

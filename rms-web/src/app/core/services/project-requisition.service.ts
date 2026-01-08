@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ProjectRequisition, ProjectRequisitionCreate } from '@core/interfaces/project-requisition';
+import { ProjectRequisition, ProjectRequisitionCreate, UpdateRequisitionStagePayload } from '@core/interfaces/project-requisition';
 import { map, Observable } from 'rxjs';
 import { environment } from '@environments';
 
@@ -37,9 +37,9 @@ export class ProjectRequisitionService {
    * Update the stage of a project requisition
    * @param requisitionId - ID of the requisition to update
    * @param requisitionStageId - New stage ID to set
-   * @returns Observable of string message
+   * @returns Observable of boolean indicating success
    */
-  public updateRequisitionStage(requisitionId: number, requisitionStageId: number): Observable<string> {
-    return this.httpClient.patch<string>(`${this.apiUrl}/${requisitionId}/stage`, { requisitionStageId });
+  public updateRequisitionStage(requisitionId: number, payload: UpdateRequisitionStagePayload): Observable<boolean> {
+    return this.httpClient.patch<boolean>(`${this.apiUrl}/${requisitionId}/stage`, payload);
   }
 }

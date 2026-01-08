@@ -65,7 +65,7 @@ export type ProjectRequisitionPatch = Partial<ProjectRequisitionCreate> & {
     requisitionId: number;
 };
 
-/**
- * If you want a fully generic update where even the id can be omitted, use:
- * type ProjectRequisitionPartial = Partial<ProjectRequisition>;
- */
+export interface UpdateRequisitionStagePayload {
+    note: string | null,
+    requisitionStageId: number
+}
