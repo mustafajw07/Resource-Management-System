@@ -1,12 +1,12 @@
 <p-table #dt2 [value]="requisitions" dataKey="requisitionId" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
     [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
-    sortField="ageingDays" [globalFilterFields]="globalFilterFields" [sortOrder]="-1">
+    sortField="ageingDays" [globalFilterFields]="globalFilterFields" [sortOrder]="-1" [tableStyle]="{ 'min-width': '10rem' }">
 
     <!-- HEADER -->
     <ng-template #header>
         <tr>
             <th></th>
-            <th class="text-sm p-3!" *ngFor="let col of headers" [pSortableColumn]="col.field">
+            <th class="text-sm p-2!" *ngFor="let col of headers" [pSortableColumn]="col.field">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
@@ -27,15 +27,15 @@
                         <!-- Dropdown Filter -->
                          <p-columnFilter *ngSwitchCase="'dropdown'" [field]="col.field" matchMode="in" [showMenu]="false">
                             <ng-template pTemplate="filter" let-filter="filterCallback">
-                                <p-multiSelect [options]="col.options || []" optionLabel="label" optionValue="value" display="chip"
-                                placeholder="Filter {{ col.header }}" (onChange)="filter($event.value)">
+                                <p-multiSelect #ms [options]="col.options || []" optionLabel="label" optionValue="value" display="chip" placeholder="Filter {{ col.header }}"
+                                (onChange)="filter($event.value); ms.hide()" appendTo="body">
                             </p-multiSelect>
                         </ng-template>
                     </p-columnFilter>
 
                     <p-columnFilter *ngSwitchCase="'date'" [field]="col.field" [type]="'date'" matchMode="equals" [showMenu]="false">
                         <ng-template pTemplate="filter" let-filter="filterCallback">
-                            <p-datePicker [readonlyInput]="true" dateFormat="yy-mm-dd" placeholder="Select date" (onSelect)="filter($event)">
+                            <p-datePicker [readonlyInput]="true" dateFormat="yy-mm-dd" appendTo="body" placeholder="Select date" (onSelect)="filter($event)">
 
                             </p-datePicker>
                         </ng-template>

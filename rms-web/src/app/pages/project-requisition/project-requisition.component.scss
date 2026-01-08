@@ -47,3 +47,8 @@
 :host ::ng-deep .p-inputtext:enabled:focus{
     border-color: black;
 }
+
+:host ::ng-deep .p-stepper-separator{
+    background: none !important;
+    display: none !important;
+}

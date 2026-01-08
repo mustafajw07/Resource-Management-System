@@ -119,6 +119,7 @@ export class ProjectRequisitionComponent implements OnInit {
         this.projectRequisitionService.updateRequisitionStage(this.selectedRequisition?.requisitionId || 0, requisitionStageId).subscribe({
             next: () => {
                 toast.success('Requisition stage updated successfully');
+                this.getAllRequisitions();
             },
             error: (error: HttpErrorResponse) => {
                 toast.error('Failed to update requisition stage: ' + error.message);
