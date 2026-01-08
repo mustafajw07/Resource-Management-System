@@ -20,8 +20,9 @@ export class MoveStageDialogComponent implements OnInit{
   protected requisitionStages: string[] =[];
   protected selectedRequisition: string | null = null;
   protected noteText: string | null = null;
-  private readonly store = inject(Store);
+
   private _stages: ReferenceRow[] = [];
+  private readonly store = inject(Store);
 
   ngOnInit(): void {
     this.store.select(selectByCategory('RequisitionStage')).subscribe((stages) => {
@@ -31,20 +32,33 @@ export class MoveStageDialogComponent implements OnInit{
     });
   }
   
-  filterDropdown(event: AutoCompleteCompleteEvent) {
+  /**
+   * Filters the dropdown options based on user input
+   * @param event AutoCompleteCompleteEvent
+   * @return void
+   */
+  filterDropdown(event: AutoCompleteCompleteEvent): void{
     this.requisitionStages = event.query
       ? this.requisitionStages.filter(item => item?.toString().toLowerCase().includes(event.query.toLowerCase()))
       : [...this.requisitionStages];
   }
 
-  submit(){
+  /**
+   * Submits the updated requisition stage and note
+   * @return void
+   */
+  submit(): void{
     if(this.requisition && this.selectedRequisition){
       const selectedStageId = this._stages.find(stage => stage.name === this.selectedRequisition)?.id || 0;
       this.updated.emit({requisitionStageId: selectedStageId, note: this.noteText});
     }
   }
 
-  cancel(){
+  /**
+   * Handles cancellation of the dialog
+   * @return void
+   */
+  cancel(): void{
     this.updated.emit();
   }
 }

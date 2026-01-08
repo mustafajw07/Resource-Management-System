@@ -20,10 +20,6 @@ export class RequisitionFormComponent implements OnInit {
   @Output() submitted = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
-  private store = inject(Store);
-  private referenceLists: Record<string, string[]> = {};
-  private metaData: Record<string, any> = {};
-
   protected form: FormGroup;
   protected requisitionTypes: string[] = [];
   protected requisitionStages: string[] = [];
@@ -35,6 +31,10 @@ export class RequisitionFormComponent implements OnInit {
   protected projects: String[] = [];
   protected clientsPoc: String[] = [];
   protected clients: string[] = [];
+
+  private store = inject(Store);
+  private referenceLists: Record<string, string[]> = {};
+  private metaData: Record<string, any> = {};
 
   constructor(private fb: FormBuilder,
     private userService: UserService,

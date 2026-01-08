@@ -131,7 +131,6 @@ export class ProjectRequisitionComponent implements OnInit {
             }
         });
         this.stageDialogVisible = false;
-        this.activeStep += 1;
     }
 
     /**

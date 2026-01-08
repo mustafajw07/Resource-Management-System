@@ -13,8 +13,9 @@ import { filter } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   protected items: MenuItem[] = [];
+
   private activeRoute = '';
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   constructor(){
     this.router.events
@@ -51,7 +52,12 @@ export class HeaderComponent implements OnInit {
       this.setActiveClass();
   }
 
-  setActiveClass() {
+  /**
+   * Sets the active class on the menu items based on the current route
+   * @return void
+   * @private
+   */
+  private setActiveClass() {
     this.items = this.items.map(item => ({
       ...item,
       styleClass: item.routerLink === this.activeRoute
