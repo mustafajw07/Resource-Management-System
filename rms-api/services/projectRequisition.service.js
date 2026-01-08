@@ -158,7 +158,7 @@ exports.updateRequisitionStage = async (req, res) => {
             return res.status(400).json({ message: 'requisitionStageId (body param) is required' });
         }
         const result = await ProjectRequisitionRepository.updateRequisitionStage(requisitionId, requisitionStageId);
-        if(note){
+        if(note !== null){
            await NotesRepository.create({
                 requisitionId: requisitionId,
                 noteText: note

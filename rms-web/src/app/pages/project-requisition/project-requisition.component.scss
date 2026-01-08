@@ -11,10 +11,6 @@
     border: none !important;
 }
 
-:host ::ng-deep .p-stepitem .p-stepper-separator{
-    background-color:  #77a6f1;
-}
-
 :host ::ng-deep  .p-button:not(:disabled):hover {
     background: #3e69ae !important;
 }
@@ -32,10 +28,6 @@
     color:white !important;
 }
 
-:host ::ng-deep .p-step:has(~ .p-step-active) .p-stepper-separator{
-    background:  #3e69ae !important;
-}
-
 :host ::ng-deep .p-button-text.p-button-secondary{
     background: #77a6f1;
 }
@@ -46,9 +38,4 @@
 
 :host ::ng-deep .p-inputtext:enabled:focus{
     border-color: black;
-}
-
-:host ::ng-deep .p-stepper-separator{
-    background: none !important;
-    display: none !important;
 }

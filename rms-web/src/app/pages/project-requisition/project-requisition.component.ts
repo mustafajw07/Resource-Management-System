@@ -15,6 +15,7 @@ import { selectByCategory } from '../../store/reference-data/reference-data.sele
 import { ReferenceRow } from '@core/interfaces/reference-row';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
     selector: 'app-project-requisition',
@@ -26,6 +27,7 @@ import { InputTextModule } from 'primeng/inputtext';
         MoveStageDialogComponent,
         CommonModule,
         StepperModule,
+        TabsModule,
         ButtonModule,
         DialogModule,
         FormsModule,

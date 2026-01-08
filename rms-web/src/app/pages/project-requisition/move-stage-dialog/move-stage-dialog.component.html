@@ -3,11 +3,12 @@
     <p-autocomplete [suggestions]="requisitionStages" [(ngModel)]="selectedRequisition" [dropdown]="true" class="w-full"
         (completeMethod)="filterDropdown($event)"></p-autocomplete>
     
-    <textarea placeholder="Write a note here..." [(ngModel)]="noteText" class="w-full p-2 border rounded"
+    <textarea [disabled]="selectedRequisition === requisition?.requisitionStage" placeholder="Write a note here..." [(ngModel)]="noteText" class="w-full p-2 border rounded"
             rows="3"></textarea>
 
     <div class="flex gap-2 justify-end">
         <p-button label="Cancel" (onClick)="cancel()"></p-button>
-        <p-button label="Move to Next Stage {{ selectedRequisition }}" (onClick)="submit()"></p-button>
+        <p-button [disabled]="selectedRequisition === requisition?.requisitionStage" icon="pi pi-arrow-right"
+  label="{{ selectedRequisition }}" (onClick)="submit()"></p-button>
     </div>
 </div>

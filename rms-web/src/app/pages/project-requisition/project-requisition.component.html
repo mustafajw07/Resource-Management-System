@@ -1,6 +1,6 @@
 <div class="w-screen p-6 block">
     <div class="flex">
-            <input pInputText [(ngModel)]="searchTerm" type="text" placeholder="Search Requisitions" />
+        <input pInputText [(ngModel)]="searchTerm" type="text" placeholder="Search Requisitions" />
         <div class="ml-auto w-64">
             <div class="relative">
                 <p-button styleClass="!bg-[#307EF7] cursor-pointer hover:!bg-[#0962EB] !border-[#307EF7] !text-white"
@@ -9,105 +9,42 @@
         </div>
     </div>
 
-    <p-stepper [(value)]="activeStep" styleClass="stage-stepper">
+<p-tabs [(value)]="activeStep" class="stage-tabs">
 
-        <p-step-list>
-            <p-step [value]="0" class="flex flex-row flex-auto gap-2">
-                <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
-                        (click)="activateCallback(0)">
-                        <div class="ml-4">All Requisitions</div>
-                        <span class="rounded-full border-2 w-12 ml-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                            <i class="pi pi-home"></i>
-                        </span>
-                    </button>
-                </ng-template>
-            </p-step>
+    <p-tablist>
+        <p-tab [value]="0">All Requisitions</p-tab>
+        <p-tab [value]="1">Approval</p-tab>
+        <p-tab [value]="2">Planning</p-tab>
+        <p-tab [value]="3">Fulfillment</p-tab>
+    </p-tablist>
 
-            <p-step [value]="1" class="flex flex-row flex-auto gap-2">
-                <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
-                        (click)="activateCallback()">
-                        <div>Approval</div>
-                        <span class="rounded-full border-2 ml-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                            <i class="pi pi-circle"></i>
-                        </span>
-                    </button>
-                </ng-template>
-            </p-step>
+    <p-tabpanels>
+        <p-tabpanel [value]="0">
+            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="requisitions" [loading]="loading"
+                [currentStage]="activeStep">
+            </app-requisition-table>
+        </p-tabpanel>
 
-            <p-step [value]="2" class="flex flex-row flex-auto gap-2">
-                <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
-                        (click)="activateCallback()">
-                        <div>Planning</div>
-                        <span class="rounded-full border-2 ml-1 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                            <i class="pi pi-sync"></i>
-                        </span>
-                    </button>
-                </ng-template>
-            </p-step>
+        <p-tabpanel [value]="1">
+            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Approval')"
+                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+            </app-requisition-table>
+        </p-tabpanel>
 
-            <p-step [value]="3" class="flex flex-row flex-auto gap-2">
-                <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
-                        (click)="activateCallback()">
-                        <span>Fulfillment</span>
-                        <span class="rounded-full border-2 ml-1 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                            <i class="pi pi-check-circle"></i>
-                        </span>
-                    </button>
-                </ng-template>
-            </p-step>
-        </p-step-list>
+        <p-tabpanel [value]="2">
+            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Planning')"
+                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+            </app-requisition-table>
+        </p-tabpanel>
 
-        <p-step-panels>
-            <p-step-panel [value]="0">
-                <ng-template pTemplate="content">
-                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="requisitions" [loading]="loading"
-                        [currentStage]="activeStep">
-                    </app-requisition-table>
-                </ng-template>
-            </p-step-panel>
+        <p-tabpanel [value]="3">
+            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Fulfillment')"
+                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+            </app-requisition-table>
+        </p-tabpanel>
+    </p-tabpanels>
+    </p-tabs>
 
-            <p-step-panel [value]="1">
-                <ng-template pTemplate="content">
-                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Approval')"
-                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-                    </app-requisition-table>
-                </ng-template>
-            </p-step-panel>
-
-            <p-step-panel [value]="2">
-                <ng-template pTemplate="content">
-                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Planning')"
-                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-                    </app-requisition-table>
-                </ng-template>
-            </p-step-panel>
-
-            <p-step-panel [value]="3">
-                <ng-template pTemplate="content">
-                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Fulfillment')"
-                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-                    </app-requisition-table>
-                </ng-template>
-            </p-step-panel>
-        </p-step-panels>
-
-    </p-stepper>
 
 </div>
 
@@ -119,8 +56,8 @@
 
 <!-- MOVE STAGE DIALOG -->
 @if(stageDialogVisible){
-    <p-dialog [header]="popupHeader" [modal]="true" [(visible)]="stageDialogVisible" [style]="{ width: '45%' }">
-        <app-move-stage-dialog [requisition]="selectedRequisition" (updated)="handleStageUpdated($event)">
-        </app-move-stage-dialog>
-    </p-dialog>
+<p-dialog [header]="popupHeader" [modal]="true" [(visible)]="stageDialogVisible" [style]="{ width: '45%' }">
+    <app-move-stage-dialog [requisition]="selectedRequisition" (updated)="handleStageUpdated($event)">
+    </app-move-stage-dialog>
+</p-dialog>
 }
