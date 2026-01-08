@@ -1,1 +1,14 @@
-<p>move-stage-dialog works!</p>
+<div class="p-fluid space-y-4">
+    <label class="block text-sm">Requisition Stage</label>
+    <p-autocomplete [suggestions]="requisitionStages" [(ngModel)]="selectedRequisition" [dropdown]="true" class="w-full"
+        (completeMethod)="filterDropdown($event)"></p-autocomplete>
+    
+    <textarea [disabled]="selectedRequisition === requisition?.requisitionStage" placeholder="Write a note here..." [(ngModel)]="noteText" class="w-full p-2 border rounded"
+            rows="3"></textarea>
+
+    <div class="flex gap-2 justify-end">
+        <p-button label="Cancel" (onClick)="cancel()"></p-button>
+        <p-button [disabled]="selectedRequisition === requisition?.requisitionStage" icon="pi pi-arrow-right"
+  label="{{ selectedRequisition }}" (onClick)="submit()"></p-button>
+    </div>
+</div>
