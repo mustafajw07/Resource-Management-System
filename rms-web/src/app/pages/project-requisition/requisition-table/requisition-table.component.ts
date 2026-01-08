@@ -29,34 +29,35 @@ import { FormsModule } from '@angular/forms';
     templateUrl: './requisition-table.component.html',
     styleUrls: ['./requisition-table.component.scss'],
     imports: [
-    TableModule,
-    TagModule,
-    IconFieldModule,
-    InputTextModule,
-    InputIconModule,
-    MultiSelectModule,
-    SelectModule,
-    ButtonModule,
-    CommonModule,
-    AutoCompleteModule,
-    TooltipModule,
-    ProgressBarModule,
-    DatePickerModule,
-    SliderModule,
-    RouterModule,
-    DrawerModule,
-    NotesDrawerComponent,
-    NotesDialogComponent,
-    Dialog,
-    FormsModule,
-],
+        TableModule,
+        TagModule,
+        IconFieldModule,
+        InputTextModule,
+        InputIconModule,
+        MultiSelectModule,
+        SelectModule,
+        ButtonModule,
+        CommonModule,
+        AutoCompleteModule,
+        TooltipModule,
+        ProgressBarModule,
+        DatePickerModule,
+        SliderModule,
+        RouterModule,
+        DrawerModule,
+        NotesDrawerComponent,
+        NotesDialogComponent,
+        Dialog,
+        FormsModule,
+    ],
 })
 export class RequisitionTableComponent implements OnInit {
+    @ViewChild('dt2') dt2!: Table;
+
     @Input() requisitions: ProjectRequisition[] = [];
     @Input() loading: boolean = false;
     @Input() currentStage: number = 0;
     @Input() globalSearch: string = '';
-    @ViewChild('dt2') dt2!: Table;
     @Output() move = new EventEmitter<ProjectRequisition>();
 
     protected headers = [
@@ -82,8 +83,8 @@ export class RequisitionTableComponent implements OnInit {
     protected isNotesVisible: boolean = false;
     protected isAddNoteVisible: boolean = false;
     protected selectedRequisitionId: number | null = null;
-
     protected notesMap = new Map<number, Notes[]>();
+
     private readonly notesService = inject(NotesService)
     private readonly notesLoaded = new Set<number>();
 
@@ -91,21 +92,22 @@ export class RequisitionTableComponent implements OnInit {
         this.globalFilterFields = this.headers.map(h => h.field);
         this.populateDropdownOptions();
     }
-    
+
     ngOnChanges(changes: SimpleChanges): void {
-    if (changes['requisitions']) {
-      this.populateDropdownOptions();
-    }
-    if (changes['globalSearch']) {
-      const term = (this.globalSearch || '').trim();
-      if (this.dt2) {
-        if (term) {
-          this.dt2.filterGlobal(term, 'contains');
-        } else {
-          this.dt2.clear();
+        if (changes['requisitions']) {
+            this.populateDropdownOptions();
         }
-    }}
-  }
+        if (changes['globalSearch']) {
+            const term = (this.globalSearch || '').trim();
+            if (this.dt2) {
+                if (term) {
+                    this.dt2.filterGlobal(term, 'contains');
+                } else {
+                    this.dt2.clear();
+                }
+            }
+        }
+    }
 
     /**
      * Return tailwind-style classes for urgency levels
@@ -216,14 +218,14 @@ export class RequisitionTableComponent implements OnInit {
         this.notesService.createNote(this.selectedRequisitionId, noteText).subscribe({
             next: () => {
                 toast.success('Note added successfully.');
-                this.getRequisitionNotes(this.selectedRequisitionId! , true);
+                this.getRequisitionNotes(this.selectedRequisitionId!, true);
             },
             error: (err) => {
                 toast.error('Failed to add note. Please try again.');
             }
         });
     }
-    
+
     /**
      * Maps each value for dropdown filteration
      * @returns void

@@ -20,6 +20,7 @@ export class UserProfileComponent {
   protected isSigningOut = false;
   protected initials: string = '';
   protected items: MenuItem[] | undefined;
+
   private msalService = inject(MsalService);
   private router = inject(Router);
 

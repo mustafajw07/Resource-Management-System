@@ -13,7 +13,7 @@ export class ProjectService {
    * Get all reference data rows.
    * @return Observable<ReferenceRow[]>
    */
-  getAllProjects(): Observable<Project[]> {
+  public getAllProjects(): Observable<Project[]> {
     return this.httpClient.get<Project[]>(this.apiUrl);
   }
 }

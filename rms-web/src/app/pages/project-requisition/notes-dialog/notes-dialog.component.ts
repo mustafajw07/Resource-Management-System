@@ -33,7 +33,7 @@ export class NotesDialogComponent {
    * Emits the note text if valid
    * @returns void
    */
-  protected submit() {
+  protected submit(): void{
     if (this.noteForm.invalid) return;
     this.addNote.emit(this.noteForm.value.noteText);
     this.noteForm.reset();
