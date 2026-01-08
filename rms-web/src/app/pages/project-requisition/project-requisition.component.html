@@ -16,8 +16,8 @@
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
                     <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
                         (click)="activateCallback(0)">
-                        <div>All Requisitions</div>
-                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                        <div class="ml-4">All Requisitions</div>
+                        <span class="rounded-full border-2 w-12 ml-12 h-12 inline-flex items-center justify-center" [ngClass]="{
                                 'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
@@ -32,7 +32,7 @@
                     <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
                         (click)="activateCallback()">
                         <div>Approval</div>
-                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                        <span class="rounded-full border-2 ml-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
                                 'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
@@ -47,7 +47,7 @@
                     <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
                         (click)="activateCallback()">
                         <div>Planning</div>
-                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                        <span class="rounded-full border-2 ml-1 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
                                 'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
@@ -62,7 +62,7 @@
                     <button class="bg-transparent cursor-pointer border-0 inline-flex flex-col gap-2"
                         (click)="activateCallback()">
                         <span>Fulfillment</span>
-                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                        <span class="rounded-full border-2 ml-1 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
                                 'bg-blue-500 text-primary-contrast border-solid': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
