@@ -16,6 +16,8 @@ import { ReferenceRow } from '@core/interfaces/reference-row';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabsModule } from 'primeng/tabs';
+import { RequisitionAuditLogService } from '@core/services/requisition-audit-log.service';
+import { switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-project-requisition',
@@ -46,6 +48,7 @@ export class ProjectRequisitionComponent implements OnInit {
     protected searchTerm: string = '';
 
     private readonly projectRequisitionService = inject(ProjectRequisitionService);
+    private readonly requisitionAuditService = inject(RequisitionAuditLogService)
     private readonly store = inject(Store);
 
     ngOnInit(): void {
@@ -121,17 +124,19 @@ export class ProjectRequisitionComponent implements OnInit {
             this.stageDialogVisible = false;
             return;
         };
-        this.projectRequisitionService.updateRequisitionStage(this.selectedRequisition?.requisitionId || 0, payload).subscribe({
-            next: () => {
-                toast.success('Requisition stage updated successfully');
-                this.getAllRequisitions();
-            },
-            error: (error: HttpErrorResponse) => {
-                toast.error('Failed to update requisition stage: ' + error.message);
-            }
-        });
-        this.stageDialogVisible = false;
-    }
+        const requisitionId = this.selectedRequisition?.requisitionId || 0;
+        this.requisitionAuditService.updateStage(requisitionId,payload.requisitionStageId,payload.note || '').pipe(switchMap(() => 
+            this.projectRequisitionService.updateRequisitionStage(requisitionId,payload))).subscribe({
+                next: () => {
+                    toast.success('Requisition stage updated successfully');
+                    this.getAllRequisitions();
+                },
+                error: (error: HttpErrorResponse) => {
+                    toast.error('Failed to log stage: ' + error.message);
+                }
+            });
+            this.stageDialogVisible = false;
+        }
 
     /**
      * Open move stage dialog
