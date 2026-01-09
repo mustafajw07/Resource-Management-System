@@ -8,5 +8,7 @@ module.exports = app => {
     // Retrieve all project requisitions logs
     router.get("/",requisitionAuditLog.findAll);
 
+    router.put("/:id/stage",requisitionAuditLog.updateRequisitionStage);
+    
     app.use('/api/requisitions-log', router);
 };
