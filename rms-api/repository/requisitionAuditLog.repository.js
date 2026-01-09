@@ -30,7 +30,7 @@ const RequisitionAuditLogRepository = {
     `;
     return queryAsync(query);
   },
-  
+
   /**
    *  logs the requisition state change.
    */
@@ -65,9 +65,8 @@ const RequisitionAuditLogRepository = {
      ORDER BY changed_at DESC
    `;
     return queryAsync(query, [requisitionId]);
-
   },
-  
+
   async findById(requisitionId) {
     const query = `
    SELECT
@@ -83,18 +82,6 @@ const RequisitionAuditLogRepository = {
  `;
     const rows = await queryAsync(query, [requisitionId]);
     return rows[0] || null;
-  },
-
-  /**
-   *  Updates the requisition stage.
-   */
-  async updateStage(requisitionId, requisitionStageId) {
-    const query = `
-    UPDATE Requisition
-    SET requisition_stage_id = ?
-    WHERE requisition_id = ?
-  `;
-    return queryAsync(query, [requisitionStageId, requisitionId]);
   }
 };
 module.exports = RequisitionAuditLogRepository;
