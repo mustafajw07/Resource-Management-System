@@ -45,3 +45,19 @@ body {
   --body-font: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   --person-line1-font-weight: 500;
 }
+
+.primary{
+  background-color: #307EF7 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #307EF7 !important;
+  cursor: pointer !important;
+  border-radius: 0.2rem !important;
+}
+
+.secondary{
+  cursor: pointer !important;
+  border: 1px solid #307EF7 !important;
+  color: #307EF7 !important;
+  background-color: transparent !important;
+  border-radius: 0.2rem !important;
+}

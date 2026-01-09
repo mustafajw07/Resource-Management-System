@@ -72,7 +72,11 @@
     </div>
 
     <div class="flex justify-end gap-2 pt-2">
-        <p-button severity="secondary" styleClass="!text-white" label="Cancel" [outlined]="true" (click)="onCancel()" />
-        <p-button styleClass="!bg-[#307EF7] hover:!bg-[#0962EB] !border-[#307EF7] !text-white" severity="contrast" label="Submit Request" (click)="onSubmit()" [disabled]="form.invalid" />
+        <p-button
+            styleClass="secondary hover:!bg-[#F2F4F7]"
+            label="Cancel" [outlined]="true" (click)="onCancel()" />
+        <p-button
+            styleClass="primary hover:!bg-[#0962EB]"
+            label="Submit" (click)="onSubmit()" [disabled]="form.invalid" />
     </div>
 </form>
