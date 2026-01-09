@@ -7,9 +7,11 @@
 
     <!-- ACTIONS -->
     <div class="flex gap-2 justify-end">
-        <button pButton type="button" label="Cancel" 
-            (click)="cancel()"></button>
-        <button pButton type="submit" label="Save"
-            [disabled]="noteForm.invalid"></button>
+        <p-button
+            styleClass="secondary hover:!bg-[#F2F4F7]"
+            label="Cancel" (click)="cancel()"></p-button>
+        <p-button
+            styleClass="primary hover:!bg-[#0962EB]"
+            label="Save" [disabled]="noteForm.invalid" (click)="submit()"></p-button>
     </div>
 </form>

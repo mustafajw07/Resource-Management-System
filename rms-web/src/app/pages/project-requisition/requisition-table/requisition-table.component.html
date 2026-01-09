@@ -2,6 +2,13 @@
     [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
     sortField="ageingDays" [globalFilterFields]="globalFilterFields" [sortOrder]="-1" [tableStyle]="{ 'min-width': '10rem' }">
 
+    <!-- Export -->
+    <ng-template #caption>
+        <div class="text-end pb-4">
+            <p-button styleClass="secondary hover:!bg-[#F2F4F7]" icon="pi pi-external-link" label="Export" (click)="dt2.exportCSV()" />
+        </div>
+    </ng-template>
+
     <!-- HEADER -->
     <ng-template #header>
         <tr>
@@ -95,12 +102,12 @@
             </td>
             <td class="flex flex-row gap-2">
                 @if(currentStage !== 0){
-                    <p-button (onClick)="moveToNextStage(row)" styleClass="text-white-500! hover:text-white-500!" type="button" 
-                        [text]="true" severity="secondary" [rounded]="true">
+                    <p-button (onClick)="moveToNextStage(row)" styleClass="bg-transparent! text-[#307EF7]! hover:bg-[#E6F0FF]!"
+                        [text]="true" [rounded]="true">
                          <i  class="pi pi-arrow-circle-right" pTooltip="Move to Next Stage"></i></p-button>
                 }
-                <p-button (onClick)="openNotes(row)" styleClass="text-white-500! hover:text-white-500!" type="button" 
-                        [text]="true" severity="secondary" [rounded]="true">
+                <p-button (onClick)="openNotes(row)" styleClass="bg-transparent! text-[#307EF7]! hover:bg-[#E6F0FF]!"
+                        [text]="true" [rounded]="true">
                          <i  class="pi pi-comment"></i></p-button>
             </td>
         </tr>
