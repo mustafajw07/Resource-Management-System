@@ -165,7 +165,6 @@ exports.updateRequisitionStage = async (req, res) => {
         }
         const oldStageValue = requisition.requisitionStageValue;
         const result = await ProjectRequisitionRepository.updateRequisitionStage(requisitionId, requisitionStageId);
-        await requisitionAuditLog.updateStage(requisitionId, requisitionStageId);
         const updatedRequisition = await ProjectRequisitionRepository.findById(requisitionId);
         const newStageValue = updatedRequisition.requisitionStageValue;
         await requisitionAuditLog.logStageChange(requisitionId, oldStageValue, newStageValue, changedBy);
@@ -178,7 +177,7 @@ exports.updateRequisitionStage = async (req, res) => {
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
         console.error('ProjectRequisitionRepository.updateRequisitionStage error:', err);
-        const message =(err && err.message) ? err.message :'Some error occurred while updating Project requisition stage.';
-        return res.status(500).json({ message});
+        const message =(err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
+        return res.status(500).json({ message });
     }
 };
