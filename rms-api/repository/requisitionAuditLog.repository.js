@@ -53,35 +53,22 @@ const RequisitionAuditLogRepository = {
    */
   async getLogsByRequisitionId(requisitionId) {
     const query = `
-     SELECT
-       audit_id AS auditId,
-       old_value AS oldStage,
-       new_value AS newStage,
-       changed_by AS changedBy,
-       changed_at AS changedAt
-     FROM RequisitionAuditLog
-     WHERE requisition_id = ?
-       AND field_name = 'stage'
-     ORDER BY changed_at DESC
+    SELECT
+    r.requisition_id,
+    a.audit_id AS auditId,
+    a.field_name AS fieldName,
+    a.old_value AS oldValue,
+    a.new_value AS newValue,
+    a.action_type AS actionType,
+    a.changed_by AS changedBy,
+    a.changed_at AS changedAt
+    FROM Requisition r
+    LEFT JOIN RequisitionAuditLog a
+    ON r.requisition_id = a.requisition_id
+    WHERE r.requisition_id = ?
+    ORDER BY a.changed_at DESC, a.audit_id DESC;
    `;
     return queryAsync(query, [requisitionId]);
   },
-
-  async findById(requisitionId) {
-    const query = `
-   SELECT
-     r.requisition_id AS id,
-     r.requisition_stage_id AS requisitionStageId,
-     rd.reference_name AS requisitionStageValue
-   FROM Requisition r
-   LEFT JOIN ReferenceData rd
-     ON rd.reference_id = r.requisition_stage_id
-    AND rd.category_id = 3
-   WHERE r.requisition_id = ?
-   LIMIT 1
- `;
-    const rows = await queryAsync(query, [requisitionId]);
-    return rows[0] || null;
-  }
 };
 module.exports = RequisitionAuditLogRepository;

@@ -1,6 +1,6 @@
 <p-table #dt2 [value]="requisitions" dataKey="requisitionId" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
     [loading]="loading" [expandedRowKeys]="expandedRows" [paginator]="true" [showGridlines]="false"
-    sortField="ageingDays" [globalFilterFields]="globalFilterFields" [sortOrder]="-1" [tableStyle]="{ 'min-width': '10rem' }">
+    sortField="ageingDays" [columns]="headers" [globalFilterFields]="globalFilterFields" [sortOrder]="-1" [tableStyle]="{ 'min-width': '10rem' }">
 
     <!-- Export -->
     <ng-template #caption>
@@ -123,7 +123,7 @@
 
 @if (isNotesVisible) {
     <p-drawer [(visible)]="isNotesVisible" header="Notes" position="right" [style]="{ width: '400px' }" modal="true" closeOnEscape="true">
-        <app-notes-drawer [notes]="notesMap.get(selectedRequisitionId || 0) || []" (isAddNoteVisible)="openAddNotes($event)"></app-notes-drawer>
+        <app-notes-drawer [logs]="logs" [notes]="notesMap.get(selectedRequisitionId || 0) || []" (isAddNoteVisible)="openAddNotes($event)"></app-notes-drawer>
     </p-drawer>
 }
 
