@@ -23,6 +23,8 @@ import { NotesDialogComponent } from "../notes-dialog/notes-dialog.component";
 import { Dialog } from "primeng/dialog";
 import { toast } from 'ngx-sonner';
 import { FormsModule } from '@angular/forms';
+import { RequisitionAuditLogService } from '@core/services/requisition-audit-log.service';
+import { RequisitionLog } from '@core/interfaces/requisition-audit-log';
 
 @Component({
     selector: 'app-requisition-table',
@@ -83,9 +85,10 @@ export class RequisitionTableComponent implements OnInit {
     protected isNotesVisible: boolean = false;
     protected isAddNoteVisible: boolean = false;
     protected selectedRequisitionId: number | null = null;
+    protected logs: RequisitionLog[] = [];
     protected notesMap = new Map<number, Notes[]>();
-
     private readonly notesService = inject(NotesService)
+    private readonly logsService = inject(RequisitionAuditLogService)
     private readonly notesLoaded = new Set<number>();
 
     ngOnInit(): void {
@@ -194,6 +197,8 @@ export class RequisitionTableComponent implements OnInit {
         this.selectedRequisitionId = row.requisitionId;
         this.getRequisitionNotes(row.requisitionId);
         this.isNotesVisible = true;
+        this.loadRequisitionLogs(row.requisitionId);
+        this.isNotesVisible = true;
     }
 
     /**
@@ -242,4 +247,14 @@ export class RequisitionTableComponent implements OnInit {
             }
         });
     }
+    
+    /**
+     * loads log for each requisition.
+     * @returns void
+     */
+    protected loadRequisitionLogs(requisitionId: number): void {
+        this.logsService.getLogsByRequisitionId(requisitionId).subscribe((logs) => {
+            this.logs = logs;
+    });
+  }
 }
