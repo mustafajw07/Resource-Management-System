@@ -5,11 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { ProjectService } from '@core/services/project.service';
 import { toast } from 'ngx-sonner';
 import { UtilizationData } from '@core/interfaces/project';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-project-utilization',
   templateUrl: './project-utilization.component.html',
-  imports: [ProjectUtilizationTableComponent, SelectButtonModule, FormsModule],
+  imports: [ProjectUtilizationTableComponent, SelectButtonModule, FormsModule, ButtonModule, InputTextModule],
 })
 export class ProjectUtilizationComponent implements OnInit{
   protected value!: number;
@@ -20,6 +22,7 @@ export class ProjectUtilizationComponent implements OnInit{
   protected projectUtilizationData: UtilizationData[] = [];
   protected filterByProject = false;
   protected filterByUser = false;
+  protected searchTerm = '';
 
   private readonly projectService = inject(ProjectService);
   

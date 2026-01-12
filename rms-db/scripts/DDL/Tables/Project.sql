@@ -7,10 +7,13 @@ CREATE TABLE Project (
   status VARCHAR(50),
   start_date DATE,
   end_date DATE,
+  project_manager_id INT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(255),
   updated_by VARCHAR(255),
   CONSTRAINT fk_project_client FOREIGN KEY (client_id) REFERENCES Client(client_id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT fk_project_manager FOREIGN KEY (project_manager_id) REFERENCES User(user_id)
     ON DELETE RESTRICT ON UPDATE CASCADE
 );

@@ -44,8 +44,10 @@
     gap: 2rem;
     color: #000000 !important;
 }
-.tab{
-    margin-left: 400px;
+
+:host ::ng-deep .p-tablist-tab-list{
+    display: flex;
+    justify-content: space-between;
 }
 
 :host ::ng-deep .p-tablist-active-bar{

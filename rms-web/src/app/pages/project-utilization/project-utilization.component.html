@@ -1,5 +1,7 @@
-<h2 class="text-2xl text-center font-semibold my-3">Projects Utilization</h2>
 <div class="w-screen p-6 block">
+  <div class="mb-2">
+    <input pInputText [(ngModel)]="searchTerm" type="text" placeholder="Search Requisitions" />
+  </div>
   <div class="flex justify-start gap-4 mb-2 w-[15%]">
     <p-selectbutton (onChange)="handleSelectionChange()" [options]="filterOptions" [(ngModel)]="value"
       optionLabel="name" optionValue="value" fluid>
@@ -8,6 +10,6 @@
       </ng-template>
     </p-selectbutton>
   </div>
-  <app-project-utilization-table [filterByUser]="filterByUser" [filterByProject]="filterByProject"
+  <app-project-utilization-table [globalSearch]="searchTerm" [filterByUser]="filterByUser" [filterByProject]="filterByProject"
     [projectUtilizationData]="projectUtilizationData"></app-project-utilization-table>
 </div>
