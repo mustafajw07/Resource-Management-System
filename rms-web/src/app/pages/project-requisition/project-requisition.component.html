@@ -3,13 +3,14 @@
         <input pInputText [(ngModel)]="searchTerm" type="text" placeholder="Search Requisitions" />
         <div class="ml-auto w-64">
             <div class="relative">
-                <p-button styleClass="!bg-[#307EF7] cursor-pointer hover:!bg-[#0962EB] !border-[#307EF7] !text-white"
-                    severity="contrast" label="Add New Request" icon="pi pi-plus" (click)="addRequisition()" />
+                <p-button styleClass="primary hover:!bg-[#0962EB]" severity="contrast" label="Add New Request"
+                    icon="pi pi-plus" (click)="addRequisition()" />
             </div>
         </div>
     </div>
 
-<p-tabs [(value)]="activeStep">
+    <div class="mt-5">
+        <p-tabs [(value)]="activeStep">
 
     <p-tablist>
         <p-tab class="tab" [value]="0"><i class="pi pi-list mr-2"></i> All Requisitions</p-tab>
@@ -18,32 +19,33 @@
         <p-tab [value]="3"><i class="pi pi-truck mr-2"></i> Fulfillment</p-tab>
     </p-tablist>
 
-    <p-tabpanels>
-        <p-tabpanel [value]="0">
-            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="requisitions" [loading]="loading"
-                [currentStage]="activeStep">
-            </app-requisition-table>
-        </p-tabpanel>
+            <p-tabpanels>
+                <p-tabpanel [value]="0">
+                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="requisitions" [loading]="loading"
+                        [currentStage]="activeStep">
+                    </app-requisition-table>
+                </p-tabpanel>
 
-        <p-tabpanel [value]="1">
-            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Approval')"
-                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-            </app-requisition-table>
-        </p-tabpanel>
+                <p-tabpanel [value]="1">
+                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Approval')"
+                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+                    </app-requisition-table>
+                </p-tabpanel>
 
-        <p-tabpanel [value]="2">
-            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Planning')"
-                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-            </app-requisition-table>
-        </p-tabpanel>
+                <p-tabpanel [value]="2">
+                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Planning')"
+                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+                    </app-requisition-table>
+                </p-tabpanel>
 
-        <p-tabpanel [value]="3">
-            <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Fulfillment')"
-                [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
-            </app-requisition-table>
-        </p-tabpanel>
-    </p-tabpanels>
-    </p-tabs>
+                <p-tabpanel [value]="3">
+                    <app-requisition-table [globalSearch]="searchTerm" [requisitions]="getByStage('Fulfillment')"
+                        [loading]="loading" (move)="openMoveDialog($event)" [currentStage]="activeStep">
+                    </app-requisition-table>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
 
 
 </div>
