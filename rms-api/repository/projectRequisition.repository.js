@@ -246,7 +246,23 @@ const ProjectRequisition = {
         const sqlStr = `UPDATE requisition SET requisition_stage_id = ? WHERE requisition_id = ?`;
         const result = await queryAsync(sqlStr, [requisitionStageId, requisitionId]);
         return { affectedRows: result.affectedRows };
-    }
+    },
+    
+    async findById(requisitionId) {
+        const query = `
+        SELECT
+        r.requisition_id AS id,
+        r.requisition_stage_id AS requisitionStageId,
+        rd.reference_name AS requisitionStageValue
+        FROM Requisition r
+        LEFT JOIN ReferenceData rd
+        ON rd.reference_id = r.requisition_stage_id
+        AND rd.category_id = 3
+        WHERE r.requisition_id = ?
+        LIMIT 1`;
+        const rows = await queryAsync(query, [requisitionId]);
+        return rows[0] || null;
+  }
 };
 
 module.exports = ProjectRequisition;

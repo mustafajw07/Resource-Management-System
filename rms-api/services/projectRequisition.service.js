@@ -1,5 +1,6 @@
 const ProjectRequisitionRepository = require("../repository/projectRequisition.repository");
 const NotesRepository = require("../repository/notes.repository");
+const requisitionAuditLog = require("../repository/requisitionAuditLog.repository") 
 const { check, validationResult } = require('express-validator');
 
 /**
@@ -149,28 +150,34 @@ exports.update = async (req, res) => {
  */
 exports.updateRequisitionStage = async (req, res) => {
     try {
-        const requisitionId = req.params && req.params.id;
-        const { requisitionStageId, note } = req.body || {};
+        const requisitionId = req.params.id;
+        const { requisitionStageId, note } = req.body;
+        const changedBy = req.user?.email || 'system';
         if (!requisitionId) {
             return res.status(400).json({ message: 'requisitionId (url param) is required' });
         }
         if (requisitionStageId === undefined) {
             return res.status(400).json({ message: 'requisitionStageId (body param) is required' });
         }
+        const requisition = await ProjectRequisitionRepository.findById(requisitionId);
+        if (!requisition) {
+            return res.status(404).json({ message: 'Requisition not found' });
+        }
+        const oldStageValue = requisition.requisitionStageValue;
         const result = await ProjectRequisitionRepository.updateRequisitionStage(requisitionId, requisitionStageId);
-        if(note !== null){
-           await NotesRepository.create({
-                requisitionId: requisitionId,
-                noteText: note
-            }, 1);
+        await requisitionAuditLog.updateStage(requisitionId, requisitionStageId);
+        const updatedRequisition = await ProjectRequisitionRepository.findById(requisitionId);
+        const newStageValue = updatedRequisition.requisitionStageValue;
+        await requisitionAuditLog.logStageChange(requisitionId, oldStageValue, newStageValue, changedBy);
+        if (note !== null) {
+            await NotesRepository.create({ requisitionId, noteText: note }, 1);
         }
         if (result.affectedRows && result.affectedRows > 0) {
-            return res.status(200).json(true);
+            return res.status(200).json({ message: 'Stage updated successfully' });
         }
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
-        console.error('ProjectRequisitionRepository.updateRequisitionStage error:', err);
-        const message = (err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
-        return res.status(500).json({ message });
+        console.error('updateRequisitionStage error:', err);
+        return res.status(500).json({ message: 'Failed to update stage' });
     }
 };

@@ -9,28 +9,12 @@ import { Observable } from 'rxjs';
 export class RequisitionAuditLogService {
   private readonly httpClient = inject(HttpClient);
   private apiUrl = `${environment.API_URL}/requisitions-log`;
+  private Apiurl = `${environment.API_URL}/project-requisitions`;
 
   /**
    * Fetch all requisition logs
    */
   public getAllLogs(): Observable<RequisitionLog[]> {
     return this.httpClient.get<RequisitionLog[]>(this.apiUrl);
-  }
-
-  // /**
-  //  * Fetch stage change logs for a requisition
-  //  */
-  // public getStageLogs(requisitionId: number): Observable<RequisitionLog[]> {
-  //   return this.httpClient.get<RequisitionLog[]>(`${this.apiUrl}/${requisitionId}/stage-logs`);
-  // }
-
-  /**
-   * Update requisition stage
-   */
-  public updateStage(requisitionId: number, requisitionStageId: number, note: string) {
-    return this.httpClient.put(`${this.apiUrl}/${requisitionId}/stage`, {
-      requisitionStageId,
-      note
-    });
   }
 }

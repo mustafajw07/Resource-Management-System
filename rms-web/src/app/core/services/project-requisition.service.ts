@@ -40,6 +40,6 @@ export class ProjectRequisitionService {
    * @returns Observable of boolean indicating success
    */
   public updateRequisitionStage(requisitionId: number, payload: UpdateRequisitionStagePayload): Observable<boolean> {
-    return this.httpClient.patch<boolean>(`${this.apiUrl}/${requisitionId}/stage`, payload);
+    return this.httpClient.put<boolean>(`${this.apiUrl}/${requisitionId}/stage`, payload);
   }
 }
