@@ -13,7 +13,7 @@ export class ClientService {
 
     /**
      * Fetch all clients from the API.
-     * @returns Observable of client array
+     * @returns Observable <Client[]>
      */
     public getAllClients(): Observable<Client[]> {
         return this.httpClient.get<Client[]>(this.apiUrl)
@@ -21,7 +21,7 @@ export class ClientService {
 
     /**
      * Fetch all client managers from the API.
-     * @returns Observable of client manager array
+     * @returns Observable <ClientManager[]>
      */
     public getAllClientManagers(clientId: number): Observable<ClientManager[]> {
         return this.httpClient.get<ClientManager[]>(`${this.apiUrl}/managers/${clientId}`);

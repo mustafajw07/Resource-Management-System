@@ -11,6 +11,7 @@ export class RequisitionAuditLogService {
   private apiUrl = `${environment.API_URL}/requisitions-log`;
   /**
    * Fetch all requisition logs
+   * @returns Observable <RequisitionLog[]>
    */
   public getAllLogs(): Observable<RequisitionLog[]> {
     return this.httpClient.get<RequisitionLog[]>(this.apiUrl);

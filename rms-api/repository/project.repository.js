@@ -34,7 +34,7 @@ const ProjectRepository = {
      * @returns {Promise<Array<{userId:number,firstName:string,lastName:string,email:string,locationId:number,locationName:string,projectId:number,projectName:string,utilizationPercentage:number,allocationStartDate:Date,allocationEndDate:Date}>>}
      */
     async getUtilization() {
-        const sqlStr = `SELECT user_id, first_name, 
+        const sqlStr = `SELECT user_id, manager_id, is_primary_project,first_name, 
                         last_name, email, location_id, location_name, 
                         project_id, project_name, utilization_percentage, 
                         allocation_start_date, allocation_end_date
@@ -43,8 +43,9 @@ const ProjectRepository = {
         if (!rows || rows.length === 0) return [];
         return rows.map(r => ({
             userId: r.user_id,
-            firstName: r.first_name,
-            lastName: r.last_name,
+            managerId: r.manager_id,
+            userName: r.first_name + ' ' + r.last_name,
+            isPrimaryProject: r.is_primary_project === 0 ? false : true,
             email: r.email,
             locationId: r.location_id,
             locationName: r.location_name,

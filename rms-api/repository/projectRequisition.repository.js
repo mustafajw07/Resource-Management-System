@@ -179,7 +179,6 @@ const ProjectRequisition = {
         return { insertId: requisitionId };
     },
 
-
     /**
      * Update an existing requisition by requisitionId. Data is camelCase
      * @Returns { affectedRows }
