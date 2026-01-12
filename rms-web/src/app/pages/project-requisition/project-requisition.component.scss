@@ -39,3 +39,15 @@
 :host ::ng-deep .p-inputtext:enabled:focus{
     border-color: black;
 }
+
+:host ::ng-deep .p-tab{
+    gap: 2rem;
+    color: #000000 !important;
+}
+.tab{
+    margin-left: 400px;
+}
+
+:host ::ng-deep .p-tablist-active-bar{
+    background: #000000 !important ;
+}

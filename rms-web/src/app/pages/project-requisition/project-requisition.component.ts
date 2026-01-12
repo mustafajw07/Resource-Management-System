@@ -117,7 +117,7 @@ export class ProjectRequisitionComponent implements OnInit {
      * @return void
      */
     protected handleStageUpdated(payload: UpdateRequisitionStagePayload): void {
-        if(!payload || payload.requisitionStageId === 0 || payload.requisitionStageId === this.selectedRequisition?.requisitionStageId) {
+        if (!payload || payload.requisitionStageId === 0 || payload.requisitionStageId === this.selectedRequisition?.requisitionStageId) {
             this.stageDialogVisible = false;
             return;
         };
