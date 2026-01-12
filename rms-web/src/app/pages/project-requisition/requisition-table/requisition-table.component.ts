@@ -78,7 +78,7 @@ export class RequisitionTableComponent implements OnInit {
         { field: 'fteHeadCount', header: 'FTE Head Count', filterType: null, },
         { field: 'ageingDays', header: 'Ageing Days', filterType: 'range' },
     ];
-    protected globalFilterFields: string[] = [];
+    protected globalFilterFields: string[] = this.headers.map(h => h.field);
     protected expandedRows = {};
     protected isNotesVisible: boolean = false;
     protected isAddNoteVisible: boolean = false;
@@ -89,7 +89,6 @@ export class RequisitionTableComponent implements OnInit {
     private readonly notesLoaded = new Set<number>();
 
     ngOnInit(): void {
-        this.globalFilterFields = this.headers.map(h => h.field);
         this.populateDropdownOptions();
     }
 

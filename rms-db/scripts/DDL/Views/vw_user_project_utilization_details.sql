@@ -8,6 +8,7 @@ SELECT
   l.location_id,
   l.location_name,
   p.project_id,
+  p.project_manager_id,
   pa.is_primary_project,
   p.project_name,
   pa.utilization_percentage,

@@ -1,1 +1,56 @@
-<p>project-utilization-table works!</p>
+<p-table #dt [rowGroupMode]="filterByProject ? 'subheader' : undefined"
+    [groupRowsBy]="filterByProject ? 'projectName' : null" [value]="projectUtilizationData"
+    sortField="userName" dataKey="userId" [rows]="50" [rowsPerPageOptions]="[25,50,100]" [paginator]="true"
+    [showGridlines]="false" [tableStyle]="{ 'min-width': '10rem' }" [globalFilterFields]="globalFilterFields">
+
+    <!-- Header -->
+    <ng-template #header>
+        <tr>
+            <th></th>
+            <th class="text-sm p-2!" *ngFor="let col of headers" [pSortableColumn]="col.field">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+
+    <!-- User Grouping -->
+    <ng-container *ngIf="filterByProject">
+        <ng-template #groupheader let-projectUtilizationData>
+            <tr pRowGroupHeader>
+                <td colspan="7">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">{{ projectUtilizationData.projectName }}</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </ng-container>
+
+
+    <ng-template #body let-row let-expanded="expanded">
+        <tr>
+            <td></td>
+            <!-- COLUMNS -->
+            <td *ngFor="let col of headers">
+                <ng-container [ngSwitch]="col.field">
+                    <!-- Dates -->
+                    <span *ngSwitchCase="'allocationEndDate'">
+                        {{ row.allocationEndDate | date:'mediumDate' }}
+                    </span>
+                    <!-- Default -->
+                    <span *ngSwitchDefault>
+                        {{ getFieldValue(row, col.field) }}
+                    </span>
+                </ng-container>
+            </td>
+        </tr>
+    </ng-template>
+
+    <!-- No Data -->
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="10">No Requisitions found.</td>
+        </tr>
+    </ng-template>
+</p-table>
