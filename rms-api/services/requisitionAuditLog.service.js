@@ -2,7 +2,7 @@ const requisitionAuditLog = require('../repository/requisitionAuditLog.repositor
 
 /**
  * GET /requisitions-log
- * Returns all requisitionlogs.
+ * Returns all requisition logs.
  */
 exports.findAll = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ exports.findAll = async (req, res) => {
 
 /**
  * GET /:id
- * Returns requisitionlogs by ID.
+ * Returns requisition logs by ID.
  */
 exports.findByRequisitionId = async (req, res) => {
   try {

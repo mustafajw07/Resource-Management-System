@@ -1,7 +1,6 @@
 module.exports = app => {
     const requisitionAuditLog = require("../services/requisitionAuditLog.service");
     const roleMiddleware = require("../middleware/auth");
-     
 
     let router = require("express").Router();
 

@@ -12,6 +12,6 @@ import { ButtonModule } from 'primeng/button';
 export class NotesDrawerComponent {
   @Input() notes: Notes[] = [];
   @Input() requisitionId!: number;
+  @Input() logs: RequisitionLog[] = [];
   @Output() isAddNoteVisible = new EventEmitter<boolean>();
-  @Input() logs: RequisitionLog[] = []; 
 }
