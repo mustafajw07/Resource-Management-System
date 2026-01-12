@@ -246,7 +246,12 @@ const ProjectRequisition = {
         const result = await queryAsync(sqlStr, [requisitionStageId, requisitionId]);
         return { affectedRows: result.affectedRows };
     },
-    
+
+    /**
+     * Retrieve all project requisition data rows by requisition ID.
+     * @param requisitionId 
+     * @returns 
+     */
     async findById(requisitionId) {
         const query = `
         SELECT
@@ -262,7 +267,7 @@ const ProjectRequisition = {
         LIMIT 1`;
         const rows = await queryAsync(query, [requisitionId]);
         return rows[0] || null;
-  }
+    }
 };
 
 module.exports = ProjectRequisition;

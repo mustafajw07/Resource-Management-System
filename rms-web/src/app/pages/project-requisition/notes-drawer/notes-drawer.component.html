@@ -34,39 +34,43 @@
     }
 
     <div class="mt-4 flex justify-center">
-        <p-button
-            styleClass="primary hover:!bg-[#0962EB]"
-            (onClick)="isAddNoteVisible.emit(true)"><span><i class="pi pi-plus"></i></span>Add note</p-button>
+        <p-button styleClass="primary hover:!bg-[#0962EB]" (onClick)="isAddNoteVisible.emit(true)"><span><i
+                    class="pi pi-plus"></i></span>Add note</p-button>
     </div>
-    
+
+    <!-- Audit logs -->
     <div class="mt-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-3">Audit Logs</h3>
-        <div *ngIf="logs.length === 0" class="py-10 text-center text-gray-500 italic">
+        @if(logs.length === 0){
+        <div class="py-10 text-center text-gray-500 italic">
             No changes recorded yet.
         </div>
-        <div *ngIf="logs.length > 0" class="space-y-4">
+        }
+        @if(logs.length > 0){
+        <div class="space-y-4">
             <div *ngFor="let log of logs"
-            class="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
-            <div class="flex items-baseline gap-3 flex-wrap">
-                <span class="font-medium text-gray-900">{{ log.fieldName }}</span>
-                <div class="text-gray-600">
-                    <span class="text-gray-500">from</span>
-                    <code class="mx-1 px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono">
+                class="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
+                <div class="flex items-baseline gap-3 flex-wrap">
+                    <span class="font-medium text-gray-900">{{ log.fieldName }}</span>
+                    <div class="text-gray-600">
+                        <span class="text-gray-500">from</span>
+                        <code class="mx-1 px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono">
                         {{ log.oldValue || '—' }}
                     </code>
-                    <span class="text-gray-500">to</span>
-                    <code class="mx-1 px-1.5 py-0.5 bg-gray-50 rounded text-sm font-mono font-medium">
+                        <span class="text-gray-500">to</span>
+                        <code class="mx-1 px-1.5 py-0.5 bg-gray-50 rounded text-sm font-mono font-medium">
                         {{ log.newValue || '—' }}
                     </code>
+                    </div>
+                </div>
+                <div class="mt-2 text-sm text-gray-500">
+                    by <span class="text-gray-700 font-medium">{{ log.changedBy }}</span>
+                    • {{ log.changedAt | date:'mediumDate' }} at {{ log.changedAt | date:'shortTime' }}
+                    <span class="ml-2 inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
+                        {{ log.actionType }}
+                    </span>
                 </div>
             </div>
-            <div class="mt-2 text-sm text-gray-500">
-                by <span class="text-gray-700 font-medium">{{ log.changedBy }}</span>
-                • {{ log.changedAt | date:'mediumDate' }} at {{ log.changedAt | date:'shortTime' }}
-                <span class="ml-2 inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
-                    {{ log.actionType }}
-                </span>
-            </div>
         </div>
+        }
     </div>
-</div>

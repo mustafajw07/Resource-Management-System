@@ -1,6 +1,6 @@
 const ProjectRequisitionRepository = require("../repository/projectRequisition.repository");
 const NotesRepository = require("../repository/notes.repository");
-const requisitionAuditLog = require("../repository/requisitionAuditLog.repository") 
+const requisitionAuditLog = require("../repository/requisitionAuditLog.repository")
 const { check, validationResult } = require('express-validator');
 
 /**
@@ -85,7 +85,7 @@ exports.findById = async (req, res) => {
         return res.status(500).json({ message });
     }
 
-} 
+}
 
 /**
  * Create new requisition
@@ -177,7 +177,7 @@ exports.updateRequisitionStage = async (req, res) => {
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
         console.error('ProjectRequisitionRepository.updateRequisitionStage error:', err);
-        const message =(err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
+        const message = (err && err.message) ? err.message : 'Some error occurred while updating Project requisition stage.';
         return res.status(500).json({ message });
     }
 };

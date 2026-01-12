@@ -85,11 +85,14 @@ export class RequisitionTableComponent implements OnInit {
     protected isNotesVisible: boolean = false;
     protected isAddNoteVisible: boolean = false;
     protected selectedRequisitionId: number | null = null;
-    protected logs: RequisitionLog[] = [];
+    protected logsMap = new Map<number, RequisitionLog[]>();
     protected notesMap = new Map<number, Notes[]>();
+
+    private notesLoaded = new Set<number>();
+    private logsLoaded = new Set<number>();
+
     private readonly notesService = inject(NotesService)
     private readonly logsService = inject(RequisitionAuditLogService)
-    private readonly notesLoaded = new Set<number>();
 
     ngOnInit(): void {
         this.populateDropdownOptions();
@@ -173,9 +176,31 @@ export class RequisitionTableComponent implements OnInit {
      */
     protected getRequisitionNotes(requisitionId: number, refresh: boolean = false): void {
         if (this.notesLoaded.has(requisitionId) && !refresh) return;
-        this.notesService.getAllNotesForRequisitionId(requisitionId).subscribe((notes) => {
-            this.notesMap.set(requisitionId, notes);
-            this.notesLoaded.add(requisitionId);
+        this.notesService.getAllNotesForRequisitionId(requisitionId).subscribe({
+            next: (notes) => {
+                this.notesMap.set(requisitionId, notes);
+                this.notesLoaded.add(requisitionId);
+            },
+            error: (err) => {
+                toast.error('Failed to load notes:', err);
+            }
+        });
+    }
+
+    /**
+     * loads log for each requisition.
+     * @returns void
+     */
+    protected loadRequisitionLogs(requisitionId: number, refresh: boolean = false): void {
+        if (this.logsLoaded.has(requisitionId) && !refresh) return;
+        this.logsService.getLogsByRequisitionId(requisitionId).subscribe({
+            next: (logs) => {
+                this.logsMap.set(requisitionId, logs);
+                this.logsLoaded.add(requisitionId);
+            },
+            error: (err) => {
+                toast.error('Failed to load logs:', err);
+            }
         });
     }
 
@@ -196,7 +221,6 @@ export class RequisitionTableComponent implements OnInit {
     protected openNotes(row: ProjectRequisition): void {
         this.selectedRequisitionId = row.requisitionId;
         this.getRequisitionNotes(row.requisitionId);
-        this.isNotesVisible = true;
         this.loadRequisitionLogs(row.requisitionId);
         this.isNotesVisible = true;
     }
@@ -247,14 +271,4 @@ export class RequisitionTableComponent implements OnInit {
             }
         });
     }
-    
-    /**
-     * loads log for each requisition.
-     * @returns void
-     */
-    protected loadRequisitionLogs(requisitionId: number): void {
-        this.logsService.getLogsByRequisitionId(requisitionId).subscribe((logs) => {
-            this.logs = logs;
-    });
-  }
 }

@@ -123,7 +123,7 @@
 
 @if (isNotesVisible) {
     <p-drawer [(visible)]="isNotesVisible" header="Notes" position="right" [style]="{ width: '400px' }" modal="true" closeOnEscape="true">
-        <app-notes-drawer [logs]="logs" [notes]="notesMap.get(selectedRequisitionId || 0) || []" (isAddNoteVisible)="openAddNotes($event)"></app-notes-drawer>
+        <app-notes-drawer [logs]="logsMap.get(selectedRequisitionId || 0) || []" [notes]="notesMap.get(selectedRequisitionId || 0) || []" (isAddNoteVisible)="openAddNotes($event)"></app-notes-drawer>
     </p-drawer>
 }
 
