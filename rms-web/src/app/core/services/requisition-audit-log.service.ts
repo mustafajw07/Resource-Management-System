@@ -12,6 +12,7 @@ export class RequisitionAuditLogService {
 
   /**
    * Fetch all requisition logs
+   * @returns Observable <RequisitionLog[]>
    */
   public getAllLogs(): Observable<RequisitionLog[]> {
     return this.httpClient.get<RequisitionLog[]>(this.apiUrl);

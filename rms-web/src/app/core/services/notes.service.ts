@@ -10,8 +10,9 @@ export class NotesService {
   private apiUrl = `${environment.API_URL}/notes`;
 
   /**
-   * Fetch all project requisitions
-   * @returns Observable of ProjectRequisition array
+   * Fetch all project requisitions notes by requisition ID
+   * @param requisitionId The ID of the requisition
+   * @returns Observable <Notes[]>
    */
   public getAllNotesForRequisitionId(requisitionId: number): Observable<Notes[]> {
     return this.httpClient.get<Notes[]>(`${this.apiUrl}/${requisitionId}`);
@@ -21,7 +22,7 @@ export class NotesService {
    * Create a new note for a requisition
    * @param requisitionId The ID of the requisition
    * @param noteText The text of the note
-   * @returns Observable of the created Note
+   * @returns Observable of boolean indicating success
    */
   public createNote(requisitionId: number, noteText: string): Observable<boolean> {
     const payload = { requisitionId, noteText };

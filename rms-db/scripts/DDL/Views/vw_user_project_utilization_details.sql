@@ -2,11 +2,13 @@ CREATE OR REPLACE VIEW vw_user_project_utilization_details AS
 SELECT
   u.user_id,
   u.first_name,
+  u.manager_id,
   u.last_name,
   u.email,
   l.location_id,
   l.location_name,
   p.project_id,
+  pa.is_primary_project,
   p.project_name,
   pa.utilization_percentage,
   pa.start_date AS allocation_start_date,
