@@ -9,8 +9,6 @@ import { Observable } from 'rxjs';
 export class RequisitionAuditLogService {
   private readonly httpClient = inject(HttpClient);
   private apiUrl = `${environment.API_URL}/requisitions-log`;
-  private Apiurl = `${environment.API_URL}/project-requisitions`;
-
   /**
    * Fetch all requisition logs
    */

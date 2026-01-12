@@ -16,7 +16,7 @@ module.exports = app => {
     // Update an existing project requisition by id
     router.put("/:id", projectRequisition.update);
 
-    router.put("/:id/stage", projectRequisition.updateRequisitionStage);
+    router.patch("/:id/stage", projectRequisition.updateRequisitionStage);
 
     app.use('/api/project-requisitions', router);
 };

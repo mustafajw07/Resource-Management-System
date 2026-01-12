@@ -257,7 +257,9 @@ const ProjectRequisition = {
         FROM Requisition r
         LEFT JOIN ReferenceData rd
         ON rd.reference_id = r.requisition_stage_id
-        AND rd.category_id = 3
+        LEFT JOIN ReferenceCategory rc
+        ON rc.category_id = rd.category_id
+        AND rc.category_name = 'RequisitionStage'
         WHERE r.requisition_id = ?
         LIMIT 1`;
         const rows = await queryAsync(query, [requisitionId]);

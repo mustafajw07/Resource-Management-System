@@ -173,11 +173,12 @@ exports.updateRequisitionStage = async (req, res) => {
             await NotesRepository.create({ requisitionId, noteText: note }, 1);
         }
         if (result.affectedRows && result.affectedRows > 0) {
-            return res.status(200).json({ message: 'Stage updated successfully' });
+            return res.status(200).json(true);
         }
         return res.status(404).json({ message: 'Requisition not found' });
     } catch (err) {
-        console.error('updateRequisitionStage error:', err);
-        return res.status(500).json({ message: 'Failed to update stage' });
+        console.error('ProjectRequisitionRepository.updateRequisitionStage error:', err);
+        const message =(err && err.message) ? err.message :'Some error occurred while updating Project requisition stage.';
+        return res.status(500).json({ message});
     }
 };
