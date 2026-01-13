@@ -62,13 +62,14 @@ const RequisitionAuditLogRepository = {
     a.action_type AS actionType,
     a.changed_by AS changedBy,
     a.changed_at AS changedAt
-    FROM Requisition r
-    LEFT JOIN RequisitionAuditLog a
-    ON r.requisition_id = a.requisition_id
+    FROM RequisitionAuditLog a
+    JOIN Requisition r ON r.requisition_id = a.requisition_id
     WHERE r.requisition_id = ?
     ORDER BY a.changed_at DESC, a.audit_id DESC;
    `;
-    return queryAsync(query, [requisitionId]);
+   const rows = await queryAsync(query, [requisitionId]);
+    if (!rows || rows.length === 0) return [];
+    return rows;
   },
 };
 module.exports = RequisitionAuditLogRepository;

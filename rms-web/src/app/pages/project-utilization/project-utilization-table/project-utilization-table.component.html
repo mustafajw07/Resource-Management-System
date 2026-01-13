@@ -6,7 +6,6 @@
     <!-- Header -->
     <ng-template #header>
         <tr>
-            <th></th>
             <th class="text-sm p-2!" *ngFor="let col of headers" [pSortableColumn]="col.field">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -18,7 +17,7 @@
     <ng-container *ngIf="filterByProject">
         <ng-template #groupheader let-projectUtilizationData>
             <tr pRowGroupHeader>
-                <td colspan="7">
+                <td colspan="6">
                     <div class="flex items-center gap-2">
                         <span class="font-bold">{{ projectUtilizationData.projectName }}</span>
                     </div>
@@ -30,13 +29,15 @@
 
     <ng-template #body let-row let-expanded="expanded">
         <tr>
-            <td></td>
             <!-- COLUMNS -->
             <td *ngFor="let col of headers">
                 <ng-container [ngSwitch]="col.field">
                     <!-- Dates -->
                     <span *ngSwitchCase="'allocationEndDate'">
                         {{ row.allocationEndDate | date:'mediumDate' }}
+                    </span>
+                    <span *ngSwitchCase="'isPrimaryProject'">
+                        {{ row.isPrimaryProject ? 'Yes' : 'No'  }}
                     </span>
                     <!-- Default -->
                     <span *ngSwitchDefault>
@@ -50,7 +51,7 @@
     <!-- No Data -->
     <ng-template #emptymessage>
         <tr>
-            <td colspan="10">No Requisitions found.</td>
+            <td colspan="6">No Requisitions found.</td>
         </tr>
     </ng-template>
 </p-table>
