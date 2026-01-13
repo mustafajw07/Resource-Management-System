@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { MsalGuard } from '@azure/msal-angular';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/project-requisition/project-requisition.component')
             .then(c => c.ProjectRequisitionComponent),
+        canActivate: [MsalGuard],
         children: [
           {
             path: 'add',
@@ -41,6 +43,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/project-utilization/project-utilization.component').then(
             (c) => c.ProjectUtilizationComponent),
+        canActivate: [MsalGuard],
       }
     ],
   },

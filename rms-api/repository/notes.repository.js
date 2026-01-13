@@ -28,7 +28,7 @@ const NoteRepository = {
         return r.map((item) => {
             return {
                 noteText: item.note_text,
-                createdByName: item.created_by_name,
+                createdBy: item.created_by_name,
                 createdAt: item.created_at
             };
         });

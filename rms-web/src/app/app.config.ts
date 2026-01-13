@@ -11,7 +11,7 @@ import { UserService } from './core/services/user.service';
 import { PermissionsService } from './core/services/permissions.service';
 import { environment } from '@environments';
 import { Location } from '@angular/common';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { referenceDataReducer } from './store/reference-data/reference-data.reducer';
 
@@ -161,7 +161,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([]), withInterceptorsFromDi()),
     importProvidersFrom(StoreModule.forRoot({ referenceData: referenceDataReducer })),
     providePrimeNG({
       theme: {
