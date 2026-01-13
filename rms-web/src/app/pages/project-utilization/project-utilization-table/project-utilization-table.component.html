@@ -1,7 +1,7 @@
 <p-table #dt [rowGroupMode]="filterByProject ? 'subheader' : undefined"
-    [groupRowsBy]="filterByProject ? 'projectName' : null" [value]="projectUtilizationData"
-    sortField="userName" dataKey="userId" [rows]="50" [rowsPerPageOptions]="[25,50,100]" [paginator]="true"
-    [showGridlines]="false" [tableStyle]="{ 'min-width': '10rem' }" [globalFilterFields]="globalFilterFields">
+    [groupRowsBy]="filterByProject ? 'projectName' : null" [value]="projectUtilizationData" sortField="userName"
+    dataKey="userId" [rows]="50" [rowsPerPageOptions]="[25,50,100]" [paginator]="true" [showGridlines]="false"
+    [tableStyle]="{ 'min-width': '10rem' }" [globalFilterFields]="globalFilterFields">
 
     <!-- Header -->
     <ng-template #header>
@@ -13,20 +13,33 @@
         </tr>
     </ng-template>
 
-    <!-- User Grouping -->
+    <!-- Project Grouping -->
     <ng-container *ngIf="filterByProject">
-        <ng-template #groupheader let-projectUtilizationData>
+        <ng-template #groupheader let-projectUtilizationData let-expanded="expanded">
             <tr pRowGroupHeader>
                 <td colspan="6">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold">{{ projectUtilizationData.projectName }}</span>
-                    </div>
+                    <button type="button" pButton pRipple [pRowToggler]="projectUtilizationData" text rounded plain
+                        class="mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                    </button>
+                    <span class="font-bold">{{ projectUtilizationData.projectName }}</span>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template #groupfooter let-rows>
+            <tr class="bg-gray-50 font-medium">
+                <td colspan="5" class="text-right pr-3">
+                    Total Project Utilization
+                </td>
+                <td class="text-left">
+                    {{ getProjectTotal(rows) | number:'1.2-2' }}%
                 </td>
             </tr>
         </ng-template>
     </ng-container>
 
-
+    <!-- Body -->
+    @if(!filterByProject){
     <ng-template #body let-row let-expanded="expanded">
         <tr>
             <!-- COLUMNS -->
@@ -37,7 +50,7 @@
                         {{ row.allocationEndDate | date:'mediumDate' }}
                     </span>
                     <span *ngSwitchCase="'isPrimaryProject'">
-                        {{ row.isPrimaryProject ? 'Yes' : 'No'  }}
+                        {{ row.isPrimaryProject ? 'Yes' : 'No' }}
                     </span>
                     <!-- Default -->
                     <span *ngSwitchDefault>
@@ -47,6 +60,30 @@
             </td>
         </tr>
     </ng-template>
+    }
+
+    @if(filterByProject){
+    <ng-template #expandedrow let-row let-expanded="expanded">
+        <tr>
+            <!-- COLUMNS -->
+            <td *ngFor="let col of headers">
+                <ng-container [ngSwitch]="col.field">
+                    <!-- Dates -->
+                    <span *ngSwitchCase="'allocationEndDate'">
+                        {{ row.allocationEndDate | date:'mediumDate' }}
+                    </span>
+                    <span *ngSwitchCase="'isPrimaryProject'">
+                        {{ row.isPrimaryProject ? 'Yes' : 'No' }}
+                    </span>
+                    <!-- Default -->
+                    <span *ngSwitchDefault>
+                        {{ getFieldValue(row, col.field) }}
+                    </span>
+                </ng-container>
+            </td>
+        </tr>
+    </ng-template>
+    }
 
     <!-- No Data -->
     <ng-template #emptymessage>

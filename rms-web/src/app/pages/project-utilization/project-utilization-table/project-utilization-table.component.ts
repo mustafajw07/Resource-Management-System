@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, ViewChild } from '@angular/core';
 import { UtilizationData } from '@core/interfaces/project';
+import { ButtonModule } from 'primeng/button';
 import { Table, TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-project-utilization-table',
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, ButtonModule],
   templateUrl: './project-utilization-table.component.html',
   styleUrl: './project-utilization-table.component.scss',
 })
@@ -45,5 +46,17 @@ export class ProjectUtilizationTableComponent {
    */
   protected getFieldValue(row: UtilizationData, field: string): any {
       return (row as any)[field] ?? 'N/A';
+  }
+
+  /**
+   * Calculate project total utilization percentage
+   * @param projectUtilizationData
+   * @return string
+   */
+  protected getProjectTotal(projectUtilizationData: UtilizationData): string {
+      const total = this.projectUtilizationData
+          .filter(p => p.projectId === projectUtilizationData.projectId)
+          .reduce((sum, p) => sum + (p.utilizationPercentage || 0), 0);
+      return total.toFixed(2);
   }
 }

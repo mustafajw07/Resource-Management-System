@@ -1,76 +1,36 @@
-<div class="h-full overflow-y-scroll">
+<div class="space-y-4">
+  @for (item of timeline; track $index) {
 
-    <!-- WATERMARK -->
-    @if(notes.length === 0) {
-    <div class="flex items-center justify-center pointer-events-none opacity-6">
-        <img src="notes.png" alt="Watermark" class="w-60" />
-    </div>
+    <!-- Note -->
+    @if(item.type === 'note') {
+      <div class="p-4 rounded-xl bg-blue-50 border border-blue-200">
+        <p class="text-sm text-gray-800">{{ item.data.noteText }}</p>
+        <div class="mt-2 text-xs text-gray-600 flex justify-between">
+          <span><i class="pi pi-user"></i> {{ item.data.createdBy }}</span>
+          <span><i class="pi pi-calendar"></i> {{ item.data.createdAt | date:'medium' }}</span>
+        </div>
+      </div>
     }
 
-    <!-- NOTES LIST -->
-    @if (notes.length > 0) {
-    <ng-container>
-        <div class="space-y-4 relative z-10">
-            @for (note of notes; track $index) {
-            <div class="p-4 rounded-xl bg-white shadow-sm border border-gray-100">
-                <p class="text-sm text-gray-700 leading-relaxed">
-                    {{ note.noteText }}
-                </p>
-
-                <div class="flex items-center justify-between mt-3 text-xs text-gray-500">
-                    <span class="flex items-center gap-1">
-                        <i class="pi pi-user"></i>
-                        {{ note.createdBy }}
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i class="pi pi-calendar"></i>
-                        {{ note.createdAt | date: 'mediumDate' }}
-                    </span>
-                </div>
-            </div>
-            }
+    <!-- Log -->
+    @if(item.type === 'log') {
+      <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+        <div class="flex items-baseline gap-2 flex-wrap">
+          <span class="font-medium text-gray-900">{{ item.data.fieldName }}</span>
+          <span class="text-sm text-gray-500">from</span>
+          <code class="px-1.5 bg-gray-100 rounded">{{ item.data.oldValue || '—' }}</code>
+          <span class="text-sm text-gray-500">to</span>
+          <code class="px-1.5 bg-gray-100 rounded">{{ item.data.newValue || '—' }}</code>
         </div>
-    </ng-container>
+        <div class="mt-2 text-xs text-gray-500 flex gap-2">
+          by <span class="font-medium">{{ item.data.changedBy }}</span>
+          • {{ item.data.changedAt | date:'medium' }}
+          <span class="ml-auto px-2 py-0.5 rounded-full bg-gray-100 text-[10px] uppercase">
+            {{ item.data.actionType }}
+          </span>
+        </div>
+      </div>
     }
 
-    <div class="mt-4 flex justify-center">
-        <p-button styleClass="primary hover:!bg-[#0962EB]" (onClick)="isAddNoteVisible.emit(true)"><span><i
-                    class="pi pi-plus"></i></span>Add note</p-button>
-    </div>
-
-    <!-- Audit logs -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Audit Logs</h3>
-        @if(logs.length === 0){
-        <div class="py-10 text-center text-gray-500 italic">
-            No changes recorded yet.
-        </div>
-        }
-        @if(logs.length > 0){
-        <div class="space-y-4">
-            <div *ngFor="let log of logs"
-                class="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
-                <div class="flex items-baseline gap-3 flex-wrap">
-                    <span class="font-medium text-gray-900">{{ log.fieldName }}</span>
-                    <div class="text-gray-600">
-                        <span class="text-gray-500">from</span>
-                        <code class="mx-1 px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono">
-                        {{ log.oldValue || '—' }}
-                    </code>
-                        <span class="text-gray-500">to</span>
-                        <code class="mx-1 px-1.5 py-0.5 bg-gray-50 rounded text-sm font-mono font-medium">
-                        {{ log.newValue || '—' }}
-                    </code>
-                    </div>
-                </div>
-                <div class="mt-2 text-sm text-gray-500">
-                    by <span class="text-gray-700 font-medium">{{ log.changedBy }}</span>
-                    • {{ log.changedAt | date:'mediumDate' }} at {{ log.changedAt | date:'shortTime' }}
-                    <span class="ml-2 inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
-                        {{ log.actionType }}
-                    </span>
-                </div>
-            </div>
-        </div>
-        }
-    </div>
+  }
+</div>
