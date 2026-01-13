@@ -42,7 +42,7 @@
 
 :host ::ng-deep .p-tab{
     gap: 2rem;
-    color: #000000 !important;
+    color:  #307EF7 !important;
 }
 
 :host ::ng-deep .p-tablist-tab-list{
@@ -51,5 +51,14 @@
 }
 
 :host ::ng-deep .p-tablist-active-bar{
-    background: #000000 !important ;
+    background: #307EF7 !important ;
+}
+
+:host ::ng-deep .p-tab-active{
+    border-color: #307EF7 !important;
+}
+
+:host ::ng-deep .p-autocomplete-option-selected {
+    background-color: #307EF7 !important;
+    color: white !important;
 }

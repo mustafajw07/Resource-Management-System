@@ -21,7 +21,6 @@
   height: 0.75rem;
 }
 
-
 :host ::ng-deep .p-datatable .p-datatable-wrapper {
   overflow-x: auto;
 }
@@ -33,4 +32,13 @@
   background: #fff;
   z-index: 2;
   min-width: 6rem; 
+}
+
+::ng-deep .p-multiselect-option.p-multiselect-option-selected.p-focus {
+  background: #307EF7 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .p-checkbox-checked-background{
+  color:#307EF7 !important;
 }
