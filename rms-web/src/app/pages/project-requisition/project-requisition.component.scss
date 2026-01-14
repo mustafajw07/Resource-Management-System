@@ -62,3 +62,22 @@
     background-color: #307EF7 !important;
     color: white !important;
 }
+
+:host ::ng-deep .p-select:not(.p-disabled).p-focus{
+  border-color: #307EF7 !important;
+}
+
+:host ::ng-deep .p-select-option.p-select-option-selected.p-focus{
+  color: white;
+   background: #307EF7 !important;
+}
+
+:host ::ng-deep .p-paginator-page.p-paginator-page-selected{
+  background: #307EF7 !important;
+  color: #fff;
+}
+
+:host ::ng-deep .p-select-option.p-select-option-selected{
+  background: #307EF7 !important;
+  color:white
+}
