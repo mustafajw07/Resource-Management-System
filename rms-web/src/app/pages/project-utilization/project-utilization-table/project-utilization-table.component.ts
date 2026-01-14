@@ -29,7 +29,6 @@ export class ProjectUtilizationTableComponent {
   @Input() filterByUser: boolean = false;
   @Input() filterByProject: boolean = false;
 
-
 protected headers: {field: string; header: string; filterType?: 'text' | 'dropdown' | 'date';options?: { label: string; value: string }[]; } [] = [
   { field: 'userName', header: 'Full Name', filterType: 'text' },
   { field: 'locationName', header: 'Location', filterType: 'text' },
