@@ -4,7 +4,10 @@ module.exports = app => {
 
     let router = require("express").Router();
 
-   // Retrieve all reference data
+    // Require authentication for all note routes
+    // router.use(roleMiddleware());
+
+    // Retrieve all reference data
     router.get("/", referenceData.findAll);
 
     app.use('/api/reference-data', router);

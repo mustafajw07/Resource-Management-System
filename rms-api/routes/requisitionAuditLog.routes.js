@@ -4,6 +4,9 @@ module.exports = app => {
 
     let router = require("express").Router();
 
+    // Require authentication for all note routes
+    // router.use(roleMiddleware());
+
     // Retrieve all project requisitions logs
     router.get("/",requisitionAuditLog.findAll);
     
