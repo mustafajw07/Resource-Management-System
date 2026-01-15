@@ -1,7 +1,20 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
+const dotenv = require('dotenv');
 
-dotenv.config()
+dotenv.config();
+
+const tenant = process.env.AAD_TENANT_ID || 'common';
+const jwksUri = `https://login.microsoftonline.com/${tenant}/discovery/v2.0/keys`;
+const client = jwksClient({ jwksUri, cache: true, rateLimit: true });
+
+function getKey(header, callback) {
+    client.getSigningKey(header.kid, function (err, key) {
+        if (err) return callback(err);
+        const signingKey = key.getPublicKey();
+        callback(null, signingKey);
+    });
+}
 
 const roleMiddleware = (roles = []) => {
     if (typeof roles === 'string') {
@@ -21,20 +34,35 @@ const roleMiddleware = (roles = []) => {
                 return res.status(401).json({ message: "Token missing!" });
             }
 
-            const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-            req.user = decoded.user;
-            
-            if (roles.length && !roles.includes(req.user.role)) {
-                return res.status(403).json({ message: "Forbidden: You don't have the required role!" });
-            }
+            const verifyOptions = {};
 
-            next();
+            if (process.env.AAD_CLIENT_ID) verifyOptions.audience = `api://${process.env.AAD_CLIENT_ID}`;
+            verifyOptions.issuer = `https://sts.windows.net/${tenant}/`;
+
+            jwt.verify(token, getKey, verifyOptions, (err, decoded) => {
+                if (err) {
+                    console.error('Token verification error:', err);
+                    return res.status(401).json({ message: "Invalid or expired token!" });
+                }
+
+                req.user = decoded;
+
+                // roles can be in 'roles', 'role', 'scp' or 'groups' depending on the token
+                let tokenRoles = decoded.roles || decoded.role || decoded.scp || decoded.groups || [];
+                if (!Array.isArray(tokenRoles)) tokenRoles = [tokenRoles].filter(Boolean);
+
+                if (roles.length && !tokenRoles.some(r => roles.includes(r))) {
+                    return res.status(403).json({ message: "Forbidden: You don't have the required role!" });
+                }
+
+                next();
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Internal jwt server error!" });
         }
     };
 
-}
+};
 
-export default roleMiddleware;
+module.exports = roleMiddleware;
