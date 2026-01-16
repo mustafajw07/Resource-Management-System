@@ -10,6 +10,11 @@
       </ng-template>
     </p-selectbutton>
   </div>
-  <app-project-utilization-table [globalSearch]="searchTerm" [filterByUser]="filterByUser" [filterByProject]="filterByProject"
+  
+  @if(filterByUser){
+    <app-user-utilization-table [projectUtilizationData]="projectUtilizationData" [globalSearch]="searchTerm"></app-user-utilization-table>
+  } @else{
+    <app-project-utilization-table [globalSearch]="searchTerm" [filterByUser]="filterByUser" [filterByProject]="filterByProject"
     [projectUtilizationData]="projectUtilizationData"></app-project-utilization-table>
+  }
 </div>
