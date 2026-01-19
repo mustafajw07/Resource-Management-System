@@ -7,11 +7,12 @@ import { toast } from 'ngx-sonner';
 import { UtilizationData } from '@core/interfaces/project';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { UserUtilizationTableComponent } from "./user-utilization-table/user-utilization-table.component";
 
 @Component({
   selector: 'app-project-utilization',
   templateUrl: './project-utilization.component.html',
-  imports: [ProjectUtilizationTableComponent, SelectButtonModule, FormsModule, ButtonModule, InputTextModule],
+  imports: [ProjectUtilizationTableComponent, SelectButtonModule, FormsModule, ButtonModule, InputTextModule, UserUtilizationTableComponent],
 })
 export class ProjectUtilizationComponent implements OnInit{
   protected value!: number;

@@ -25,3 +25,14 @@
 :host ::ng-deep .p-datatable .p-datatable-wrapper {
   overflow-x: auto;
 }
+
+.caption-wrapper{
+  margin-top: -4rem;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.caption-wrapper p-button{
+  pointer-events: auto;
+}

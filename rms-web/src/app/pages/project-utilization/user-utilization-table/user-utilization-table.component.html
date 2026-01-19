@@ -1,0 +1,63 @@
+<p-treeTable #tt [value]="userHierarchy" [columns]="headers" [tableStyle]="{ 'min-width': '56rem' }">
+    <!-- Header -->
+    <ng-template #header let-columns>
+        <tr>
+            @for (col of columns; track col) {
+            <th>{{ col.header }}</th>
+            }
+        </tr>
+        <tr>
+            @for (col of columns; track col) {
+            <th>
+                <ng-container [ngSwitch]="col.filterType">
+                    <!-- Text Filter -->
+                    <input *ngSwitchCase="'text'" pInputText [placeholder]="'Filter by ' + col.header" type="text"
+                        (input)="tt.filter($event.target.value, col.field, 'contains')" />
+                    <!-- Dropdown Filter -->
+                    <p-multiSelect *ngSwitchCase="'dropdown'" [options]="col.options || []" optionLabel="label"
+                        optionValue="value" display="chip" placeholder="Filter {{ col.header }}"
+                        (onChange)="tt.filter($event.value, col.field, 'in')" appendTo="body">
+                    </p-multiSelect>
+                    <!-- Date range filter (inside your *ngSwitchCase === 'date') -->
+                    <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="dateRange"
+                        (ngModelChange)="applyDateFilter($event)" selectionMode="range" [showClear]="true"
+                        appendTo="body" dateFormat="yy-mm-dd" placeholder="Select date range">
+                    </p-datepicker>
+                    <!-- Default -->
+                    <span *ngSwitchDefault></span>
+                </ng-container>
+            </th>
+            }
+        </tr>
+    </ng-template>
+    <!-- Body -->
+    <ng-template pTemplate="body" let-rowNode let-columns="columns">
+        <tr>
+            <td *ngFor="let col of columns">
+                <ng-container [ngSwitch]="col.field">
+                    <span *ngSwitchCase="'userName'">
+                        <p-treeTableToggler [rowNode]="rowNode" class="mr-2"></p-treeTableToggler>
+                        {{ rowNode.node.data.userName }}
+                    </span>
+                    <!-- Date formatting -->
+                    <span *ngSwitchCase="'allocationEndDate'">
+                        {{ rowNode.node.data.allocationEndDate | date:'mediumDate' }}
+                    </span>
+                    <span *ngSwitchCase="'isPrimaryProject'">
+                        {{ rowNode.node.data.isPrimaryProject ? 'Yes' : 'No' }}
+                    </span>
+                    <!-- Default -->
+                    <span *ngSwitchDefault>
+                        {{ rowNode.node.data[col.field] }}
+                    </span>
+                </ng-container>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="headers.length">No Users Found.</td>
+        </tr>
+    </ng-template>
+</p-treeTable>

@@ -10,6 +10,8 @@ export interface Project{
 export interface UtilizationData{
     userId:number;
     userName:string;
+    managerId: number;
+    managerName: string;
     email:string;
     locationId:number;
     locationName:string;

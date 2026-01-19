@@ -4,12 +4,14 @@
     [tableStyle]="{ 'min-width': '10rem' }" [columns]="headers" [globalFilterFields]="globalFilterFields">
     
     <ng-template pTemplate="caption">
-        <div class="text-end pb-4">
+        <div class="caption-wrapper">
+        <div class="flex flex-row justify-end pb-4">
             <p-button styleClass="secondary hover:!bg-[#F2F4F7]" icon="pi pi-external-link" label="Export" (click)="dt.exportCSV()">
             </p-button>
+            <p-button styleClass="secondary ml-2 hover:!bg-[#F2F4F7]" icon="pi pi-filter-slash" label="Clear" (click)="clear(dt)"></p-button>
+        </div>
         </div>
     </ng-template>
-
 
     <!-- Header -->
     <ng-template #header>
@@ -41,7 +43,7 @@
                 <!-- Date Filter -->
                  <p-columnFilter *ngSwitchCase="'date'" [field]="col.field" [type]="'date'" matchMode="equals" [showMenu]="false">
                     <ng-template pTemplate="filter" let-filter="filterCallback">
-                        <p-datePicker [readonlyInput]="true" dateFormat="yy-mm-dd" appendTo="body" placeholder="Select date" (onSelect)="filter($event)">
+                        <p-datePicker [showClear]="true" [readonlyInput]="true" dateFormat="yy-mm-dd" appendTo="body" selectionMode="range" placeholder="Select date range" (onSelect)="filter($event)">
                         </p-datePicker>
                     </ng-template>
                 </p-columnFilter>

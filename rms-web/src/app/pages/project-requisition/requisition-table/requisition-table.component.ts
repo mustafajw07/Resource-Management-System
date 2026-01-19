@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -270,5 +270,11 @@ export class RequisitionTableComponent implements OnInit {
                 header.options = uniqueValues.map(v => ({ label: v, value: v }));
             }
         });
+    }
+    
+    protected clear(table: Table): void {
+        table.clear();
+        this.globalSearch = '';
+        this.expandedRows = {};
     }
 }
